@@ -132,17 +132,22 @@ code {
 .col-guide h2:first-of-type { margin-top: 1.25rem; }
 
 .principle {
-  margin-top: 1.25rem;
-  padding: 0.9rem 1rem;
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.9rem;
+  margin-top: 0.85rem;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 0.88rem;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 .principle strong { color: var(--text); }
 
+.moment {
+  padding: 0.8rem 0.95rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
 .moment-list {
   display: flex;
   flex-direction: column;
@@ -151,13 +156,7 @@ code {
   padding: 0;
   list-style: none;
 }
-.moment {
-  padding: 0.85rem 1rem 0.85rem 0.95rem;
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-}
+
 .moment h3 {
   margin: 0 0 0.3rem;
   font-size: 0.92rem;
@@ -170,9 +169,34 @@ code {
   color: var(--text-muted);
   line-height: 1.55;
 }
-.moment .circuit {
-  font: 600 0.78rem/1.5 ui-monospace, monospace;
-  color: var(--accent);
+
+/* Circuit diagrams — muted, inline with mechanics cards */
+.circuit-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border);
+}
+.circuit-strip img {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 42px;
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
+  opacity: 0.62;
+  filter: grayscale(0.15) brightness(0.92);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2px 4px;
+}
+.circuit-strip--3 img {
+  max-height: 38px;
+}
+.circuit-strip img:hover {
+  opacity: 0.85;
 }
 
 .classical-note {
@@ -193,6 +217,19 @@ code {
 .footer-dev p { margin: 0.35rem 0; }
 .footer-dev a { text-decoration: none; }
 .footer-dev a:hover { text-decoration: underline; }
+.dev-details {
+  margin-bottom: 0.65rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.dev-details summary {
+  cursor: pointer;
+  color: var(--link);
+  user-select: none;
+}
+.dev-details summary:hover { color: var(--link-hover); }
+.dev-details p { margin: 0.4rem 0 0; }
+.dev-details code { font-size: 0.76rem; }
 
 /* Game frame */
 #frame {

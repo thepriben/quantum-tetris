@@ -31,5 +31,5 @@ wasm-bindgen --out-dir "$OUT" --target web \
   --no-typescript \
   target/wasm32-unknown-unknown/release/quantum_tetris.wasm
 
-echo "OK — open docs/play.html via a local server (see docs/WASM.md)"
+echo "OK — open docs/index.html via a local server (see docs/WASM.md)"
 du -sh "$OUT" 2>/dev/null || true
