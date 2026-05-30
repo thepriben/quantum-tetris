@@ -1,7 +1,7 @@
 //! Neon Tetris UI — board grid + minimal HUD.
 
 use crate::board::{Board, COLS, ROWS};
-use crate::config::{GameConfig, GamePlatform, QuantumSession};
+use crate::config::{GameConfig, QuantumSession};
 use crate::game_state::GameRun;
 use crate::pieces::PieceKind;
 use crate::tetris;
@@ -41,7 +41,7 @@ pub(crate) struct ModeClassicBtn;
 #[derive(Component)]
 pub(crate) struct ModeQuantumBtn;
 
-pub(crate) fn setup_ui(mut commands: Commands, config: Res<GameConfig>, run: Res<GameRun>) {
+pub(crate) fn setup_ui(mut commands: Commands, run: Res<GameRun>) {
     commands.spawn(Camera2d);
 
     commands
@@ -57,7 +57,7 @@ pub(crate) fn setup_ui(mut commands: Commands, config: Res<GameConfig>, run: Res
             },
         ))
         .with_children(|root| {
-            spawn_side_panel(root, &config, &run);
+            spawn_side_panel(root, &run);
             spawn_grid(root);
         });
 }
@@ -111,9 +111,9 @@ fn grid_cell_bundle(col: usize, row: usize) -> impl Bundle {
     )
 }
 
-fn spawn_side_panel(parent: &mut ChildSpawnerCommands, config: &GameConfig, run: &GameRun) {
+fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun) {
     parent.spawn(panel_node()).with_children(|p| {
-        spawn_mode_row(p, config, run.is_quantum);
+        spawn_mode_row(p, run.is_quantum);
         p.spawn((
             Text::new("← → move   ↑ rotate   ↓ faster   Space drop"),
             text_style(12.0, Color::srgb(0.75, 0.85, 0.95)),
@@ -142,7 +142,7 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, config: &GameConfig, run:
     });
 }
 
-fn spawn_mode_row(parent: &mut ChildSpawnerCommands, config: &GameConfig, quantum: bool) {
+fn spawn_mode_row(parent: &mut ChildSpawnerCommands, quantum: bool) {
     parent
         .spawn(Node {
             flex_direction: FlexDirection::Row,
