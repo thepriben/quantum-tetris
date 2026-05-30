@@ -1,6 +1,6 @@
-/** WASM boot — GitHub Pages paths, canvas mount before run(), locale queue. */
+/** WASM boot — progress UI, canvas mount, locale sync. */
 
-const MOUNT_TIMEOUT_MS = 45_000;
+const MOUNT_TIMEOUT_MS = 60_000;
 const WASM_JS = new URL('./wasm/quantum_tetris.js', import.meta.url);
 const WASM_BIN = new URL('./wasm/quantum_tetris_bg.wasm', import.meta.url);
 
@@ -10,6 +10,15 @@ let setWebLocaleFn = null;
 
 function normalizeLang(lang) {
   return lang === 'en' ? 'en' : 'fr';
+}
+
+function loaderText(msg) {
+  const el = document.getElementById('loader-text');
+  if (el) el.textContent = msg;
+}
+
+function t(key, fallback) {
+  return window.qtI18n?.t?.(key) ?? fallback;
 }
 
 /** Called from i18n.js before WASM is ready. */
@@ -45,18 +54,33 @@ function mountCanvas(frameInner, loader, onFail) {
   requestAnimationFrame(tick);
 }
 
-async function wasmReachable() {
-  try {
-    const res = await fetch(WASM_BIN, {
-      method: 'GET',
-      cache: 'no-store',
-      headers: { Range: 'bytes=0-0' },
-    });
-    return res.ok || res.status === 206;
-  } catch {
-    // Preflight failed — still try init (HEAD/Range not supported everywhere).
-    return true;
+async function fetchWasmBytes(url, onProgress) {
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`WASM HTTP ${res.status}`);
   }
+  const total = Number(res.headers.get('content-length') || 0);
+  if (!res.body?.getReader || !total) {
+    onProgress?.(0, 0);
+    return res.arrayBuffer();
+  }
+  const reader = res.body.getReader();
+  const chunks = [];
+  let loaded = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    loaded += value.length;
+    onProgress?.(loaded, total);
+  }
+  const out = new Uint8Array(loaded);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return out.buffer;
 }
 
 export async function bootGame({ frameInner, loader, errorEl }) {
@@ -71,22 +95,20 @@ export async function bootGame({ frameInner, loader, errorEl }) {
     }
   };
 
-  if (!(await wasmReachable())) {
-    console.warn('WASM preflight failed — attempting load anyway');
-  }
+  loaderText(t('play.starting', 'Loading…'));
 
   let mod;
   try {
     mod = await import(WASM_JS.href);
   } catch (e) {
     console.error(e);
-    fail(window.qtI18n?.t?.('error.wasm') ?? 'WASM load failed');
+    fail(t('error.wasm', 'WASM load failed'));
     return;
   }
 
   const { default: init, run_wasm, set_web_locale } = mod;
   if (typeof init !== 'function' || typeof run_wasm !== 'function') {
-    fail(window.qtI18n?.t?.('error.wasm') ?? 'WASM exports missing');
+    fail(t('error.wasm', 'WASM exports missing'));
     return;
   }
 
@@ -97,37 +119,48 @@ export async function bootGame({ frameInner, loader, errorEl }) {
   };
   window.__qtSetWebLocale = (lang) => queueWebLocale(lang);
 
-  mountCanvas(frameInner, loader, () => {
-    fail(window.qtI18n?.t?.('error.canvas') ?? 'Canvas timeout');
-  });
-
   try {
-    await init(WASM_BIN);
+    loaderText(t('play.downloading', 'Downloading game…'));
+    const wasmBytes = await fetchWasmBytes(WASM_BIN.href, (loaded, total) => {
+      if (!total) {
+        loaderText(t('play.downloading', 'Downloading game…'));
+        return;
+      }
+      const pct = Math.min(99, Math.round((loaded / total) * 100));
+      const mb = (total / (1024 * 1024)).toFixed(0);
+      loaderText(`${t('play.downloading', 'Downloading game…')} ${pct}% (~${mb} MB)`);
+    });
+    loaderText(t('play.initializing', 'Starting engine…'));
+    await init(await WebAssembly.compile(wasmBytes));
   } catch (e) {
     console.error(e);
-    fail(window.qtI18n?.t?.('error.wasm') ?? 'WASM init failed');
+    fail(t('error.wasm', 'WASM init failed'));
     return;
   }
 
-  const lang = pendingLocale ?? window.qtI18n?.getLocale?.() ?? 'fr';
+  const lang = pendingLocale ?? window.qtI18n?.getLocale?.() ?? 'en';
   setWebLocaleFn(lang);
+
+  mountCanvas(frameInner, loader, () => {
+    fail(t('error.canvas', 'Canvas timeout'));
+  });
 
   try {
     run_wasm();
   } catch (e) {
     console.error(e);
-    fail(window.qtI18n?.t?.('error.run') ?? 'Game start failed');
+    fail(t('error.run', 'Game start failed'));
   }
 }
 
 export function bindLocaleSync(notify) {
   window.addEventListener('storage', (e) => {
     if (e.key === 'qt-lang') {
-      notify(normalizeLang(window.qtI18n?.getLocale?.() ?? 'fr'));
+      notify(normalizeLang(window.qtI18n?.getLocale?.() ?? 'en'));
     }
   });
   window.addEventListener('qt-locale', (e) => {
-    notify(normalizeLang(e.detail ?? 'fr'));
+    notify(normalizeLang(e.detail ?? 'en'));
   });
 }
 

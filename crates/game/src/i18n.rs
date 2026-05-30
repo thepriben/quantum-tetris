@@ -1,4 +1,4 @@
-//! French-first UI strings and Qiskit circuit explanations.
+//! UI strings and Qiskit circuit explanations (English default on web).
 
 use bevy::prelude::*;
 #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
@@ -7,8 +7,8 @@ use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 #[derive(Resource, Clone, Copy, PartialEq, Eq, Default, Debug)]
 pub enum Locale {
     #[default]
-    Fr,
     En,
+    Fr,
 }
 
 #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
@@ -38,15 +38,15 @@ impl Locale {
             .flatten()
             .and_then(|s| s.get_item("qt-lang").ok())
             .flatten()
-            .filter(|v| v == "en")
-            .map(|_| Self::En)
-            .unwrap_or(Self::Fr)
+            .filter(|v| v == "fr")
+            .map(|_| Self::Fr)
+            .unwrap_or(Self::En)
     }
 }
 
 #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
 pub fn push_web_locale(lang: &str) {
-    WEB_LOCALE.store(u8::from(lang == "en"), Ordering::Relaxed);
+    WEB_LOCALE.store(u8::from(lang == "fr"), Ordering::Relaxed);
     WEB_LOCALE_DIRTY.store(true, Ordering::Relaxed);
 }
 
@@ -54,8 +54,8 @@ pub fn push_web_locale(lang: &str) {
 pub fn sync_web_locale(mut locale: ResMut<Locale>) {
     if WEB_LOCALE_DIRTY.swap(false, Ordering::Relaxed) {
         *locale = match WEB_LOCALE.load(Ordering::Relaxed) {
-            1 => Locale::En,
-            _ => Locale::Fr,
+            1 => Locale::Fr,
+            _ => Locale::En,
         };
     }
 }
