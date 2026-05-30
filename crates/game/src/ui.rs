@@ -114,10 +114,7 @@ fn grid_cell_bundle(col: usize, row: usize) -> impl Bundle {
 fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun) {
     parent.spawn(panel_node()).with_children(|p| {
         spawn_mode_row(p, run.is_quantum);
-        p.spawn((
-            Text::new("← → move   ↑ rotate   ↓ faster   Space drop"),
-            text_style(12.0, Color::srgb(0.75, 0.85, 0.95)),
-        ));
+        spawn_controls_hint(p);
         p.spawn((
             HudScore,
             Text::new("0"),
@@ -181,7 +178,58 @@ fn spawn_mode_button<M: Component>(
             BorderColor::all(border),
         ))
         .with_children(|btn| {
-            btn.spawn((Text::new(label), text_style(13.0, text_c)));
+            btn.spawn((
+                Node {
+                    justify_content: JustifyContent::Center,
+                    align_items: AlignItems::Center,
+                    ..default()
+                },
+                Text::new(label),
+                text_style(13.0, text_c),
+            ));
+        });
+}
+
+fn spawn_controls_hint(parent: &mut ChildSpawnerCommands) {
+    parent
+        .spawn(Node {
+            flex_direction: FlexDirection::Row,
+            flex_wrap: FlexWrap::Wrap,
+            column_gap: Val::Px(5.0),
+            row_gap: Val::Px(4.0),
+            ..default()
+        })
+        .with_children(|row| {
+            spawn_hint_chip(row, "LR", "MOVE");
+            spawn_hint_chip(row, "^", "ROTATE");
+            spawn_hint_chip(row, "v", "FASTER");
+            spawn_hint_chip(row, "Sp", "DROP");
+        });
+}
+
+fn spawn_hint_chip(parent: &mut ChildSpawnerCommands, key: &str, action: &str) {
+    parent
+        .spawn(Node {
+            flex_direction: FlexDirection::Row,
+            align_items: AlignItems::Center,
+            column_gap: Val::Px(4.0),
+            ..default()
+        })
+        .with_children(|chip| {
+            chip.spawn((
+                Node {
+                    padding: UiRect::axes(Val::Px(5.0), Val::Px(2.0)),
+                    border: UiRect::all(Val::Px(1.0)),
+                    border_radius: BorderRadius::all(Val::Px(4.0)),
+                    ..default()
+                },
+                BackgroundColor(Color::srgba(0.1, 0.16, 0.26, 0.98)),
+                BorderColor::all(Color::srgb(0.4, 0.58, 0.82)),
+            ))
+            .with_children(|k| {
+                k.spawn((Text::new(key), text_style(10.0, Color::srgb(1.0, 0.82, 0.4))));
+            });
+            chip.spawn((Text::new(action), text_style(10.0, Color::srgb(0.78, 0.88, 0.98))));
         });
 }
 
@@ -282,16 +330,18 @@ fn apply_mode(
 pub(crate) fn refresh_ui(
     board: Res<Board>,
     run: Res<GameRun>,
-    mut cells: Query<(&GridCell, &mut BackgroundColor)>,
-    mut preview: Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
-    mut classic_btn: Query<
-        (&mut BackgroundColor, &mut BorderColor),
-        (With<ModeClassicBtn>, Without<ModeQuantumBtn>),
-    >,
-    mut quantum_btn: Query<
-        (&mut BackgroundColor, &mut BorderColor),
-        (With<ModeQuantumBtn>, Without<ModeClassicBtn>),
-    >,
+    mut bg_queries: ParamSet<(
+        Query<(&GridCell, &mut BackgroundColor)>,
+        Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
+        Query<
+            (&mut BackgroundColor, &mut BorderColor),
+            (With<ModeClassicBtn>, Without<ModeQuantumBtn>),
+        >,
+        Query<
+            (&mut BackgroundColor, &mut BorderColor),
+            (With<ModeQuantumBtn>, Without<ModeClassicBtn>),
+        >,
+    )>,
     mut texts: ParamSet<(
         Query<&mut Text, With<HudScore>>,
         Query<&mut Text, With<HudLines>>,
@@ -299,21 +349,21 @@ pub(crate) fn refresh_ui(
         Query<&mut Text, With<HudBits>>,
     )>,
 ) {
-    for (cell, mut bg) in &mut cells {
+    for (cell, mut bg) in bg_queries.p0().iter_mut() {
         *bg = BackgroundColor(board.display_color(cell.col, cell.row).unwrap_or(GRID));
     }
 
-    for (cell, mut bg) in &mut preview {
+    for (cell, mut bg) in bg_queries.p1().iter_mut() {
         *bg = BackgroundColor(preview_color(board.next, cell.col, cell.row).unwrap_or(GRID));
     }
 
     let quantum = run.is_quantum;
-    if let Ok((mut bg, mut border)) = classic_btn.single_mut() {
+    if let Ok((mut bg, mut border)) = bg_queries.p2().single_mut() {
         let (c, b, _) = mode_button_colors(!quantum);
         *bg = BackgroundColor(c);
         *border = BorderColor::all(b);
     }
-    if let Ok((mut bg, mut border)) = quantum_btn.single_mut() {
+    if let Ok((mut bg, mut border)) = bg_queries.p3().single_mut() {
         let (c, b, _) = mode_button_colors(quantum);
         *bg = BackgroundColor(c);
         *border = BorderColor::all(b);
@@ -371,6 +421,10 @@ fn text_style(size: f32, color: Color) -> impl Bundle {
             ..default()
         },
         TextColor(color),
+        TextLayout {
+            linebreak: LineBreak::NoWrap,
+            ..default()
+        },
     )
 }
 

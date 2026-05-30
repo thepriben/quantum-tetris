@@ -1,7 +1,10 @@
 //! Runtime configuration — desktop (classic / Qiskit) and WASM (classic / Born quantum).
 
 use bevy::prelude::*;
-use quantum_tetris_quantum::{build_backend, BackendKind, QuantumBackend, QuantumError};
+use quantum_tetris_quantum::{
+    build_backend, BackendKind, ClassicBackend, QuantumBackend, QuantumCircuit, QuantumError,
+    Measurement,
+};
 use std::sync::Mutex;
 
 /// How the game is launched (native binary vs WASM bundle).
@@ -64,6 +67,21 @@ impl QuantumSession {
             eprintln!("[quantum] {kind:?} unavailable ({error}), falling back to classic");
             Self::new(BackendKind::Classic).expect("classic backend")
         })
+    }
+
+    /// Run a circuit; on failure, log and fall back to uniform classic randomness.
+    pub fn run_circuit(&self, circuit: &QuantumCircuit) -> Measurement {
+        let mut backend = self.backend.lock().expect("backend");
+        match backend.run(circuit) {
+            Ok(measurement) => measurement,
+            Err(error) => {
+                eprintln!("[quantum] backend run failed ({error}), using classic fallback");
+                let mut classic = ClassicBackend;
+                classic
+                    .run(circuit)
+                    .expect("classic backend always succeeds")
+            }
+        }
     }
 
     /// Hot-swap backend (classic ↔ quantum) and return whether it succeeded.

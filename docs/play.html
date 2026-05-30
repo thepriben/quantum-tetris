@@ -10,18 +10,50 @@
     #bar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 10;
       display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-      padding: 8px 12px; font: 14px system-ui, sans-serif;
-      color: #bdf; background: rgba(8, 18, 32, 0.85); pointer-events: auto;
+      padding: 8px 12px; font: 13px system-ui, sans-serif;
+      color: #bdf; background: rgba(8, 18, 32, 0.9); pointer-events: auto;
     }
-    #bar a { color: #6fd; }
-    #keys { color: #fc5; font-weight: 600; letter-spacing: 0.05em; }
-    #status { color: #8cf; }
+    #bar a { color: #6fd; text-decoration: none; }
+    #bar a:hover { text-decoration: underline; }
+    #keys {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    #keys.visible { display: flex; }
+    .hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .hint kbd {
+      display: inline-block;
+      padding: 2px 5px;
+      font: 600 10px/1.2 ui-monospace, monospace;
+      color: #fc5;
+      background: rgba(16, 28, 44, 0.95);
+      border: 1px solid rgba(80, 130, 190, 0.7);
+      border-radius: 4px;
+    }
+    .hint span {
+      color: #cde;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    #status { color: #8cf; font-size: 12px; }
   </style>
 </head>
 <body>
   <div id="bar">
     <a href="index.html">← Home</a>
-    <span id="keys">← → MOVE · ↑ ROTATE · ↓ FASTER · SPACE OBSERVE!</span>
+    <div id="keys">
+      <div class="hint"><kbd>LR</kbd><span>MOVE</span></div>
+      <div class="hint"><kbd>^</kbd><span>ROTATE</span></div>
+      <div class="hint"><kbd>v</kbd><span>FASTER</span></div>
+      <div class="hint"><kbd>Sp</kbd><span>DROP</span></div>
+    </div>
     <span id="status">Loading…</span>
   </div>
   <script type="module">
@@ -33,7 +65,8 @@
       status.textContent = 'Starting quantum mode…';
       await init();
       run_wasm();
-      status.textContent = 'Quantum · Born rule (Qiskit-matched) · use CLASSIC / QUANTUM in game';
+      document.getElementById('keys').classList.remove('visible');
+      status.textContent = 'Quantum mode · switch CLASSIC / QUANTUM in-game';
     }
 
     boot().catch((e) => {
