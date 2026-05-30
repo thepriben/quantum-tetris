@@ -8,7 +8,7 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Play online</strong></a>
 </p>
 
-Tetris where **every stochastic outcome** comes from a quantum circuit — not a PRNG. Only the player's keyboard moves (← → ↑ ↓) are classical. Piece shape, next preview, rotation, spawn column, drop speed, Space bonus, and line-clear multiplier are all **Born-rule measurements** (Qiskit Aer on desktop, Qiskit-matched statevector simulator in the browser).
+Tetris where **every stochastic outcome** comes from a quantum circuit — not a PRNG. Only the player's keyboard moves (← → ↑ ↓) are classical. Piece shape, next preview, rotation, spawn column, drop speed, Space bonus, and line-clear multiplier are all **Born-rule measurements** (Qiskit Aer on desktop; Rust Born simulator in the browser — same gates, Qiskit-matched probabilities, no Python).
 
 > **The player:** ← → ↑ ↓ and Space · **The game:** everything else.
 

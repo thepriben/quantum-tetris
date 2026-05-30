@@ -12,7 +12,7 @@
       'home.title': 'Quantum Tetris',
       'home.subtitle': 'Tetris — le hasard vient des circuits quantiques',
       'home.lead':
-        'Règles Tetris classiques. Chaque tirage aléatoire (pièce, vitesse, bonus) provient d\'une mesure sur un circuit quantique — Qiskit Aer sur desktop, simulateur statevector calibré dans le navigateur.',
+        'Règles Tetris classiques. Chaque tirage aléatoire (pièce, vitesse, bonus) provient d\'une mesure sur un circuit quantique — Qiskit Aer sur desktop ; simulateur Born en Rust dans le navigateur (mêmes portes, probabilités calibrées sur Qiskit, sans Python).',
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
       'home.quantumTitle': 'Mécaniques',
@@ -57,7 +57,7 @@
       'home.title': 'Quantum Tetris',
       'home.subtitle': 'Tetris — randomness from quantum circuits',
       'home.lead':
-        'Standard Tetris rules. Every random outcome (piece, speed, bonus) comes from a quantum circuit measurement — Qiskit Aer on desktop, matched statevector simulator in the browser.',
+        'Standard Tetris rules. Every random outcome (piece, speed, bonus) comes from a quantum circuit measurement — Qiskit Aer on desktop; Rust Born simulator in the browser (same gates, Qiskit-matched probabilities, no Python).',
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
       'home.quantumTitle': 'Mechanics',
