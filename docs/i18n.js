@@ -15,13 +15,9 @@
         'En surface, c\'est du Tetris. Chaque tirage du jeu (pièce, vitesse, bonus) passe par une mesure quantique — Qiskit sur desktop, simulateur calibré dans le navigateur.',
       'home.principle':
         '<strong>Toi :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
-      'home.classicalTitle': 'Classique — toi',
-      'home.quantumTitle': 'Quantique — le jeu',
+      'home.quantumTitle': 'Mécaniques',
       'home.label.game': 'En jeu',
       'home.label.quantum': 'Circuit',
-      'home.moment.controls.title': 'Déplacements',
-      'home.moment.controls.game': '← → déplacent, ↑ tourne, ↓ accélère la chute entre deux cases.',
-      'home.moment.controls.quantum': 'Pas de mesure — seule part entièrement sous ton contrôle.',
       'home.moment.piece.title': 'Pièce en cours & « suiv. »',
       'home.moment.piece.game': 'Quelle forme joue, et ce que montre l\'aperçu suivant.',
       'home.moment.piece.quantum':
@@ -61,13 +57,9 @@
         'Looks like Tetris. Every roll (piece, speed, bonus) is a quantum measurement — Qiskit on desktop, matched simulator in the browser.',
       'home.principle':
         '<strong>You:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
-      'home.classicalTitle': 'Classical — you',
-      'home.quantumTitle': 'Quantum — the game',
+      'home.quantumTitle': 'Mechanics',
       'home.label.game': 'In-game',
       'home.label.quantum': 'Circuit',
-      'home.moment.controls.title': 'Movement',
-      'home.moment.controls.game': '← → move, ↑ rotate, ↓ soft-drop faster.',
-      'home.moment.controls.quantum': 'No measurement — the only fully player-controlled part.',
       'home.moment.piece.title': 'Active piece & “next”',
       'home.moment.piece.game': 'Which shape plays, and what the next preview shows.',
       'home.moment.piece.quantum':

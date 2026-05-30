@@ -163,9 +163,6 @@ code {
   font-weight: 600;
   color: var(--heading);
 }
-.moment--classical {
-  border-left: 3px solid var(--kbd-fg);
-}
 .moment--quantum {
   border-left: 3px solid var(--accent);
 }

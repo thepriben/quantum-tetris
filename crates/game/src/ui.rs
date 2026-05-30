@@ -6,6 +6,7 @@ use crate::game_state::GameRun;
 use crate::i18n::{self, Locale};
 use crate::pieces::PieceKind;
 use crate::tetris;
+use bevy::ecs::query::Or;
 use bevy::ecs::system::ParamSet;
 use bevy::prelude::*;
 use quantum_tetris_quantum::BackendKind;
@@ -44,6 +45,8 @@ pub(crate) struct ModeQuantumBtn;
 #[cfg(not(target_arch = "wasm32"))]
 #[derive(Component)]
 pub(crate) struct LangToggleBtn;
+#[derive(Component)]
+pub(crate) struct LangToggleLabel;
 #[derive(Component)]
 pub(crate) struct HudCircuitTitle;
 #[derive(Component)]
@@ -202,6 +205,7 @@ fn spawn_lang_row(parent: &mut ChildSpawnerCommands, locale: Locale) {
             ))
             .with_children(|btn| {
                 btn.spawn((
+                    LangToggleLabel,
                     Text::new(locale.toggle_label()),
                     text_style(11.0, Color::srgb(0.75, 0.88, 1.0)),
                 ));
@@ -394,16 +398,10 @@ fn spawn_next_preview(parent: &mut ChildSpawnerCommands) {
 #[allow(clippy::type_complexity)]
 pub(crate) fn handle_lang_button(
     mut locale: ResMut<Locale>,
-    mut btn: Query<
-        (&Interaction, &mut Text),
-        (Changed<Interaction>, With<LangToggleBtn>, With<Button>),
-    >,
+    btn: Query<&Interaction, (Changed<Interaction>, With<LangToggleBtn>, With<Button>)>,
 ) {
-    for (interaction, mut text) in &mut btn {
-        if *interaction == Interaction::Pressed {
-            *locale = locale.toggle();
-            **text = locale.toggle_label().into();
-        }
+    if btn.iter().any(|i| *i == Interaction::Pressed) {
+        *locale = locale.toggle();
     }
 }
 
@@ -470,23 +468,48 @@ pub(crate) fn refresh_ui(
             (With<ModeQuantumBtn>, Without<ModeClassicBtn>),
         >,
     )>,
-    mut hud_texts: ParamSet<(
-        Query<&mut Text, With<HudScore>>,
-        Query<&mut Text, With<HudLines>>,
-        Query<&mut Text, With<HudNext>>,
-        Query<&mut Text, With<HudBits>>,
-        Query<&mut Text, With<HudEvent>>,
-        Query<&mut Text, With<HudCircuitTitle>>,
-        Query<&mut Text, With<HudCircuit>>,
-    )>,
-    mut label_texts: ParamSet<(
-        Query<&mut Text, With<ModeClassicLabel>>,
-        Query<&mut Text, With<ModeQuantumLabel>>,
-        Query<&mut Text, With<HintMoveLabel>>,
-        Query<&mut Text, With<HintRotateLabel>>,
-        Query<&mut Text, With<HintFasterLabel>>,
-        Query<&mut Text, With<HintDropLabel>>,
-    )>,
+    mut hud_texts: Query<
+        (
+            &mut Text,
+            Has<HudScore>,
+            Has<HudLines>,
+            Has<HudNext>,
+            Has<HudBits>,
+            Has<HudEvent>,
+            Has<HudCircuitTitle>,
+            Has<HudCircuit>,
+        ),
+        Or<(
+            With<HudScore>,
+            With<HudLines>,
+            With<HudNext>,
+            With<HudBits>,
+            With<HudEvent>,
+            With<HudCircuitTitle>,
+            With<HudCircuit>,
+        )>,
+    >,
+    mut label_texts: Query<
+        (
+            &mut Text,
+            Has<ModeClassicLabel>,
+            Has<ModeQuantumLabel>,
+            Has<HintMoveLabel>,
+            Has<HintRotateLabel>,
+            Has<HintFasterLabel>,
+            Has<HintDropLabel>,
+            Has<LangToggleLabel>,
+        ),
+        Or<(
+            With<ModeClassicLabel>,
+            With<ModeQuantumLabel>,
+            With<HintMoveLabel>,
+            With<HintRotateLabel>,
+            With<HintFasterLabel>,
+            With<HintDropLabel>,
+            With<LangToggleLabel>,
+        )>,
+    >,
 ) {
     for (cell, mut bg) in bg_queries.p0().iter_mut() {
         *bg = BackgroundColor(board.display_color(cell.col, cell.row).unwrap_or(GRID));
@@ -508,54 +531,51 @@ pub(crate) fn refresh_ui(
         *border = BorderColor::all(b);
     }
 
-    for mut t in hud_texts.p0().iter_mut() {
-        **t = run.score.to_string();
+    for (mut t, score, lines, next, bits, event, circ_title, circ) in hud_texts.iter_mut() {
+        if score {
+            **t = run.score.to_string();
+        } else if lines {
+            **t = i18n::lines_level(*locale, run.lines, run.level);
+        } else if next {
+            **t = i18n::next_piece(*locale, next_label(board.next));
+        } else if bits {
+            **t = if run.last_bits.is_empty() {
+                "—".into()
+            } else if run.is_quantum {
+                format!("[{}] {:.0}%", run.last_bits, run.last_confidence)
+            } else {
+                format!("[{}]", run.last_bits)
+            };
+        } else if event {
+            **t = if run.last_event.is_empty() {
+                "—".into()
+            } else {
+                run.last_event.clone()
+            };
+        } else if circ_title {
+            **t = i18n::circuit_heading(*locale).into();
+        } else if circ {
+            **t = i18n::circuit_explain(*locale, run.last_moment).into();
+        }
     }
-    for mut t in hud_texts.p1().iter_mut() {
-        **t = i18n::lines_level(*locale, run.lines, run.level);
-    }
-    for mut t in hud_texts.p2().iter_mut() {
-        **t = i18n::next_piece(*locale, next_label(board.next));
-    }
-    for mut t in hud_texts.p3().iter_mut() {
-        **t = if run.last_bits.is_empty() {
-            "—".into()
-        } else if run.is_quantum {
-            format!("[{}] {:.0}%", run.last_bits, run.last_confidence)
-        } else {
-            format!("[{}]", run.last_bits)
-        };
-    }
-    for mut t in hud_texts.p4().iter_mut() {
-        **t = if run.last_event.is_empty() {
-            "—".into()
-        } else {
-            run.last_event.clone()
-        };
-    }
-    for mut t in hud_texts.p5().iter_mut() {
-        **t = i18n::circuit_heading(*locale).into();
-    }
-    for mut t in hud_texts.p6().iter_mut() {
-        **t = i18n::circuit_explain(*locale, run.last_moment).into();
-    }
-    for mut t in label_texts.p0().iter_mut() {
-        **t = i18n::mode_classic(*locale).into();
-    }
-    for mut t in label_texts.p1().iter_mut() {
-        **t = i18n::mode_quantum(*locale).into();
-    }
-    for mut t in label_texts.p2().iter_mut() {
-        **t = i18n::hint_move(*locale).into();
-    }
-    for mut t in label_texts.p3().iter_mut() {
-        **t = i18n::hint_rotate(*locale).into();
-    }
-    for mut t in label_texts.p4().iter_mut() {
-        **t = i18n::hint_faster(*locale).into();
-    }
-    for mut t in label_texts.p5().iter_mut() {
-        **t = i18n::hint_drop(*locale).into();
+    for (mut t, classic, quantum, move_l, rotate_l, faster_l, drop_l, lang) in
+        label_texts.iter_mut()
+    {
+        if classic {
+            **t = i18n::mode_classic(*locale).into();
+        } else if quantum {
+            **t = i18n::mode_quantum(*locale).into();
+        } else if move_l {
+            **t = i18n::hint_move(*locale).into();
+        } else if rotate_l {
+            **t = i18n::hint_rotate(*locale).into();
+        } else if faster_l {
+            **t = i18n::hint_faster(*locale).into();
+        } else if drop_l {
+            **t = i18n::hint_drop(*locale).into();
+        } else if lang {
+            **t = locale.toggle_label().into();
+        }
     }
 }
 
