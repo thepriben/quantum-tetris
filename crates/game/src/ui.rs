@@ -251,11 +251,13 @@ pub(crate) fn handle_mode_buttons(
     mut session: ResMut<QuantumSession>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
-    classic: Query<&Interaction, (Changed<Interaction>, With<ModeClassicBtn>, With<Button>)>,
-    quantum: Query<&Interaction, (Changed<Interaction>, With<ModeQuantumBtn>, With<Button>)>,
+    mut buttons: ParamSet<(
+        Query<&Interaction, (Changed<Interaction>, With<ModeClassicBtn>, With<Button>)>,
+        Query<&Interaction, (Changed<Interaction>, With<ModeQuantumBtn>, With<Button>)>,
+    )>,
 ) {
-    let pick_classic = classic.iter().any(|i| *i == Interaction::Pressed);
-    let pick_quantum = quantum.iter().any(|i| *i == Interaction::Pressed);
+    let pick_classic = buttons.p0().iter().any(|i| *i == Interaction::Pressed);
+    let pick_quantum = buttons.p1().iter().any(|i| *i == Interaction::Pressed);
 
     if pick_classic {
         apply_mode(&mut session, &mut board, &mut run, BackendKind::Classic);
