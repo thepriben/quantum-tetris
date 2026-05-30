@@ -8,9 +8,9 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Jouer en ligne</strong></a>
 </p>
 
-Tetris où **toute la stochasticité** vient de circuits quantiques — pas d’un PRNG. Seuls vos déplacements clavier (← → ↑ ↓) restent classiques. Forme de la pièce, aperçu suivant, rotation, colonne, vitesse, bonus Espace et multiplicateur de lignes passent par une **mesure Born** (Qiskit Aer sur desktop, simulateur statevector calibré dans le navigateur).
+Tetris où **toute la stochasticité** vient de circuits quantiques — pas d’un PRNG. Seuls les déplacements clavier du joueur (← → ↑ ↓) restent classiques. Forme de la pièce, aperçu suivant, rotation, colonne, vitesse, bonus Espace et multiplicateur de lignes passent par une **mesure Born** (Qiskit Aer sur desktop, simulateur statevector calibré dans le navigateur).
 
-> **Toi :** ← → ↑ ↓ et Espace · **Le jeu :** tout le reste.
+> **Le joueur :** ← → ↑ ↓ et Espace · **Le jeu :** tout le reste.
 
 ---
 
@@ -22,7 +22,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 
 | | |
 |---|---|
-| **En jeu** | Quelle forme joue, et ce que montre l’aperçu **suivant**. |
+| **En jeu** | Détermine la forme active et l’aperçu **suivant**. |
 | **Circuit** | `quantum-teleportation-gate-v1` ×2 — paire de Bell → famille (I, O, T…), qubit message → variante. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="480"></p>
@@ -31,7 +31,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 
 | | |
 |---|---|
-| **En jeu** | Orientation à l’apparition et colonne où la pièce spawn. |
+| **En jeu** | Fixe l’orientation à l’apparition et la colonne d’entrée. |
 | **Circuit** | `imp-brain-v1` — deux bits mesurés → rotation + colonne. |
 
 <p align="left"><img src="docs/circuits/imp-brain-v1.png" alt="imp-brain-v1" width="480"></p>
@@ -40,7 +40,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 
 | | |
 |---|---|
-| **En jeu** | Intervalle entre deux descentes — accélère avec le niveau. |
+| **En jeu** | Intervalle entre deux descentes ; diminue avec le niveau. |
 | **Circuit** | `enemy-profile-hunter-v1` — vitesse tirée à chaque nouvelle pièce. |
 
 <p align="left"><img src="docs/circuits/enemy-profile-hunter-v1.png" alt="enemy-profile-hunter-v1" width="480"></p>
@@ -49,7 +49,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 
 | | |
 |---|---|
-| **En jeu** | Pose immédiatement ; bonus de score, parfois une ligne en plus. |
+| **En jeu** | Pose immédiate ; bonus de score, parfois une ligne supplémentaire. |
 | **Circuit** | `observation-pulse-v1` — mesure volontaire, 2 bits → type de bonus. |
 
 <p align="left"><img src="docs/circuits/observation-pulse-v1.png" alt="observation-pulse-v1" width="480"></p>
