@@ -34,6 +34,14 @@ jobs:
       - name: Build WASM bundle
         run: ./scripts/build_wasm.sh
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Render Qiskit circuit diagrams
+        run: |
+          pip install -r scripts/requirements.txt
+          python scripts/render_circuit_diagrams.py
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
