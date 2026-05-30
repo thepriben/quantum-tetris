@@ -1,7 +1,7 @@
 //! Map circuit measurements to Tetris gameplay.
 
 use crate::pieces::{PieceFamily, PieceKind};
-use quantum_town_quantum::{Measurement, QuantumCircuit};
+use quantum_tetris_quantum::{Measurement, QuantumCircuit};
 
 pub fn record_measurement(run: &mut crate::game_state::GameRun, m: &Measurement) {
     run.last_bits = m.bits.clone();

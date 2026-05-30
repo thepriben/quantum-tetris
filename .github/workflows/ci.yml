@@ -32,7 +32,7 @@ jobs:
       - name: wasm target
         run: rustup target add wasm32-unknown-unknown
       - name: wasm check
-        run: cargo check -p quantum-town-la --no-default-features --features wasm --target wasm32-unknown-unknown
+        run: cargo check -p quantum-tetris --no-default-features --features wasm --target wasm32-unknown-unknown
 
   quantum-qiskit:
     runs-on: ubuntu-latest
@@ -50,4 +50,4 @@ jobs:
       - name: qiskit integration tests
         env:
           QUANTUM_PYTHON: python
-        run: cargo test -p quantum-town-quantum --features backend-qiskit --test python_backends --test shim_direct
+        run: cargo test -p quantum-tetris-quantum --features backend-qiskit --test python_backends --test shim_direct --test born_qiskit_parity

@@ -10,7 +10,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 authors = ["thepriben"]
-repository = "https://github.com/thepriben/quantum-town-la"
+repository = "https://github.com/thepriben/quantum-tetris"
 rust-version = "1.89"
 
 [workspace.dependencies]

@@ -1,6 +1,8 @@
 # WASM / GitHub Pages
 
-Run **Quantum Tetris** in the browser. The WASM build uses the **classic** backend only (uniform random — no Python).
+Run **Quantum Tetris** in the browser with **quantum mode** enabled by default.
+
+The WASM build uses a **Born-rule statevector simulator** (same gates as Qiskit Aer). Probabilities are verified against Qiskit in CI (`born_qiskit_parity` test). Use the in-game **CLASSIC** / **QUANTUM** buttons to switch modes.
 
 ---
 
@@ -36,9 +38,9 @@ docs/
 
 ## Exported entry point
 
-| Function | Backend |
+| Function | Default backend |
 | --- | --- |
-| `run_wasm()` | Classic (uniform) |
+| `run_wasm()` | Quantum (Born rule, Qiskit-matched) |
 
 ---
 
@@ -55,9 +57,9 @@ Push to `main` triggers `.github/workflows/pages.yml`:
 - Repository must be **public** (free plan) or GitHub Pro (private Pages).
 - Settings → Pages → source: **GitHub Actions**.
 
-Live URL (once deployed): `https://<user>.github.io/quantum-town-la/play.html`
+Live URL (once deployed): `https://thepriben.github.io/quantum-tetris/play.html`
 
-**Qiskit does not run in the browser.** The web build is classic mode only. Qiskit is tested in the separate CI job `quantum-qiskit`.
+Desktop **Qiskit Aer** (Python subprocess) is not available in the browser; the WASM simulator reproduces the same Born probabilities.
 
 ---
 

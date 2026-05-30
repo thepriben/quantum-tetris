@@ -1,24 +1,24 @@
 [package]
-name = "quantum-town-la"
-description = "Quantum Tetris: LA — circuit-driven Tetris, classic or Qiskit"
+name = "quantum-tetris"
+description = "Quantum Tetris — circuit-driven Tetris, classic or Qiskit"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish = false
 
 [lib]
-name = "quantum_town_la"
+name = "quantum_tetris"
 path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]
-name = "quantum-town-la"
+name = "quantum-tetris"
 path = "src/main.rs"
 required-features = ["desktop"]
 
 [dependencies]
 bevy = { workspace = true }
-quantum-town-quantum = { path = "../quantum" }
+quantum-tetris-quantum = { path = "../quantum" }
 rand = "0.9"
 dotenvy = { version = "0.15", optional = true }
 wasm-bindgen = { version = "0.2", optional = true }
@@ -30,4 +30,4 @@ getrandom = { version = "0.3", features = ["wasm_js"] }
 default = ["desktop", "qiskit"]
 desktop = ["dep:dotenvy"]
 wasm = ["dep:wasm-bindgen"]
-qiskit = ["quantum-town-quantum/backend-qiskit"]
+qiskit = ["quantum-tetris-quantum/backend-qiskit"]

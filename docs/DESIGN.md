@@ -1,4 +1,4 @@
-# Design — Quantum Tetris: LA
+# Design — Quantum Tetris
 
 2D neon Tetris built with **Bevy 0.18**. No 3D assets — pure UI grid + arcade HUD.
 

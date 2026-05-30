@@ -1,6 +1,6 @@
 [package]
-name = "quantum-town-quantum"
-description = "Circuits and backends for Quantum Tetris: LA"
+name = "quantum-tetris-quantum"
+description = "Circuits and backends for Quantum Tetris"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -20,6 +20,10 @@ required-features = ["backend-qiskit"]
 
 [[test]]
 name = "shim_direct"
+required-features = ["backend-qiskit"]
+
+[[test]]
+name = "born_qiskit_parity"
 required-features = ["backend-qiskit"]
 
 [features]

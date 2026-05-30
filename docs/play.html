@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum Tetris: LA — Play</title>
+  <title>Quantum Tetris — Play</title>
   <style>
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0a1220; }
     canvas { display: block; width: 100%; height: 100%; touch-action: none; }
@@ -25,15 +25,15 @@
     <span id="status">Loading…</span>
   </div>
   <script type="module">
-    import init, { run_wasm } from './wasm/quantum_town_la.js';
+    import init, { run_wasm } from './wasm/quantum_tetris.js';
 
     const status = document.getElementById('status');
 
     async function boot() {
-      status.textContent = 'Starting classic mode…';
+      status.textContent = 'Starting quantum mode…';
       await init();
       run_wasm();
-      status.textContent = 'Classic · arcade mode';
+      status.textContent = 'Quantum · Born rule (Qiskit-matched) · use CLASSIC / QUANTUM in game';
     }
 
     boot().catch((e) => {

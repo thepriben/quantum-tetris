@@ -1,4 +1,4 @@
-# Quantum layer — Quantum Tetris: LA
+# Quantum layer — Quantum Tetris
 
 The game always calls `QuantumBackend::run(circuit)`. Only the **backend** changes how probabilities are assigned to bitstrings; gameplay reads bits the same way in both modes.
 
@@ -8,8 +8,8 @@ The game always calls `QuantumBackend::run(circuit)`. Only the **backend** chang
 
 | Backend | Select with | What it does |
 | --- | --- | --- |
-| **Classic** | `QUANTUM_MODE=classic` (default) | Uniform random bits — fast arcade baseline, works in WASM |
-| **Qiskit** | `QUANTUM_MODE=qiskit` | Python Qiskit Aer via `scripts/quantum_shim.py` — Born-rule histograms |
+| **Classic** | `QUANTUM_MODE=classic` (default) | Uniform random bits — fast arcade baseline |
+| **Quantum** | `QUANTUM_MODE=qiskit` (desktop) or in-game **QUANTUM** button | Born-rule histograms — Qiskit Aer on desktop, statevector simulator in WASM (Qiskit-matched) |
 
 ```bash
 # .env or shell
@@ -22,7 +22,9 @@ QUANTUM_BACKEND=classic|qiskit
 
 **Classic**: every outcome in the histogram has equal weight — confidence stays flat.
 
-**Qiskit**: gate angles and entanglement **bias** the histogram — confidence % varies with the circuit.
+**Quantum (desktop)**: Python Qiskit Aer via `scripts/quantum_shim.py`.
+
+**Quantum (browser)**: Rust statevector simulator — same gates, probabilities verified against Qiskit in CI.
 
 ---
 
@@ -72,7 +74,7 @@ QUANTUM_BACKEND=classic|qiskit
 ## Crate API
 
 ```rust
-use quantum_town_quantum::{build_backend, BackendKind, QuantumCircuit, QuantumBackend};
+use quantum_tetris_quantum::{build_backend, BackendKind, QuantumCircuit, QuantumBackend};
 
 let mut backend = build_backend(BackendKind::Classic).unwrap();
 let m = backend.run(&QuantumCircuit::teleporter()).unwrap();
@@ -85,10 +87,10 @@ println!("{}", m.bits); // e.g. "101"
 
 ```bash
 python -m pip install -r scripts/requirements.txt
-QUANTUM_MODE=qiskit cargo run -p quantum-town-la
+QUANTUM_MODE=qiskit cargo run -p quantum-tetris
 ```
 
-CI runs Qiskit integration tests separately (`cargo test -p quantum-town-quantum --features backend-qiskit`).
+CI runs Qiskit integration tests separately (`cargo test -p quantum-tetris-quantum --features backend-qiskit`).
 
 Environment:
 

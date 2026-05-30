@@ -1,4 +1,4 @@
-use quantum_town_quantum::{
+use quantum_tetris_quantum::{
     build_backend, BackendKind, EnemyBehavior, QuantumBackend, QuantumCircuit, QuantumError,
 };
 
@@ -78,7 +78,7 @@ fn rejects_more_than_eight_qubits() {
     let mut backend = classic();
     let circuit = QuantumCircuit {
         qubits: 9,
-        gates: vec![quantum_town_quantum::Gate::H(0)],
+        gates: vec![quantum_tetris_quantum::Gate::H(0)],
         label: "too-wide".into(),
     };
     let error = backend.run(&circuit).expect_err("9 qubits");

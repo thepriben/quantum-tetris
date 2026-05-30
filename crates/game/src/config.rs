@@ -1,7 +1,7 @@
-//! Runtime configuration — desktop (classic / Qiskit) and WASM (classic only).
+//! Runtime configuration — desktop (classic / Qiskit) and WASM (classic / Born quantum).
 
 use bevy::prelude::*;
-use quantum_town_quantum::{build_backend, BackendKind, QuantumBackend, QuantumError};
+use quantum_tetris_quantum::{build_backend, BackendKind, QuantumBackend, QuantumError};
 use std::sync::Mutex;
 
 /// How the game is launched (native binary vs WASM bundle).
@@ -24,17 +24,17 @@ impl GameConfig {
     pub fn desktop() -> Self {
         Self {
             platform: GamePlatform::Desktop,
-            window_title: "Quantum Tetris: LA",
+            window_title: "Quantum Tetris",
             backend_kind: BackendKind::from_env(),
         }
     }
 
-    /// Browser: classic uniform random only (no Python).
+    /// Browser: Born-rule quantum by default (Qiskit-matched statevector).
     pub fn wasm() -> Self {
         Self {
             platform: GamePlatform::Wasm,
-            window_title: "Quantum Tetris: LA",
-            backend_kind: BackendKind::Classic,
+            window_title: "Quantum Tetris",
+            backend_kind: BackendKind::Quantum,
         }
     }
 
@@ -66,7 +66,7 @@ impl QuantumSession {
         })
     }
 
-    /// Hot-swap backend (classic ↔ Qiskit) and return whether it succeeded.
+    /// Hot-swap backend (classic ↔ quantum) and return whether it succeeded.
     pub fn switch_to(&mut self, kind: BackendKind) -> bool {
         if self.kind == kind {
             return true;
