@@ -3,184 +3,257 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum Tetris — Guide quantum & gameplay</title>
+  <title>Quantum Tetris</title>
+  <link rel="stylesheet" href="site.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 54rem; margin: 0 auto; padding: 0 1.25rem 3rem;
-      background: #0a1220; color: #cde; line-height: 1.6;
-      background-image:
-        radial-gradient(ellipse 70% 40% at 50% 0%, rgba(40, 100, 180, 0.12), transparent 60%);
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 0.5rem;
     }
-    .topbar { display: flex; justify-content: flex-end; padding-top: 1rem; margin-bottom: 0.25rem; }
-    #lang-toggle {
-      padding: 4px 10px; font: 600 12px system-ui, sans-serif;
-      color: #bdf; background: #152033; border: 1px solid #3a5880; border-radius: 6px; cursor: pointer;
+    .site-header h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--heading);
     }
-    #lang-toggle:hover { background: #1a2840; }
+    .site-header .tagline {
+      margin: 0.15rem 0 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
 
-    .hero { margin-bottom: 1.5rem; }
-    .badge {
-      display: inline-block; margin-bottom: 0.6rem;
-      padding: 0.25rem 0.65rem; font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: #5ef; background: rgba(30, 70, 120, 0.35);
-      border: 1px solid rgba(80, 160, 220, 0.4); border-radius: 999px;
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
+      gap: 2rem 2.5rem;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 3rem;
+      align-items: start;
     }
-    h1 {
-      margin: 0 0 0.5rem; font-size: clamp(1.75rem, 5vw, 2.25rem);
-      color: #5ef; text-shadow: 0 0 20px rgba(80, 200, 255, 0.35);
-    }
-    .subtitle { margin: 0; color: #9bc; font-size: 1.05rem; }
-    .lead { margin: 1rem 0 0; font-size: 1rem; color: #bde; }
 
-    .play-box {
-      margin: 1.75rem 0; padding: 1.25rem 1.35rem;
-      background: linear-gradient(135deg, rgba(12, 40, 60, 0.6), rgba(8, 24, 44, 0.8));
-      border: 1px solid rgba(60, 140, 200, 0.35); border-radius: 12px;
-      text-align: center;
+    .col-game {
+      position: sticky;
+      top: 1rem;
     }
-    .cta {
-      display: inline-block; margin: 0.25rem 0 0.5rem;
-      padding: 0.85rem 1.75rem;
-      background: linear-gradient(135deg, #0a8, #086);
-      color: #fff; text-decoration: none; border-radius: 10px;
-      font-weight: 700; font-size: 1.05rem;
-      box-shadow: 0 4px 0 #043, 0 0 24px rgba(0, 180, 120, 0.25);
-      transition: transform 0.12s, box-shadow 0.12s;
+    .col-game .controls-label {
+      margin: 0.85rem 0 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
-    .cta:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #043, 0 0 32px rgba(0, 200, 140, 0.35); }
-    .cta:active { transform: translateY(2px); box-shadow: 0 2px 0 #043; }
-    .play-note { margin: 0; font-size: 0.88rem; color: #8ab; }
 
-    h2 {
-      color: #7cf; font-size: 1.1rem; margin: 2rem 0 0.75rem;
-      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(60, 100, 150, 0.3);
+    .col-guide h2 {
+      margin: 1.75rem 0 0.65rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--heading);
+      letter-spacing: 0.02em;
     }
-    h3 { color: #9df; font-size: 0.98rem; margin: 0 0 0.35rem; }
+    .col-guide h2:first-of-type { margin-top: 0; }
 
-    code { background: #152033; padding: 0.12em 0.4em; border-radius: 4px; font-size: 0.9em; }
-    .keys { display: flex; flex-wrap: wrap; gap: 8px; margin: 0.75rem 0 0; }
-    .hint { display: inline-flex; align-items: center; gap: 4px; }
-    .hint kbd {
-      padding: 2px 6px; font: 600 11px/1.2 ui-monospace, monospace;
-      color: #fc5; background: #152033; border: 1px solid #3a5880; border-radius: 4px;
+    .lead {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text);
     }
-    .hint span { color: #cde; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
 
-    .quantum-list { margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.95rem; }
-    .quantum-list li { margin-bottom: 0.5rem; }
-    .quantum-list strong { color: #9ef; }
+    .principle {
+      margin-top: 1.25rem;
+      padding: 0.85rem 1rem;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+    .principle strong { color: var(--text); }
 
-    .gameplay-circuits { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 0.5rem; }
-    .circuit-block {
-      padding: 1rem 1.1rem;
-      background: rgba(10, 18, 32, 0.75);
-      border: 1px solid rgba(55, 85, 130, 0.45);
-      border-radius: 10px;
+    .moment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
-    .circuit-block p { margin: 0 0 0.75rem; font-size: 0.94rem; color: #bdd; }
-    .circuit-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-    .circuit-fig {
-      flex: 1 1 14rem; max-width: 100%; margin: 0;
-      background: #eef3fb; border-radius: 8px; padding: 6px 8px 4px;
-      border: 1px solid rgba(120, 160, 210, 0.35);
+    .moment {
+      padding: 0.85rem 1rem;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
     }
-    .circuit-fig img { width: 100%; height: auto; display: block; border-radius: 4px; }
-    .circuit-fig figcaption {
-      margin-top: 4px; font: 600 10px/1.3 ui-monospace, monospace;
-      color: #1a2840; text-align: center; word-break: break-all;
+    .moment h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--heading);
+    }
+    .moment p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .moment .circuit {
+      display: block;
+      margin-top: 0.45rem;
+      font: 600 0.78rem/1.4 ui-monospace, monospace;
+      color: var(--accent);
+    }
+
+    .classical-note {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--accent);
+      background: rgba(107, 191, 138, 0.06);
+      font-size: 0.88rem;
+      color: var(--text-muted);
     }
 
     .footer-dev {
-      margin-top: 2.5rem; padding-top: 1.25rem;
-      border-top: 1px solid rgba(50, 80, 120, 0.35);
-      font-size: 0.9rem; color: #9ab;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--text-muted);
     }
-    .footer-dev a { color: #7cd; }
+    .footer-dev p { margin: 0.35rem 0; }
+    .footer-dev a { text-decoration: none; }
+    .footer-dev a:hover { text-decoration: underline; }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .col-game { position: static; }
+    }
   </style>
   <script src="i18n.js" defer></script>
 </head>
 <body data-page="index">
-  <div class="topbar"><button id="lang-toggle" type="button">(en)</button></div>
-
-  <header class="hero">
-    <span class="badge" data-i18n="home.badge">Guide quantum & gameplay</span>
-    <h1 data-i18n="home.title">Quantum Tetris</h1>
-    <p class="subtitle" data-i18n="home.subtitle">Explications · circuits Qiskit · mécaniques de jeu</p>
-    <p class="lead" data-i18n="home.lead" data-i18n-html></p>
+  <header class="site-header">
+    <div>
+      <h1 data-i18n="home.title">Quantum Tetris</h1>
+      <p class="tagline" data-i18n="home.subtitle">Tetris où le hasard vient de mesures quantiques</p>
+    </div>
+    <div class="lang-flags" role="group" aria-label="Language">
+      <button type="button" class="lang-btn" data-lang="fr" title="Français" aria-label="Français">🇫🇷</button>
+      <button type="button" class="lang-btn" data-lang="en" title="English" aria-label="English">🇬🇧</button>
+    </div>
   </header>
 
-  <div class="play-box">
-    <a class="cta" href="play.html" data-i18n="home.play">Jouer maintenant</a>
-    <p class="play-note" data-i18n="home.playNote">La page de jeu est épurée — retrouve ici tout le détail quantique.</p>
-  </div>
-
-  <h2 data-i18n="home.controlsTitle">Contrôles</h2>
-  <div class="keys">
-    <div class="hint"><kbd>LR</kbd><span data-i18n="hint.move">BOUGER</span></div>
-    <div class="hint"><kbd>^</kbd><span data-i18n="hint.rotate">TOURNER</span></div>
-    <div class="hint"><kbd>v</kbd><span data-i18n="hint.faster">VITE</span></div>
-    <div class="hint"><kbd>Sp</kbd><span data-i18n="hint.drop">POSER</span></div>
-  </div>
-
-  <h2 data-i18n="home.quantumTitle">Ce qui est quantique dans le gameplay</h2>
-  <div data-i18n="home.quantumList" data-i18n-html></div>
-
-  <h2 data-i18n="home.circuitsTitle">Circuits Qiskit — diagrammes & effets</h2>
-  <section class="gameplay-circuits">
-    <article class="circuit-block">
-      <h3 data-i18n="home.circuit.spawn.title">Apparition — pièce actuelle & suivante</h3>
-      <p data-i18n="home.circuit.spawn.text" data-i18n-html></p>
-      <div class="circuit-grid">
-        <figure class="circuit-fig">
-          <img src="circuits/quantum-teleportation-gate-v1.png" width="480" height="120"
-               data-i18n="circuit.teleport.alt" data-i18n-attr="alt" alt="quantum-teleportation-gate-v1">
-          <figcaption>quantum-teleportation-gate-v1</figcaption>
-        </figure>
-        <figure class="circuit-fig">
-          <img src="circuits/imp-brain-v1.png" width="360" height="100"
-               data-i18n="circuit.imp.alt" data-i18n-attr="alt" alt="imp-brain-v1">
-          <figcaption>imp-brain-v1</figcaption>
-        </figure>
-        <figure class="circuit-fig">
-          <img src="circuits/enemy-profile-hunter-v1.png" width="360" height="100"
-               data-i18n="circuit.hunter.alt" data-i18n-attr="alt" alt="enemy-profile-hunter-v1">
-          <figcaption>enemy-profile-hunter-v1</figcaption>
-        </figure>
+  <div class="layout">
+    <section class="col-game" aria-label="Game">
+      <div id="frame">
+        <div id="frame-inner">
+          <div id="loader">
+            <div class="spinner" aria-hidden="true"></div>
+            <span id="loader-text" data-i18n="play.starting">Chargement…</span>
+          </div>
+          <p id="error"></p>
+        </div>
       </div>
-    </article>
+      <p class="controls-label" data-i18n="home.controlsTitle">Contrôles (classiques)</p>
+      <div class="keys">
+        <div class="hint"><kbd>LR</kbd><span data-i18n="hint.move">BOUGER</span></div>
+        <div class="hint"><kbd>^</kbd><span data-i18n="hint.rotate">TOURNER</span></div>
+        <div class="hint"><kbd>v</kbd><span data-i18n="hint.faster">VITE</span></div>
+        <div class="hint"><kbd>Sp</kbd><span data-i18n="hint.drop">POSER</span></div>
+      </div>
+    </section>
 
-    <article class="circuit-block">
-      <h3 data-i18n="home.circuit.observe.title">Espace — chute forcée</h3>
-      <p data-i18n="home.circuit.observe.text" data-i18n-html></p>
-      <figure class="circuit-fig">
-        <img src="circuits/observation-pulse-v1.png" width="360" height="100"
-             data-i18n="circuit.observe.alt" data-i18n-attr="alt" alt="observation-pulse-v1">
-        <figcaption>observation-pulse-v1</figcaption>
-      </figure>
-    </article>
+    <section class="col-guide">
+      <p class="lead" data-i18n="home.lead" data-i18n-html></p>
 
-    <article class="circuit-block">
-      <h3 data-i18n="home.circuit.line.title">Ligne effacée</h3>
-      <p data-i18n="home.circuit.line.text" data-i18n-html></p>
-      <figure class="circuit-fig">
-        <img src="circuits/q-shard-stabilizer-v1.png" width="360" height="100"
-             data-i18n="circuit.line.alt" data-i18n-attr="alt" alt="q-shard-stabilizer-v1">
-        <figcaption>q-shard-stabilizer-v1</figcaption>
-      </figure>
-    </article>
-  </section>
+      <div class="principle" data-i18n="home.principle" data-i18n-html></div>
 
-  <footer class="footer-dev">
-    <p><strong data-i18n="home.localClassic">Classique local :</strong> <code>cargo run -p quantum-tetris</code></p>
-    <p><strong data-i18n="home.localQiskit">Qiskit Aer local :</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
-    <p>
-      <a href="QUANTUM.md" data-i18n="home.circuitsLink">Circuits quantiques</a> ·
-      <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a> ·
-      <a href="README.md" data-i18n="home.readme">Architecture (README)</a>
-    </p>
-  </footer>
+      <h2 data-i18n="home.quantumTitle">Quand le jeu mesure un circuit</h2>
+      <ul class="moment-list">
+        <li class="moment">
+          <h3 data-i18n="home.moment.spawn.title">Nouvelle pièce</h3>
+          <p data-i18n="home.moment.spawn.text" data-i18n-html></p>
+        </li>
+        <li class="moment">
+          <h3 data-i18n="home.moment.observe.title">Barre d'espace</h3>
+          <p data-i18n="home.moment.observe.text" data-i18n-html></p>
+        </li>
+        <li class="moment">
+          <h3 data-i18n="home.moment.line.title">Ligne complétée</h3>
+          <p data-i18n="home.moment.line.text" data-i18n-html></p>
+        </li>
+      </ul>
+
+      <p class="classical-note" data-i18n="home.classicalNote" data-i18n-html></p>
+
+      <footer class="footer-dev">
+        <p><strong data-i18n="home.localClassic">Classique local :</strong> <code>cargo run -p quantum-tetris</code></p>
+        <p><strong data-i18n="home.localQiskit">Qiskit Aer local :</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
+        <p>
+          <a href="QUANTUM.md" data-i18n="home.circuitsLink">Circuits quantiques</a> ·
+          <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a> ·
+          <a href="README.md" data-i18n="home.readme">Architecture</a> ·
+          <a href="play.html" data-i18n="home.fullscreen">Plein écran</a>
+        </p>
+      </footer>
+    </section>
+  </div>
+
+  <script type="module">
+    import init, { run_wasm } from './wasm/quantum_tetris.js';
+
+    const loader = document.getElementById('loader');
+    const loaderText = document.getElementById('loader-text');
+    const errorEl = document.getElementById('error');
+    const frameInner = document.getElementById('frame-inner');
+
+    function strings() {
+      const en = window.qtI18n?.getLocale?.() === 'en';
+      return en
+        ? { error: 'WASM error — run ./scripts/build_wasm.sh first' }
+        : { error: 'Erreur WASM — lance ./scripts/build_wasm.sh' };
+    }
+
+    function mountCanvas() {
+      const canvas = document.querySelector('canvas');
+      if (!canvas) {
+        requestAnimationFrame(mountCanvas);
+        return;
+      }
+      loader.classList.add('hidden');
+      frameInner.appendChild(canvas);
+    }
+
+    async function boot() {
+      await init();
+      run_wasm();
+      mountCanvas();
+    }
+
+    boot().catch((e) => {
+      loader.classList.add('hidden');
+      errorEl.textContent = strings().error;
+      errorEl.classList.add('visible');
+      console.error(e);
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'qt-lang' && !loader.classList.contains('hidden') && loaderText) {
+        const dict = window.qtI18n?.getLocale?.() === 'en'
+          ? 'Loading quantum engine…'
+          : 'Chargement du moteur quantique…';
+        loaderText.textContent = dict;
+      }
+    });
+  </script>
 </body>
 </html>
