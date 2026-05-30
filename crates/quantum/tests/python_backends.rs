@@ -21,7 +21,7 @@ fn qiskit_runs_imp_brain() {
         eprintln!("skip: pip install -r scripts/requirements.txt");
         return;
     }
-    let mut backend = build_backend(BackendKind::Quantum).expect("qiskit backend");
+    let mut backend = build_backend(BackendKind::Qiskit).expect("qiskit backend");
     let measurement = backend
         .run(&QuantumCircuit::imp_brain())
         .expect("qiskit run");
@@ -36,7 +36,7 @@ fn qiskit_runs_teleporter() {
     if !python_ready() {
         return;
     }
-    let mut backend = build_backend(BackendKind::Quantum).expect("qiskit backend");
+    let mut backend = build_backend(BackendKind::Qiskit).expect("qiskit backend");
     let measurement = backend
         .run(&QuantumCircuit::teleporter())
         .expect("teleporter");

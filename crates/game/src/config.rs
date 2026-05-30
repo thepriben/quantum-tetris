@@ -1,4 +1,4 @@
-//! Runtime configuration — desktop (classic / Qiskit) and WASM (classic / RustQIP quantum).
+//! Runtime configuration — classic, RustQIP quantum (local + WASM), or Qiskit (desktop only).
 
 use bevy::prelude::*;
 use quantum_tetris_quantum::{
@@ -23,7 +23,7 @@ pub struct GameConfig {
 }
 
 impl GameConfig {
-    /// Native: `QUANTUM_MODE=classic|qiskit` (default `classic`).
+    /// Native: `QUANTUM_MODE=classic|quantum|qiskit` (default `quantum` / RustQIP).
     pub fn desktop() -> Self {
         Self {
             platform: GamePlatform::Desktop,

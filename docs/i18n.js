@@ -10,11 +10,11 @@
       'lang.fr': 'Français',
       'lang.en': 'English',
       'home.title': 'Quantum Tetris',
-      'home.subtitle': 'Tetris — le hasard vient des circuits quantiques',
+      'home.subtitle': 'Tetris — tirages aléatoires via circuits quantiques',
       'home.lead':
-        'Règles Tetris classiques. Chaque tirage aléatoire (pièce, vitesse, bonus) est une mesure sur un preset de circuit quantique.',
+        'Règles Tetris habituelles. Pièce, cadence, bonus : à chaque tirage, un circuit prédéfini est exécuté ; les bits mesurés déterminent l\'effet en jeu.',
       'home.stack':
-        '<strong>Chaîne technique.</strong> Moteur Bevy (Rust) → WASM dans le navigateur. Les circuits sont les mêmes partout ; le desktop appelle Qiskit Aer (Python), le navigateur exécute <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) — probabilités vérifiées contre Qiskit en CI. Qiskit ne tourne pas dans un onglet (Python).',
+        '<strong>Architecture.</strong> Bevy (Rust) → WASM dans le navigateur. Mêmes circuits sur tous les backends : <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simule le statevector par défaut, en local et en ligne (résultats comparés à Qiskit en CI). Option desktop : Qiskit Aer via Python.',
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
       'home.quantumTitle': 'Mécaniques',
@@ -23,23 +23,23 @@
       'home.moment.piece.title': 'Pièce en cours & « suiv. »',
       'home.moment.piece.game': 'Détermine la forme active et l\'aperçu suivant.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> ×2 — paire de Bell → famille (I, O, T…), qubit message → variante.',
+        '<code>quantum-teleportation-gate-v1</code> (×2) — paire intriquée ; les bits mesurés fixent la famille (I, O, T…) et la variante.',
       'home.moment.brain.title': 'Rotation & colonne',
       'home.moment.brain.game': 'Fixe l\'orientation à l\'apparition et la colonne d\'entrée.',
       'home.moment.brain.quantum':
-        '<code>imp-brain-v1</code> — deux bits mesurés, mappés sur rotation et colonne.',
+        '<code>imp-brain-v1</code> — 2 qubits mesurés → rotation (0–3) et colonne d\'apparition.',
       'home.moment.hunter.title': 'Cadence de chute',
       'home.moment.hunter.game': 'Intervalle entre deux descentes ; diminue avec le niveau.',
       'home.moment.hunter.quantum':
-        '<code>enemy-profile-hunter-v1</code> — vitesse tirée à chaque nouvelle pièce.',
+        '<code>enemy-profile-hunter-v1</code> — 2 qubits mesurés → intervalle de chute pour la pièce en cours.',
       'home.moment.observe.title': 'Espace — chute forcée',
       'home.moment.observe.game': 'Pose immédiate ; bonus de score, parfois une ligne supplémentaire.',
       'home.moment.observe.quantum':
-        '<code>observation-pulse-v1</code> — mesure volontaire, 2 bits → type de bonus.',
+        '<code>observation-pulse-v1</code> — mesure à la pose forcée ; les bits choisissent le bonus.',
       'home.moment.line.title': 'Ligne complétée',
       'home.moment.line.game': 'Multiplicateur de points ×1 à ×4 selon le tirage.',
       'home.moment.line.quantum':
-        '<code>q-shard-stabilizer-v1</code> — stabilisation après effacement, bits → multiplicateur.',
+        '<code>q-shard-stabilizer-v1</code> — après effacement d\'une ligne ; les bits fixent le multiplicateur (×1–×4).',
       'home.circuitsLink': 'Référence circuits',
       'home.github': 'GitHub',
       'home.readme': 'Build local',
@@ -57,11 +57,11 @@
       'lang.fr': 'Français',
       'lang.en': 'English',
       'home.title': 'Quantum Tetris',
-      'home.subtitle': 'Tetris — randomness from quantum circuits',
+      'home.subtitle': 'Tetris — random draws from quantum circuits',
       'home.lead':
-        'Standard Tetris rules. Every random outcome (piece, speed, bonus) is a measurement on a quantum circuit preset.',
+        'Standard Tetris rules. Piece, cadence, bonuses: each draw runs a predefined circuit; measured bits drive the in-game effect.',
       'home.stack':
-        '<strong>Stack.</strong> Bevy game engine (Rust) → WASM in the browser. Circuits are shared presets; desktop calls Qiskit Aer (Python), the browser runs <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) — probabilities verified against Qiskit in CI. Qiskit does not run in a tab (Python).',
+        '<strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. Same circuit presets on every backend: <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default, locally and online (cross-checked against Qiskit in CI). Desktop option: Qiskit Aer via Python.',
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
       'home.quantumTitle': 'Mechanics',
@@ -70,23 +70,23 @@
       'home.moment.piece.title': 'Active piece & “next”',
       'home.moment.piece.game': 'Sets the active shape and the next preview.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> ×2 — Bell pair → family (I, O, T…), message qubit → variant.',
+        '<code>quantum-teleportation-gate-v1</code> (×2) — entangled pair; measured bits pick the family (I, O, T…) and variant.',
       'home.moment.brain.title': 'Rotation & column',
       'home.moment.brain.game': 'Sets spawn orientation and entry column.',
       'home.moment.brain.quantum':
-        '<code>imp-brain-v1</code> — two measured bits mapped to rotation and column.',
+        '<code>imp-brain-v1</code> — 2 measured qubits → rotation (0–3) and spawn column.',
       'home.moment.hunter.title': 'Drop cadence',
       'home.moment.hunter.game': 'Interval between grid steps; decreases as level rises.',
       'home.moment.hunter.quantum':
-        '<code>enemy-profile-hunter-v1</code> — drop interval drawn on each new piece.',
+        '<code>enemy-profile-hunter-v1</code> — 2 measured qubits → drop interval for the active piece.',
       'home.moment.observe.title': 'Space — hard drop',
       'home.moment.observe.game': 'Instant lock; score bonus, sometimes one extra line.',
       'home.moment.observe.quantum':
-        '<code>observation-pulse-v1</code> — deliberate measure, 2 bits → bonus type.',
+        '<code>observation-pulse-v1</code> — measure on hard drop; bits select the score bonus.',
       'home.moment.line.title': 'Line clear',
       'home.moment.line.game': 'Score multiplier ×1 to ×4 from the draw.',
       'home.moment.line.quantum':
-        '<code>q-shard-stabilizer-v1</code> — post-clear stabilizer, bits → multiplier.',
+        '<code>q-shard-stabilizer-v1</code> — after a line clear; bits set the score multiplier (×1–×4).',
       'home.circuitsLink': 'Circuit reference',
       'home.github': 'GitHub',
       'home.readme': 'Local build',

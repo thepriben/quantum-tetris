@@ -7,6 +7,7 @@ use quantum_tetris_quantum::BackendKind;
 
 #[derive(Resource, Debug)]
 pub struct GameRun {
+    pub backend_kind: BackendKind,
     pub backend_label: String,
     pub is_quantum: bool,
     pub last_bits: String,
@@ -25,8 +26,9 @@ pub struct GameRun {
 impl GameRun {
     pub fn new(backend: BackendKind) -> Self {
         Self {
+            backend_kind: backend,
             backend_label: backend.label().into(),
-            is_quantum: backend != BackendKind::Classic,
+            is_quantum: backend.is_quantum(),
             last_bits: String::new(),
             last_confidence: 0.0,
             last_event: String::new(),

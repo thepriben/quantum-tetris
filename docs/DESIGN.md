@@ -35,13 +35,7 @@
 Portable circuit IR (`Gate`, `QuantumCircuit`) and backends:
 
 - **Classic** — always compiled
-- **Qiskit** — feature `backend-qiskit`, subprocess to `scripts/quantum_shim.py`
+- **RustQIP** — in-process statevector (`RustQipBackend`), desktop + WASM
+- **Qiskit** — feature `backend-qiskit`, subprocess to `scripts/quantum_shim.py` (desktop only)
 
 Game enables Qiskit via its own `qiskit` feature (on by default for desktop).
-
----
-
-## Backends removed
-
-- **QIP** (Rust in-process simulator) — removed; use classic or Qiskit instead.
-- **BlueQubit** — never shipped in this repo.

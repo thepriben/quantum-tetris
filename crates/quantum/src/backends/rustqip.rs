@@ -12,6 +12,22 @@ fn map_circuit_error(err: qip::errors::CircuitError) -> QuantumError {
     }
 }
 
+/// Map a statevector index to a bitstring in Qiskit computational-basis order (q0 = LSB).
+fn index_to_bits(index: usize, width: usize) -> String {
+    format!("{index:0width$b}")
+}
+
+/// RustQIP tensor index order differs from Qiskit; reverse index bits to align amplitudes.
+fn bit_reverse_index(index: usize, width: usize) -> usize {
+    let mut reversed = 0usize;
+    for bit in 0..width {
+        if (index >> bit) & 1 == 1 {
+            reversed |= 1 << (width - 1 - bit);
+        }
+    }
+    reversed
+}
+
 fn apply_gates(
     b: &mut LocalBuilder<f64>,
     qubits: &mut Vec<<LocalBuilder<f64> as CircuitBuilder>::Register>,
@@ -60,7 +76,7 @@ fn apply_gates(
     Ok(())
 }
 
-/// Exact Born probabilities via RustQIP (used by tests and parity checks).
+/// Exact outcome probabilities via RustQIP (used by tests and parity checks).
 pub fn rustqip_probabilities(circuit: &QuantumCircuit) -> Result<Vec<(String, f32)>, QuantumError> {
     if circuit.qubits == 0 || circuit.qubits > 8 {
         return Err(QuantumError::UnsupportedQubits(circuit.qubits));
@@ -75,10 +91,11 @@ pub fn rustqip_probabilities(circuit: &QuantumCircuit) -> Result<Vec<(String, f3
     let (state, _) = builder.calculate_state();
     let width = n as usize;
     Ok((0..state.len())
-        .map(|index| {
-            let amplitude = state[index];
+        .map(|qiskit_index| {
+            let rust_index = bit_reverse_index(qiskit_index, width);
+            let amplitude = state[rust_index];
             let probability = (amplitude.re * amplitude.re + amplitude.im * amplitude.im) as f32;
-            (format!("{index:0width$b}"), probability)
+            (index_to_bits(qiskit_index, width), probability)
         })
         .collect())
 }
@@ -98,7 +115,7 @@ fn sample(probabilities: &[(String, f32)]) -> String {
         .unwrap_or_default()
 }
 
-/// Samples from RustQIP Born-rule probabilities (Qiskit-matched in CI).
+/// Samples from RustQIP statevector probabilities (Qiskit-matched in CI).
 #[derive(Debug, Default)]
 pub struct RustQipBackend;
 
@@ -125,6 +142,14 @@ mod tests {
         for (_, probability) in &probabilities {
             assert!((probability - 0.25).abs() < 1e-5);
         }
+    }
+
+    #[test]
+    fn hunter_profile_matches_qiskit_bit_order() {
+        let probabilities = rustqip_probabilities(&QuantumCircuit::hunter_profile()).expect("rustqip");
+        let by_bits: std::collections::HashMap<_, _> = probabilities.into_iter().collect();
+        assert!((by_bits["01"] - 0.10305369).abs() < 1e-4);
+        assert!((by_bits["10"] - 0.3969463).abs() < 1e-4);
     }
 
     #[test]

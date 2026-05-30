@@ -8,24 +8,24 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Jouer en ligne</strong></a>
 </p>
 
-Tetris où **toute la stochasticité** vient de circuits quantiques — pas d’un PRNG. Seuls les déplacements clavier du joueur (← → ↑ ↓) restent classiques. Forme de la pièce, aperçu suivant, rotation, colonne, vitesse, bonus Espace et multiplicateur de lignes passent par une **mesure Born** sur des presets de circuits communs.
+Tetris où les tirages aléatoires (pièce, vitesse, bonus…) ne passent pas par un PRNG classique : le moteur exécute des circuits quantiques prédéfinis et lit les bits mesurés. Seuls les déplacements ← → ↑ ↓ et la pose forcée (Espace) échappent à cette logique.
 
 > **Le joueur :** ← → ↑ ↓ et Espace · **Le jeu :** tout le reste.
 
-**Chaîne :** Bevy (Rust) → WASM dans le navigateur. Desktop → **Qiskit Aer** (subprocess Python). Navigateur → **[RustQIP](https://github.com/Renmusxd/RustQIP)** (`RustQipBackend`, calibré sur Qiskit en CI).
+**Exécution.** Bevy (Rust), en binaire desktop ou WASM dans le navigateur. Mode quantum par défaut : simulateur statevector **RustQIP**, identique en local et en ligne. **Qiskit Aer** (Python) reste disponible sur desktop pour comparaison et CI.
 
 ---
 
 ## Gameplay & circuits
 
-Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont générés à partir des mêmes circuits que le runtime ([`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py)). Correspondances bit à bit → [`docs/QUANTUM.md`](docs/QUANTUM.md).
+À chaque moment aléatoire, le moteur invoque un circuit de la liste partagée (voir [`docs/QUANTUM.md`](docs/QUANTUM.md)). Les diagrammes reprennent exactement ces circuits ([`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py)).
 
 ### Pièce en cours & « suiv. »
 
 | | |
 |---|---|
 | **En jeu** | Détermine la forme active et l’aperçu **suivant**. |
-| **Circuit** | `quantum-teleportation-gate-v1` ×2 — paire de Bell → famille (I, O, T…), qubit message → variante. |
+| **Circuit** | `quantum-teleportation-gate-v1` (×2) — paire intriquée ; les bits mesurés fixent la famille (I, O, T…) et la variante. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="480"></p>
 
@@ -34,7 +34,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 | | |
 |---|---|
 | **En jeu** | Fixe l’orientation à l’apparition et la colonne d’entrée. |
-| **Circuit** | `imp-brain-v1` — deux bits mesurés → rotation + colonne. |
+| **Circuit** | `imp-brain-v1` — 2 qubits mesurés → rotation (0–3) et colonne d'apparition. |
 
 <p align="left"><img src="docs/circuits/imp-brain-v1.png" alt="imp-brain-v1" width="480"></p>
 
@@ -43,7 +43,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 | | |
 |---|---|
 | **En jeu** | Intervalle entre deux descentes ; diminue avec le niveau. |
-| **Circuit** | `enemy-profile-hunter-v1` — vitesse tirée à chaque nouvelle pièce. |
+| **Circuit** | `enemy-profile-hunter-v1` — 2 qubits mesurés → intervalle de chute pour la pièce en cours. |
 
 <p align="left"><img src="docs/circuits/enemy-profile-hunter-v1.png" alt="enemy-profile-hunter-v1" width="480"></p>
 
@@ -52,7 +52,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 | | |
 |---|---|
 | **En jeu** | Pose immédiate ; bonus de score, parfois une ligne supplémentaire. |
-| **Circuit** | `observation-pulse-v1` — mesure volontaire, 2 bits → type de bonus. |
+| **Circuit** | `observation-pulse-v1` — mesure à la pose forcée ; les bits choisissent le bonus. |
 
 <p align="left"><img src="docs/circuits/observation-pulse-v1.png" alt="observation-pulse-v1" width="480"></p>
 
@@ -61,7 +61,7 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 | | |
 |---|---|
 | **En jeu** | Multiplicateur de points ×1 à ×4 selon le tirage. |
-| **Circuit** | `q-shard-stabilizer-v1` — stabilisation après effacement, bits → multiplicateur. |
+| **Circuit** | `q-shard-stabilizer-v1` — après effacement d'une ligne ; les bits fixent le multiplicateur (×1–×4). |
 
 <p align="left"><img src="docs/circuits/q-shard-stabilizer-v1.png" alt="q-shard-stabilizer-v1" width="480"></p>
 
@@ -72,14 +72,15 @@ Chaque tirage aléatoire exécute un preset Qiskit nommé. Les diagrammes sont g
 **Desktop**
 
 ```bash
-cp .env.example .env          # QUANTUM_MODE=classic par défaut
+cp .env.example .env          # QUANTUM_MODE=quantum (RustQIP) par défaut
 cargo run -p quantum-tetris
 ```
 
 | Mode | Commande |
 | --- | --- |
+| Quantum — RustQIP (défaut) | `cargo run -p quantum-tetris` |
 | Classique | `QUANTUM_MODE=classic cargo run -p quantum-tetris` |
-| Qiskit Aer | `pip install -r scripts/requirements.txt` puis `QUANTUM_MODE=qiskit cargo run -p quantum-tetris` |
+| Quantum — Qiskit (desktop uniquement) | `pip install -r scripts/requirements.txt` puis `QUANTUM_MODE=qiskit cargo run -p quantum-tetris` |
 
 **Navigateur** (nécessite ~3 Go d’espace libre pour le build WASM release)
 
@@ -159,12 +160,12 @@ sequenceDiagram
 
 | Backend | Où | Mécanisme |
 | --- | --- | --- |
-| **Classic** | partout | `rand` uniforme — baseline arcade |
-| **RustQIP** | WASM + fallback desktop | Statevector [RustQIP](https://github.com/Renmusxd/RustQIP), règle de Born |
-| **Qiskit Aer** | desktop (+ CI) | subprocess → `quantum_shim.py` |
+| **Classic** | partout | `rand` uniforme — baseline sans simulateur |
+| **RustQIP** | desktop + navigateur | simulateur statevector in-process |
+| **Qiskit Aer** | desktop uniquement (+ CI) | subprocess Python → `quantum_shim.py` |
 
-- `QUANTUM_MODE=classic|qiskit` (alias `QUANTUM_BACKEND`)
-- Bascule **CLASSIQUE** / **QUANTIQUE** in-game
+- `QUANTUM_MODE=classic|quantum|qiskit` (alias `QUANTUM_BACKEND`)
+- Bascule **CLASSIQUE** / **RUSTQIP** in-game (navigateur) ; **QISKIT** aussi sur desktop
 - Parité RustQIP ↔ Qiskit en CI (`rustqip_qiskit_parity`)
 
 ---

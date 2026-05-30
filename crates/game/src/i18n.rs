@@ -1,4 +1,4 @@
-//! UI strings and Qiskit circuit explanations (English default on web).
+//! UI strings and in-game circuit explanations (English default on web).
 
 use bevy::prelude::*;
 #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
@@ -71,7 +71,7 @@ pub fn initial_locale() -> Locale {
     }
 }
 
-/// Gameplay moment that triggers one or more Qiskit circuits.
+/// Gameplay moment that triggers one or more quantum circuits.
 #[derive(Clone, Copy, PartialEq, Eq, Default, Debug)]
 pub enum GameplayMoment {
     #[default]
@@ -85,28 +85,28 @@ pub enum GameplayMoment {
 pub fn circuit_explain(locale: Locale, moment: GameplayMoment) -> &'static str {
     match (locale, moment) {
         (Locale::Fr, GameplayMoment::Spawn) => {
-            "Spawn — 4 mesures Qiskit :\n\
-             • quantum-teleportation-gate-v1 ×2 : pièce en cours + pièce suivante\n\
+            "Apparition — 4 circuits :\n\
+             • quantum-teleportation-gate-v1 ×2 : pièce active + suivante\n\
              • imp-brain-v1 : rotation et colonne\n\
-             • enemy-profile-hunter-v1 : vitesse de chute"
+             • enemy-profile-hunter-v1 : intervalle de chute"
         }
         (Locale::En, GameplayMoment::Spawn) => {
-            "Spawn — 4 Qiskit measurements:\n\
+            "Spawn — 4 circuits:\n\
              • quantum-teleportation-gate-v1 ×2: active piece + next preview\n\
              • imp-brain-v1: rotation and column\n\
-             • enemy-profile-hunter-v1: drop speed"
+             • enemy-profile-hunter-v1: drop interval"
         }
         (Locale::Fr, GameplayMoment::Observe) => {
             "Espace — observation-pulse-v1 (2 qubits) :\n\
-             mesure volontaire à l'atterrissage forcé → bonus de score (parfois une ligne bonus)"
+             mesure à la pose forcée → bonus de score (parfois une ligne bonus)"
         }
         (Locale::En, GameplayMoment::Observe) => {
             "Space — observation-pulse-v1 (2 qubits):\n\
-             deliberate measure on hard drop → score bonus (sometimes an extra line)"
+             measure on hard drop → score bonus (sometimes an extra line)"
         }
         (Locale::Fr, GameplayMoment::LineClear) => {
             "Ligne effacée — q-shard-stabilizer-v1 (2 qubits) :\n\
-             stabilisation après effacement → multiplicateur de points (×1 à ×4)"
+             mesure après effacement → multiplicateur de points (×1 à ×4)"
         }
         (Locale::En, GameplayMoment::LineClear) => {
             "Line clear — q-shard-stabilizer-v1 (2 qubits):\n\
@@ -127,10 +127,17 @@ pub fn mode_classic(locale: Locale) -> &'static str {
     }
 }
 
-pub fn mode_quantum(locale: Locale) -> &'static str {
+pub fn mode_rustqip(locale: Locale) -> &'static str {
     match locale {
-        Locale::Fr => "QUANTIQUE",
-        Locale::En => "QUANTUM",
+        Locale::Fr => "RUSTQIP",
+        Locale::En => "RUSTQIP",
+    }
+}
+
+pub fn mode_qiskit(locale: Locale) -> &'static str {
+    match locale {
+        Locale::Fr => "QISKIT",
+        Locale::En => "QISKIT",
     }
 }
 
@@ -227,7 +234,7 @@ pub fn observe_fx_label(locale: Locale, bits: &str) -> &'static str {
 
 pub fn circuit_heading(locale: Locale) -> &'static str {
     match locale {
-        Locale::Fr => "Circuit Qiskit",
-        Locale::En => "Qiskit circuit",
+        Locale::Fr => "Circuit",
+        Locale::En => "Circuit",
     }
 }
