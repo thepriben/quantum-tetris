@@ -7,3 +7,5 @@
 dist/wasm/
 docs/wasm/
 docs/assets/
+scripts/free_disk.sh
+.disk_cleanup_report.txt
