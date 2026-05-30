@@ -1,24 +1,23 @@
-# Design notes — Quantum Sub: LA
+# Design — Quantum Tetris: LA
 
-Jeu **local**, **2 touches** (flèches + Espace), session ~2 min.
+10×20 stacker, **2D neon UI**, arrows + Space.
 
-## Boucle
+## Loop
 
-1. Piloter contre le **courant** (mesure `imp-brain` toutes les 2 s).
-2. **Espace** sur les cellules → stabilizer ; ailleurs → warp ou observation.
-3. Éviter 4 **mines** (profils hunter/patrol mesurés).
-4. Portail **sud** (−Z) avec 3/3 énergie.
+1. **Teleporter** circuit → next piece (I–L).
+2. **Imp-brain** → rotation + spawn column.
+3. Player moves / rotates / soft-drops.
+4. **Space** → hard drop + **observation-pulse** bonus.
+5. Line clear → **shard-stabilizer** score multiplier.
 
-## Fichiers Bevy (`crates/game/src/`)
+## Modules
 
-| Fichier | Rôle |
+| File | Role |
 | --- | --- |
-| `app.rs` | `DrivePlugin`, startup |
-| `arena.rs` | Sol, rochers GLB, balises, cellules, portail, mines |
-| `vehicle.rs` | Sous-marin procédural + caméra |
-| `quantum_drive.rs` | Timers, `try_space_action`, mines |
+| `board.rs` | Grid, collision, line clear |
+| `pieces.rs` | Tetromino shapes |
+| `tetris.rs` | Systems + quantum spawn |
 | `measurement_fx.rs` | Bits → gameplay |
-| `ui.rs` | HUD graphique |
-| `input.rs` | Flèches + Espace |
+| `ui.rs` | Grid + HUD |
 
-Quantique : [QUANTUM.md](QUANTUM.md).
+Quantum details → [QUANTUM.md](QUANTUM.md).

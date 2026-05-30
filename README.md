@@ -1,32 +1,23 @@
-# Quantum Sub: LA
+# Quantum Tetris: LA
 
 [![CI](https://github.com/thepriben/quantum-town-la/actions/workflows/ci.yml/badge.svg)](https://github.com/thepriben/quantum-town-la/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A small local **Bevy** game: pilot a submarine, collect energy, avoid mines. **Arrow keys** + **Space**. Every action runs a **2–3 qubit circuit**; measured bits drive currents, warps, mines, and pickups.
-
-**Classic mode** (default) uses uniform random outcomes on the same circuits. **QIP mode** uses an in-process Rust simulator (Born rule). Details → [docs/QUANTUM.md](docs/QUANTUM.md).
+**Quantum Tetris** — a pretty neon stacker where **every piece and special move comes from a small quantum circuit**. Same rules in **classic** (uniform random) and **QIP** (Born rule) modes.
 
 ---
 
 ## Play locally
 
-**Requirements:** Rust 1.89+, macOS / Linux / Windows.
-
 ```bash
-git clone https://github.com/thepriben/quantum-town-la.git
-cd quantum-town-la
-cp .env.example .env          # QUANTUM_MODE=classic
-./scripts/fetch_assets.sh     # optional GLB rocks
+cp .env.example .env
 cargo run -p quantum-town-la
 ```
 
 | Mode | Command |
 | --- | --- |
-| **Classic** (recommended) | `QUANTUM_MODE=classic cargo run -p quantum-town-la` |
-| **Quantum (QIP)** | `QUANTUM_MODE=quantum cargo run -p quantum-town-la` |
-
-Disk full at link time? `./scripts/clean_build.sh`
+| **Classic** | `QUANTUM_MODE=classic cargo run -p quantum-town-la` |
+| **Quantum** | `QUANTUM_MODE=quantum cargo run -p quantum-town-la` |
 
 ---
 
@@ -34,38 +25,25 @@ Disk full at link time? `./scripts/clean_build.sh`
 
 | Key | Action |
 | --- | --- |
-| **Arrow keys** | Drive (camera-relative) |
-| **Space** | Measure / act — always a circuit |
-
-**Space** priority: south gate (3/3 energy) → nearby cell → warp → observe.
-
-**Goal:** 3 energy cells, south gate, **2:00** timer. HUD shows mode, timer, energy dots, current arrow, `[bits]` and **confidence %**.
+| **← →** | Move piece |
+| **↑** | Rotate |
+| **↓** | Soft drop |
+| **Space** | **Observe** — hard drop + `observation-pulse-v1` bonus |
 
 ---
 
-## Browser (WASM)
+## Quantum hooks
 
-```bash
-./scripts/build_wasm.sh
-python3 -m http.server 8080 --directory docs
-# → http://localhost:8080/play.html
-```
+| When | Circuit | Effect |
+| --- | --- | --- |
+| New piece | `quantum-teleportation-gate-v1` | 3 bits → piece type (I–L) |
+| Spawn pose | `imp-brain-v1` | 2 bits → rotation + column |
+| Space | `observation-pulse-v1` | 2 bits → score / line bonus |
+| Line clear | `q-shard-stabilizer-v1` | 2 bits → score multiplier |
 
-See [docs/WASM.md](docs/WASM.md). GitHub Pages builds WASM on push to `main`.
+HUD shows `[bits]` and **confidence %** after each measurement.
 
----
-
-## Development
-
-```bash
-cargo test --workspace
-```
-
-| Doc | Content |
-| --- | --- |
-| [docs/QUANTUM.md](docs/QUANTUM.md) | Circuits, backends, classic vs QIP |
-| [docs/WASM.md](docs/WASM.md) | Browser build |
-| [docs/DESIGN.md](docs/DESIGN.md) | Short design notes |
+Details → [docs/QUANTUM.md](docs/QUANTUM.md) · Browser → [docs/WASM.md](docs/WASM.md)
 
 ---
 

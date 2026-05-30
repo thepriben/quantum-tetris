@@ -24,7 +24,7 @@ impl GameConfig {
     pub fn desktop() -> Self {
         Self {
             platform: GamePlatform::Desktop,
-            window_title: "Quantum Sub: LA",
+            window_title: "Quantum Tetris: LA",
             backend_kind: BackendKind::from_env(),
         }
     }
@@ -33,7 +33,7 @@ impl GameConfig {
     pub fn wasm(kind: BackendKind) -> Self {
         Self {
             platform: GamePlatform::Wasm,
-            window_title: "Quantum Sub: LA",
+            window_title: "Quantum Tetris: LA",
             backend_kind: kind,
         }
     }
