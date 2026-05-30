@@ -1,21 +1,33 @@
 [package]
 name = "quantum-town-la"
-description = "Quantum Town: LA — cute FPS with quantum-driven AI and teleporters"
+description = "Quantum Sub: LA — underwater driving, classic or QIP (local Bevy game)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish = false
 
+[lib]
+name = "quantum_town_la"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
 [[bin]]
 name = "quantum-town-la"
 path = "src/main.rs"
+required-features = ["desktop"]
 
 [dependencies]
 bevy = { workspace = true }
-quantum-doom-quantum = { path = "../quantum", package = "quantum-doom-quantum" }
-quantum-doom-osm = { path = "../osm", package = "quantum-doom-osm" }
+quantum-town-quantum = { path = "../quantum", features = ["backend-qip"] }
+rand = "0.9"
+dotenvy = { version = "0.15", optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.3", features = ["wasm_js"] }
 
 [features]
 default = ["desktop"]
-desktop = []
-wasm = []
+desktop = ["dep:dotenvy"]
+wasm = ["dep:wasm-bindgen"]
+qiskit = ["quantum-town-quantum/backend-qiskit"]

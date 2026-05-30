@@ -1,43 +1,56 @@
-# Web build (WASM)
+# Build WASM (GitHub Pages)
 
-## Goal
+Le jeu tourne dans le navigateur via **wasm-bindgen** + QIP ou classique in-process (pas de Python).
 
-Play **Quantum Town: LA** in the browser for article demos, easy sharing, and WASM leaderboard export.
+## Jouer en local (navigateur)
 
-## Stack
+```bash
+./scripts/fetch_assets.sh    # optionnel (rochers GLB)
+./scripts/build_wasm.sh
+python3 -m http.server 8080 --directory docs
+```
 
-| Piece | Choice |
+Ouvrir [http://localhost:8080/play.html](http://localhost:8080/play.html)  
+Mode quantique : [play.html?mode=quantum](play.html?mode=quantum)
+
+> Un serveur HTTP est requis (pas `file://`) — COOP/wasm + chargement des assets.
+
+## Structure déployée (`docs/`)
+
+| Chemin | Rôle |
 | --- | --- |
-| Engine | Bevy 0.18+ |
-| Target | `wasm32-unknown-unknown` |
-| Physics | bevy_rapier3d (wasm-enabled config) |
-| UI | bevy_egui |
-| Quantum | **QIP** default in browser |
+| `index.html` | Landing |
+| `play.html` | Canvas + loader WASM |
+| `wasm/` | Généré par `build_wasm.sh` (`.wasm`, `.js`) |
+| `assets/models/` | GLB copiés depuis `assets/models/` |
 
-## Backends in WASM
-
-| Backend | Browser |
-| --- | --- |
-| QIP (Rust) | Yes |
-| Qiskit | No (no Python in tab) |
-| BlueQubit | Via server proxy if CORS blocks direct API |
-
-## Planned build commands (Sprint 7)
+## Build manuel
 
 ```bash
 rustup target add wasm32-unknown-unknown
-cargo build -p quantum-town-la --release --target wasm32-unknown-unknown --features wasm
-wasm-bindgen --out-dir dist/wasm --target web target/wasm32-unknown-unknown/release/quantum-town-la.wasm
+cargo install wasm-bindgen-cli
+
+CARGO_TARGET_DIR=target cargo build --lib -p quantum-town-la --release \
+  --no-default-features --features wasm \
+  --target wasm32-unknown-unknown
+
+wasm-bindgen --out-dir docs/wasm --target web \
+  target/wasm32-unknown-unknown/release/quantum_town_la.wasm
 ```
+
+`.cargo/config.toml` active `getrandom_backend="wasm_js"` pour wasm32.
+
+## Entrées Rust
+
+| Export | Backend |
+| --- | --- |
+| `run_wasm()` | Classique (uniforme) |
+| `run_wasm_quantum()` | QIP |
 
 ## GitHub Pages
 
-Workflow deploys `docs/` (landing now; WASM bundle later).
+Le workflow [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) exécute `build_wasm.sh` puis publie `docs/`.
 
-URL: https://thepriben.github.io/quantum-town-la/
+## Contrôles navigateur
 
-## Constraints
-
-- Keep wasm + assets under ~15 MB gzip where possible
-- Circuits capped at 3 qubits in browser builds
-- Desktop-first until Sprint 7
+Flèches clavier + Espace (identique au binaire desktop).

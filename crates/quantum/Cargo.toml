@@ -1,17 +1,31 @@
 [package]
-name = "quantum-doom-quantum"
-description = "Quantum circuits and pluggable backends for Quantum Town: LA"
+name = "quantum-town-quantum"
+description = "Circuits and backends for Quantum Sub: LA"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [dependencies]
 serde = { workspace = true }
+serde_json = { workspace = true }
 thiserror = { workspace = true }
-reqwest = { workspace = true, optional = true }
+rand = "0.9"
+qip = { version = "1.5", optional = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }
+
+[[test]]
+name = "python_backends"
+required-features = ["backend-qiskit"]
+
+[[test]]
+name = "shim_direct"
+required-features = ["backend-qiskit"]
 
 [features]
 default = ["backend-qip"]
-backend-qip = []
-backend-qiskit = []
-backend-bluequbit = ["dep:reqwest"]
+backend-qip = ["dep:qip"]
+# Academic/reference option (Python Qiskit), not enabled by default.
+backend-qiskit = ["backend-python"]
+backend-python = []

@@ -7,11 +7,41 @@ on:
     branches: [main]
 
 jobs:
-  check:
+  rust:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@1.89
+        with:
+          components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: cargo test
+        run: cargo test --workspace
       - name: cargo check
         run: cargo check --workspace
+      - name: wasm target
+        run: rustup target add wasm32-unknown-unknown
+      - name: wasm check
+        run: cargo check -p quantum-town-la --no-default-features --features wasm --target wasm32-unknown-unknown
+
+  quantum-qiskit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.89
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+      - name: install qiskit
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+      - name: qiskit integration tests
+        env:
+          QUANTUM_PYTHON: python
+        run: cargo test -p quantum-town-quantum --features backend-qiskit --test python_backends --test shim_direct

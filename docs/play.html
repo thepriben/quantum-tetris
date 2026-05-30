@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quantum Sub: LA — jouer</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0a2838; }
+    canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+    #bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+      display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+      padding: 8px 12px; font: 14px system-ui, sans-serif;
+      color: #bdf; background: rgba(8, 28, 40, 0.75); pointer-events: auto;
+    }
+    #bar a { color: #6fd; }
+    #bar button {
+      background: rgba(20, 60, 80, 0.9); border: 1px solid #4af;
+      color: #cef; border-radius: 6px; padding: 4px 10px; cursor: pointer;
+    }
+    #status { color: #8cf; }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <a href="index.html">← Accueil</a>
+    <span>Flèches · Espace</span>
+    <button type="button" id="btn-classic">Classique</button>
+    <button type="button" id="btn-quantum">QIP</button>
+    <span id="status">Chargement…</span>
+  </div>
+  <script type="module">
+    import init, { run_wasm, run_wasm_quantum } from './wasm/quantum_town_la.js';
+
+    const status = document.getElementById('status');
+    let started = false;
+
+    async function boot(mode) {
+      if (started) {
+        status.textContent = 'Recharge la page pour changer de mode.';
+        return;
+      }
+      status.textContent = 'Démarrage ' + mode + '…';
+      await init();
+      if (mode === 'quantum') run_wasm_quantum();
+      else run_wasm();
+      started = true;
+      status.textContent = mode === 'quantum' ? 'Mode QIP' : 'Mode classique';
+    }
+
+    const params = new URLSearchParams(location.search);
+    const initial = (params.get('mode') === 'quantum' || params.get('mode') === 'qip')
+      ? 'quantum' : 'classic';
+
+    document.getElementById('btn-classic').onclick = () => boot('classic');
+    document.getElementById('btn-quantum').onclick = () => boot('quantum');
+
+    boot(initial).catch((e) => {
+      status.textContent = 'Erreur WASM — as-tu lancé ./scripts/build_wasm.sh ?';
+      console.error(e);
+    });
+  </script>
+</body>
+</html>
