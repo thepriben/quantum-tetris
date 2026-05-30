@@ -9,7 +9,7 @@ The game always calls `QuantumBackend::run(circuit)`. Only the **backend** chang
 | Backend | Select with | What it does |
 | --- | --- | --- |
 | **Classic** | `QUANTUM_MODE=classic` (default) | Uniform random bits — fast arcade baseline |
-| **Quantum** | `QUANTUM_MODE=qiskit` (desktop) or in-game **QUANTUM** button | Born-rule histograms — Qiskit Aer on desktop, statevector simulator in WASM (Qiskit-matched) |
+| **Quantum** | `QUANTUM_MODE=qiskit` (desktop) or in-game **QUANTUM** button | Born-rule histograms — Qiskit Aer on desktop, [RustQIP](https://github.com/Renmusxd/RustQIP) in WASM (Qiskit-matched) |
 
 ```bash
 # .env or shell
@@ -24,7 +24,7 @@ QUANTUM_BACKEND=classic|qiskit
 
 **Quantum (desktop)**: Python Qiskit Aer via `scripts/quantum_shim.py`.
 
-**Quantum (browser)**: Rust statevector simulator — same gates, probabilities verified against Qiskit in CI.
+**Quantum (browser)**: [RustQIP](https://github.com/Renmusxd/RustQIP) via `RustQipBackend` — same gates, probabilities verified against Qiskit in CI.
 
 ---
 

@@ -1,14 +1,14 @@
-//! Backend adapters: **classic** uniform random, **Born** statevector, and **Qiskit Aer** (Python).
+//! Backend adapters: **classic** uniform random, **RustQIP** statevector, and **Qiskit Aer** (Python).
 
-mod born;
 mod classic;
 #[cfg(feature = "backend-qiskit")]
 mod qiskit;
+mod rustqip;
 
-pub use born::{born_probabilities, BornBackend};
 pub use classic::ClassicBackend;
 #[cfg(feature = "backend-qiskit")]
 pub use qiskit::QiskitBackend;
+pub use rustqip::{rustqip_probabilities, RustQipBackend};
 
 use crate::{QuantumBackend, QuantumError};
 
@@ -17,7 +17,7 @@ use crate::{QuantumBackend, QuantumError};
 pub enum BackendKind {
     /// Uniform random bitstrings — arcade baseline.
     Classic,
-    /// Born-rule distributions: Qiskit Aer on desktop, statevector simulator in WASM.
+    /// Born-rule distributions: Qiskit Aer on desktop, RustQIP statevector in WASM.
     Quantum,
 }
 
@@ -50,7 +50,7 @@ impl BackendKind {
                 }
                 #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
                 {
-                    "quantum (Born rule · Qiskit-matched)"
+                    "quantum (RustQIP · Qiskit-matched)"
                 }
             }
         }
@@ -69,14 +69,14 @@ pub fn build_backend(kind: BackendKind) -> Result<Box<dyn QuantumBackend>, Quant
                 } else {
                     eprintln!(
                         "[quantum] Qiskit Aer unavailable (pip install -r scripts/requirements.txt), \
-                         using Born-rule simulator"
+                         using RustQIP simulator"
                     );
-                    Ok(Box::new(BornBackend))
+                    Ok(Box::new(RustQipBackend))
                 }
             }
             #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
             {
-                Ok(Box::new(BornBackend))
+                Ok(Box::new(RustQipBackend))
             }
         }
     }
