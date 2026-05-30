@@ -8,7 +8,7 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Jouer en ligne</strong></a>
 </p>
 
-Tetris où **toute la stochasticité** vient de circuits quantiques — pas d’un PRNG. Seuls les déplacements clavier du joueur (← → ↑ ↓) restent classiques. Forme de la pièce, aperçu suivant, rotation, colonne, vitesse, bonus Espace et multiplicateur de lignes passent par une **mesure Born** (Qiskit Aer sur desktop, simulateur statevector calibré dans le navigateur).
+Tetris où **toute la stochasticité** vient de circuits quantiques — pas d’un PRNG. Seuls les déplacements clavier du joueur (← → ↑ ↓) restent classiques. Forme de la pièce, aperçu suivant, rotation, colonne, vitesse, bonus Espace et multiplicateur de lignes passent par une **mesure Born** (Qiskit Aer sur desktop ; simulateur Born en Rust dans le navigateur — mêmes portes, probabilités calibrées sur Qiskit, sans Python).
 
 > **Le joueur :** ← → ↑ ↓ et Espace · **Le jeu :** tout le reste.
 
