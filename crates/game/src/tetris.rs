@@ -216,12 +216,7 @@ fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun, lo
     run.last_event = i18n::spawn_event(locale, &now_readout.bell, kind_label(kind));
 }
 
-fn reset_game(
-    session: &QuantumSession,
-    board: &mut Board,
-    run: &mut GameRun,
-    locale: Locale,
-) {
+fn reset_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
     *board = Board::default();
     *run = GameRun::new(session.kind);
     run.last_event.clear();

@@ -3,7 +3,7 @@
 use crate::board::Board;
 use crate::config::{GameConfig, QuantumSession};
 use crate::game_state::GameRun;
-use crate::i18n::Locale;
+use crate::i18n;
 use crate::tetris;
 use crate::ui;
 use bevy::prelude::*;
@@ -26,7 +26,7 @@ impl Plugin for TetrisPlugin {
 
         app.insert_resource(self.config.clone())
             .insert_resource(ClearColor(crate::ui::BG))
-            .insert_resource(Locale::default())
+            .insert_resource(i18n::initial_locale())
             .insert_resource(session)
             .insert_resource(GameRun::new(self.config.backend_kind))
             .insert_resource(Board::default())
@@ -35,10 +35,13 @@ impl Plugin for TetrisPlugin {
             .add_systems(
                 Update,
                 (
+                    #[cfg(not(target_arch = "wasm32"))]
                     ui::handle_lang_button,
                     ui::handle_mode_buttons,
                     tetris::tick_gravity,
                     tetris::handle_input,
+                    #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+                    i18n::sync_web_locale,
                     ui::refresh_ui,
                 )
                     .chain(),
