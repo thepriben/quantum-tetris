@@ -12,29 +12,43 @@
       'home.title': 'Quantum Tetris',
       'home.subtitle': 'Tetris — le hasard vient des circuits, pas d\'un dé',
       'home.lead':
-        'En surface, c\'est du Tetris. Sous le capot, <strong>chaque tirage</strong> (pièce, vitesse, bonus) passe par un circuit Qiskit — ou son équivalent dans le navigateur. Toi, tu bouges ; le reste, c\'est la mesure.',
+        'En surface, c\'est du Tetris. Chaque tirage du jeu (pièce, vitesse, bonus) passe par une mesure quantique — Qiskit sur desktop, simulateur calibré dans le navigateur.',
       'home.principle':
-        '<strong>Toi :</strong> ← → ↑ ↓ et Espace.<br>' +
-        '<strong>Le jeu :</strong> tout le reste.',
-      'home.quantumTitle': 'Mécaniques',
-      'home.moment.spawn.title': 'Nouvelle pièce',
-      'home.moment.spawn.text':
-        'Quatre tirs à l\'apparition : deux téléportations pour la pièce en jeu et le «&nbsp;suiv.&nbsp;», puis rotation/colonne et cadence de chute.',
+        '<strong>Toi :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
+      'home.classicalTitle': 'Classique — toi',
+      'home.quantumTitle': 'Quantique — le jeu',
+      'home.label.game': 'En jeu',
+      'home.label.quantum': 'Circuit',
+      'home.moment.controls.title': 'Déplacements',
+      'home.moment.controls.game': '← → déplacent, ↑ tourne, ↓ accélère la chute entre deux cases.',
+      'home.moment.controls.quantum': 'Pas de mesure — seule part entièrement sous ton contrôle.',
+      'home.moment.piece.title': 'Pièce en cours & « suiv. »',
+      'home.moment.piece.game': 'Quelle forme joue, et ce que montre l\'aperçu suivant.',
+      'home.moment.piece.quantum':
+        '<code>quantum-teleportation-gate-v1</code> ×2 — paire de Bell → famille (I, O, T…), qubit message → variante.',
+      'home.moment.brain.title': 'Rotation & colonne',
+      'home.moment.brain.game': 'Orientation à l\'apparition et colonne où la pièce spawn.',
+      'home.moment.brain.quantum':
+        '<code>imp-brain-v1</code> — deux bits mesurés, mappés sur rotation et colonne.',
+      'home.moment.hunter.title': 'Cadence de chute',
+      'home.moment.hunter.game': 'Intervalle entre deux descentes — accélère avec le niveau.',
+      'home.moment.hunter.quantum':
+        '<code>enemy-profile-hunter-v1</code> — vitesse tirée à chaque nouvelle pièce.',
       'home.moment.observe.title': 'Espace — chute forcée',
-      'home.moment.observe.text':
-        'Pose immédiate + tirage bonus. Parfois une ligne en cadeau.',
+      'home.moment.observe.game': 'Pose immédiatement ; bonus de score, parfois une ligne en plus.',
+      'home.moment.observe.quantum':
+        '<code>observation-pulse-v1</code> — mesure volontaire, 2 bits → type de bonus.',
       'home.moment.line.title': 'Ligne complétée',
-      'home.moment.line.text':
-        'Multiplicateur de score tiré au sort — ×1 à ×4.',
-      'home.classicalNote':
-        'Les flèches restent 100&nbsp;% classiques. Le HUD in-game affiche le circuit actif et les bits mesurés.',
-      'home.localClassic': 'Desktop classique :',
-      'home.localQiskit': 'Desktop Qiskit Aer :',
+      'home.moment.line.game': 'Multiplicateur de points ×1 à ×4 selon le tirage.',
+      'home.moment.line.quantum':
+        '<code>q-shard-stabilizer-v1</code> — stabilisation après effacement, bits → multiplicateur.',
       'home.circuitsLink': 'Référence circuits',
       'home.github': 'GitHub',
-      'home.readme': 'Architecture',
+      'home.readme': 'Build local',
       'play.starting': 'Chargement…',
       'error.wasm': 'Jeu indisponible — build WASM manquant (./scripts/build_wasm.sh)',
+      'error.canvas': 'Le canvas n\'a pas démarré — recharger la page.',
+      'error.run': 'Erreur au lancement du jeu — voir la console.',
     },
     en: {
       'meta.title': 'Quantum Tetris',
@@ -44,51 +58,79 @@
       'home.title': 'Quantum Tetris',
       'home.subtitle': 'Tetris — randomness from circuits, not a dice roll',
       'home.lead':
-        'Looks like Tetris. Under the hood, <strong>every roll</strong> (piece, speed, bonus) runs through a Qiskit circuit — or its browser twin. You move; the rest is measurement.',
+        'Looks like Tetris. Every roll (piece, speed, bonus) is a quantum measurement — Qiskit on desktop, matched simulator in the browser.',
       'home.principle':
-        '<strong>You:</strong> ← → ↑ ↓ and Space.<br>' +
-        '<strong>The game:</strong> everything else.',
-      'home.quantumTitle': 'Mechanics',
-      'home.moment.spawn.title': 'New piece',
-      'home.moment.spawn.text':
-        'Four draws on spawn: two teleportations for the active piece and “next”, then rotation/column and drop cadence.',
+        '<strong>You:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
+      'home.classicalTitle': 'Classical — you',
+      'home.quantumTitle': 'Quantum — the game',
+      'home.label.game': 'In-game',
+      'home.label.quantum': 'Circuit',
+      'home.moment.controls.title': 'Movement',
+      'home.moment.controls.game': '← → move, ↑ rotate, ↓ soft-drop faster.',
+      'home.moment.controls.quantum': 'No measurement — the only fully player-controlled part.',
+      'home.moment.piece.title': 'Active piece & “next”',
+      'home.moment.piece.game': 'Which shape plays, and what the next preview shows.',
+      'home.moment.piece.quantum':
+        '<code>quantum-teleportation-gate-v1</code> ×2 — Bell pair → family (I, O, T…), message qubit → variant.',
+      'home.moment.brain.title': 'Rotation & column',
+      'home.moment.brain.game': 'Spawn orientation and which column the piece enters.',
+      'home.moment.brain.quantum':
+        '<code>imp-brain-v1</code> — two measured bits mapped to rotation and column.',
+      'home.moment.hunter.title': 'Drop cadence',
+      'home.moment.hunter.game': 'Time between grid steps — speeds up with level.',
+      'home.moment.hunter.quantum':
+        '<code>enemy-profile-hunter-v1</code> — drop interval drawn on each new piece.',
       'home.moment.observe.title': 'Space — hard drop',
-      'home.moment.observe.text':
-        'Instant lock plus a bonus roll. Sometimes an extra line.',
+      'home.moment.observe.game': 'Locks instantly; score bonus, sometimes an extra line.',
+      'home.moment.observe.quantum':
+        '<code>observation-pulse-v1</code> — deliberate measure, 2 bits → bonus type.',
       'home.moment.line.title': 'Line clear',
-      'home.moment.line.text':
-        'Random score multiplier — ×1 to ×4.',
-      'home.classicalNote':
-        'Arrow keys stay 100% classical. The in-game HUD shows the active circuit and measured bits.',
-      'home.localClassic': 'Desktop classic:',
-      'home.localQiskit': 'Desktop Qiskit Aer:',
+      'home.moment.line.game': 'Score multiplier ×1 to ×4 from the draw.',
+      'home.moment.line.quantum':
+        '<code>q-shard-stabilizer-v1</code> — post-clear stabilizer, bits → multiplier.',
       'home.circuitsLink': 'Circuit reference',
       'home.github': 'GitHub',
-      'home.readme': 'Architecture',
+      'home.readme': 'Local build',
       'play.starting': 'Loading…',
       'error.wasm': 'Game unavailable — WASM build missing (./scripts/build_wasm.sh)',
+      'error.canvas': 'Canvas did not start — reload the page.',
+      'error.run': 'Game failed to start — see console.',
     },
   };
 
   function getLocale() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === 'en' ? 'en' : DEFAULT;
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored === 'en' ? 'en' : DEFAULT;
+    } catch {
+      return DEFAULT;
+    }
   }
 
   function t(key) {
-    return T[getLocale()][key];
+    const dict = T[getLocale()];
+    return dict?.[key] ?? key;
   }
 
   function notifyGame(lang) {
+    const l = lang === 'en' ? 'en' : 'fr';
     if (typeof window.__qtSetWebLocale === 'function') {
-      window.__qtSetWebLocale(lang);
+      window.__qtSetWebLocale(l);
+    } else if (typeof window.__qtQueueLocale === 'function') {
+      window.__qtQueueLocale(l);
     }
   }
 
   function setLocale(lang) {
-    localStorage.setItem(STORAGE_KEY, lang === 'en' ? 'en' : 'fr');
+    const l = lang === 'en' ? 'en' : 'fr';
+    try {
+      localStorage.setItem(STORAGE_KEY, l);
+    } catch {
+      /* private mode */
+    }
     apply();
-    notifyGame(lang);
+    notifyGame(l);
+    window.dispatchEvent(new CustomEvent('qt-locale', { detail: l }));
   }
 
   function apply() {
