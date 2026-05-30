@@ -20,7 +20,7 @@ python3 -m http.server 8080 --directory docs
 # open http://localhost:8080/
 ```
 
-Requires ~3 GiB free disk for the release WASM build. Use `./scripts/clean_build.sh` if needed.
+Requires ~3 GiB free disk for the release WASM build. Use `./scripts/clean_build.sh` if needed. If the page says the WASM bundle is missing, `docs/wasm/` has not been generated locally or the GitHub Pages workflow has not deployed a successful build yet.
 
 ---
 

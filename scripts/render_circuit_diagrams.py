@@ -98,17 +98,30 @@ def build_circuit(qubits: int, gates: list[dict[str, Any]]) -> QuantumCircuit:
 
 def render_circuit(qc: QuantumCircuit, stem: str) -> None:
     png_path = OUT_DIR / f"{stem}.png"
-    style = {"backgroundcolor": "#eef3fb", "textcolor": "#1a2840", "linecolor": "#2a5080"}
+    style = {
+        "backgroundcolor": "#ffffff",
+        "textcolor": "#172033",
+        "linecolor": "#1e3a5f",
+        "creglinecolor": "#53657d",
+    }
 
     import matplotlib.pyplot as plt
 
-    qc.draw(
+    fig = qc.draw(
         output="mpl",
-        filename=str(png_path),
-        scale=0.85,
+        scale=1.25,
         fold=-1,
         style=style,
         plot_barriers=False,
+    )
+    fig.set_facecolor("#ffffff")
+    fig.savefig(
+        png_path,
+        dpi=180,
+        facecolor=fig.get_facecolor(),
+        edgecolor="none",
+        bbox_inches="tight",
+        pad_inches=0.12,
     )
     plt.close("all")
     print(f"  OK {stem} → {png_path.name}")

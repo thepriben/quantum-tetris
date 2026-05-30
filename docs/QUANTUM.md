@@ -2,6 +2,8 @@
 
 The game always calls `QuantumBackend::run(circuit)`. The backend only changes *how* bitstrings are sampled; gameplay decodes the bits the same way in every mode.
 
+Default gameplay is quantum: desktop and browser both use the RustQIP statevector backend unless the player explicitly switches to **CLASSIC**.
+
 ---
 
 ## Backends
@@ -34,13 +36,15 @@ QUANTUM_BACKEND=classic|quantum|qiskit
 
 | Label | Qubits | When | Game effect |
 | --- | --- | --- | --- |
-| `quantum-teleportation-gate-v1` | 3 | Each spawn (×2) | **Shot 1**: current piece. **Shot 2**: next piece. Bell bits (q0,q1) → family; message qubit (q2) → variant |
+| `quantum-teleportation-gate-v1` | 3 | Each spawn (×2) | **Shot 1**: current piece. **Shot 2**: next piece. Bell-measurement bits (q0,q1) → family; message/receiver bit (q2) → variant |
 | `imp-brain-v1` | 2 | Each spawn | Rotation 0–3 + spawn column |
 | `enemy-profile-hunter-v1` | 2 | Each spawn | Gravity interval (seconds) |
 | `observation-pulse-v1` | 2 | Space | Hard-drop bonus |
 | `q-shard-stabilizer-v1` | 2 | Line clear | Score multiplier |
 
 ### Teleporter families (Bell measurement)
+
+`quantum-teleportation-gate-v1` exposes the sender-side Bell measurement bits as gameplay state. It is teleportation-inspired rather than a hidden correction protocol: the game intentionally reads the correction/message bits instead of applying classical feed-forward and discarding them.
 
 | Bell | Family | Pieces |
 | --- | --- | --- |
@@ -106,4 +110,4 @@ Environment:
 
 ## WASM note
 
-The browser build uses **classic only** — no Python in the tab. See [WASM.md](WASM.md).
+The browser build uses **RustQIP quantum mode** by default. Qiskit does not run in the tab because it needs Python, but the RustQIP probabilities are checked against Qiskit Aer in CI. See [WASM.md](WASM.md).

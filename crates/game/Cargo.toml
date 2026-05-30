@@ -1,6 +1,6 @@
 [package]
 name = "quantum-tetris"
-description = "Quantum Tetris — circuit-driven Tetris, classic or Qiskit"
+description = "Quantum Tetris — circuit-driven Tetris with RustQIP and Qiskit"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

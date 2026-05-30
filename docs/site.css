@@ -212,29 +212,29 @@ code {
 
 /* Circuit diagram — readable Qiskit strip under each gameplay moment */
 .circuit-fig {
-  margin: 0.55rem 0 0;
-  padding: 8px 10px;
+  margin: 0.7rem 0 0;
+  display: inline-block;
+  max-width: 100%;
+  padding: 6px;
   line-height: 0;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
 }
 .circuit-fig img {
   display: block;
-  width: 100%;
+  width: auto;
   max-width: 100%;
   height: auto;
-  max-height: 120px;
+  max-height: 260px;
   object-fit: contain;
   object-position: left center;
+  background: #fff;
   border-radius: 4px;
-  background: linear-gradient(180deg, #e8eef8 0%, #dfe8f4 100%);
-  padding: 6px 8px;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
 .moment--quantum:hover .circuit-fig img {
-  filter: brightness(1.03);
+  filter: brightness(1.06);
 }
 .circuit-fig--missing { display: none; }
 

@@ -8,26 +8,26 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Play online</strong></a>
 </p>
 
-Tetris where random outcomes (piece, speed, bonuses…) do not use a classical PRNG: the engine runs predefined quantum circuits and reads the measured bits. Only arrow keys (← → ↑ ↓) and hard drop (Space) sit outside that pipeline.
+Tetris where stochastic game events (piece, spawn state, cadence, bonuses…) are driven by measured quantum circuits in the default mode. The player still controls movement with ← → ↑ ↓ and Space; the game draws everything else from circuit measurements.
 
 > **The player:** ← → ↑ ↓ and Space · **The game:** everything else.
 
-**Runtime.** Bevy (Rust), shipped as a desktop binary or WASM in the browser. Quantum mode defaults to the **RustQIP** statevector simulator — same build locally and online. **Qiskit Aer** (Python) remains available on desktop for comparison and CI.
+**Runtime.** Bevy (Rust), shipped as a desktop binary or WASM in the browser. Quantum mode defaults to **RustQIP** statevector simulation, so the same circuit presets run locally and online. **Qiskit Aer** (Python) remains available on desktop for parity checks, diagrams, and CI.
 
 ---
 
 ## Gameplay & circuits
 
-Each random moment invokes a circuit from the shared preset list (see [`docs/QUANTUM.md`](docs/QUANTUM.md)). Diagrams below match what the runtime executes ([`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py)).
+Each stochastic moment invokes a circuit from the shared preset list (see [`docs/QUANTUM.md`](docs/QUANTUM.md)). The diagrams below are generated from the same gate definitions mirrored by [`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py).
 
 ### Active piece & “next”
 
 | | |
 |---|---|
 | **In-game** | Sets the active shape and the **next** preview. |
-| **Circuit** | `quantum-teleportation-gate-v1` (×2) — entangled pair; measured bits pick family (I, O, T…) and variant. |
+| **Circuit** | `quantum-teleportation-gate-v1` (×2) — teleportation-inspired Bell measurement; measured bits pick family (I, O, T…) and variant. |
 
-<p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="480"></p>
+<p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="720"></p>
 
 ### Rotation & column
 
@@ -36,7 +36,7 @@ Each random moment invokes a circuit from the shared preset list (see [`docs/QUA
 | **In-game** | Sets spawn orientation and entry column. |
 | **Circuit** | `imp-brain-v1` — 2 measured qubits → rotation (0–3) and spawn column. |
 
-<p align="left"><img src="docs/circuits/imp-brain-v1.png" alt="imp-brain-v1" width="480"></p>
+<p align="left"><img src="docs/circuits/imp-brain-v1.png" alt="imp-brain-v1" width="720"></p>
 
 ### Drop cadence
 
@@ -45,7 +45,7 @@ Each random moment invokes a circuit from the shared preset list (see [`docs/QUA
 | **In-game** | Interval between grid steps; decreases as level rises. |
 | **Circuit** | `enemy-profile-hunter-v1` — 2 measured qubits → drop interval for the active piece. |
 
-<p align="left"><img src="docs/circuits/enemy-profile-hunter-v1.png" alt="enemy-profile-hunter-v1" width="480"></p>
+<p align="left"><img src="docs/circuits/enemy-profile-hunter-v1.png" alt="enemy-profile-hunter-v1" width="720"></p>
 
 ### Space — hard drop
 
@@ -54,7 +54,7 @@ Each random moment invokes a circuit from the shared preset list (see [`docs/QUA
 | **In-game** | Instant lock; score bonus, sometimes one extra line. |
 | **Circuit** | `observation-pulse-v1` — measure on hard drop; bits select the score bonus. |
 
-<p align="left"><img src="docs/circuits/observation-pulse-v1.png" alt="observation-pulse-v1" width="480"></p>
+<p align="left"><img src="docs/circuits/observation-pulse-v1.png" alt="observation-pulse-v1" width="720"></p>
 
 ### Line clear
 
@@ -63,7 +63,7 @@ Each random moment invokes a circuit from the shared preset list (see [`docs/QUA
 | **In-game** | Score multiplier ×1 to ×4 from the draw. |
 | **Circuit** | `q-shard-stabilizer-v1` — after a line clear; bits set the multiplier (×1–×4). |
 
-<p align="left"><img src="docs/circuits/q-shard-stabilizer-v1.png" alt="q-shard-stabilizer-v1" width="480"></p>
+<p align="left"><img src="docs/circuits/q-shard-stabilizer-v1.png" alt="q-shard-stabilizer-v1" width="720"></p>
 
 ---
 
@@ -72,7 +72,7 @@ Each random moment invokes a circuit from the shared preset list (see [`docs/QUA
 **Desktop**
 
 ```bash
-cp .env.example .env          # QUANTUM_MODE=quantum (RustQIP) by default
+cp .env.example .env          # optional; QUANTUM_MODE=quantum is the default
 cargo run -p quantum-tetris
 ```
 
@@ -80,7 +80,7 @@ cargo run -p quantum-tetris
 | --- | --- |
 | Quantum — RustQIP (default) | `cargo run -p quantum-tetris` |
 | Classic | `QUANTUM_MODE=classic cargo run -p quantum-tetris` |
-| Quantum — Qiskit (desktop only) | `pip install -r scripts/requirements.txt` then `QUANTUM_MODE=qiskit cargo run -p quantum-tetris` |
+| Quantum — Qiskit (desktop only) | `python -m pip install -r scripts/requirements.txt` then `QUANTUM_MODE=qiskit cargo run -p quantum-tetris` |
 
 **Browser** (needs ~3 GiB free disk for the release WASM build)
 
@@ -91,7 +91,7 @@ python3 -m http.server 8080 --directory docs
 # → http://localhost:8080/
 ```
 
-If the linker fails with `errno=28`, free disk space or run `./scripts/clean_build.sh`. The WASM bundle is ~70 MB — first load in the browser can take a minute.
+If the linker fails with `errno=28`, free disk space or run `./scripts/clean_build.sh`. The optimized WASM bundle is about 40 MB (larger without `wasm-opt`), so the first browser load can take a moment.
 
 **Controls:** ← → move · ↑ rotate · ↓ soft drop · **Space** hard drop + quantum observe (`observation-pulse-v1`).
 
@@ -133,7 +133,7 @@ flowchart TB
   SHIM -.->|subprocess JSON| PY["scripts/quantum_shim.py<br/>Qiskit Aer"]
 ```
 
-**Core idea:** the game only calls `QuantumBackend::run(circuit) → Measurement`, then decodes bitstrings in `measurement_fx.rs`. Switching backends never changes Tetris logic.
+**Core idea:** the game only calls `QuantumBackend::run(circuit) → Measurement`, then decodes bitstrings in `measurement_fx.rs`. Switching between Classic, RustQIP, and Qiskit never changes the Tetris logic.
 
 ### Spawn pipeline
 
@@ -145,9 +145,9 @@ sequenceDiagram
   participant Q as QuantumSession
   participant M as measurement_fx.rs
 
-  T->>Q: piece_circuit() — teleport #1
+  T->>Q: piece_circuit() — teleportation-inspired shot #1
   Q-->>T: bits → active piece
-  T->>Q: piece_circuit() — teleport #2
+  T->>Q: piece_circuit() — teleportation-inspired shot #2
   Q-->>T: bits → next piece (preview)
   T->>Q: rotation_circuit() — imp-brain-v1
   Q-->>M: rotation + spawn column

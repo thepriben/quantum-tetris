@@ -10,11 +10,11 @@
       'lang.fr': 'Français',
       'lang.en': 'English',
       'home.title': 'Quantum Tetris',
-      'home.subtitle': 'Tetris — tirages aléatoires via circuits quantiques',
+      'home.subtitle': 'Tetris — événements stochastiques via circuits quantiques',
       'home.lead':
-        'Règles Tetris habituelles. Pièce, cadence, bonus : à chaque tirage, un circuit prédéfini est exécuté ; les bits mesurés déterminent l\'effet en jeu.',
+        'Règles Tetris habituelles. Pièce, état d’apparition, cadence, bonus : chaque événement stochastique exécute un circuit prédéfini ; les bits mesurés déterminent l’effet en jeu.',
       'home.stack':
-        '<strong>Architecture.</strong> Bevy (Rust) → WASM dans le navigateur. Mêmes circuits sur tous les backends : <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simule le statevector par défaut, en local et en ligne (résultats comparés à Qiskit en CI). Option desktop : Qiskit Aer via Python.',
+        '<strong>Architecture.</strong> Bevy (Rust) → WASM dans le navigateur. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simule le statevector par défaut en local et en ligne ; Qiskit Aer reste disponible sur desktop pour la parité, les diagrammes et la CI.',
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
       'home.quantumTitle': 'Mécaniques',
@@ -23,7 +23,7 @@
       'home.moment.piece.title': 'Pièce en cours & « suiv. »',
       'home.moment.piece.game': 'Détermine la forme active et l\'aperçu suivant.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> (×2) — paire intriquée ; les bits mesurés fixent la famille (I, O, T…) et la variante.',
+        '<code>quantum-teleportation-gate-v1</code> (×2) — mesure de Bell inspirée de la téléportation ; les bits mesurés fixent la famille (I, O, T…) et la variante.',
       'home.moment.brain.title': 'Rotation & colonne',
       'home.moment.brain.game': 'Fixe l\'orientation à l\'apparition et la colonne d\'entrée.',
       'home.moment.brain.quantum':
@@ -46,8 +46,12 @@
       'play.starting': 'Chargement…',
       'play.downloading': 'Téléchargement du jeu…',
       'play.initializing': 'Démarrage du moteur…',
-      'play.hint': 'Premier chargement (~70 Mo). Attendre la fin du téléchargement.',
-      'error.wasm': 'Jeu indisponible — build WASM manquant (./scripts/build_wasm.sh)',
+      'play.hint': 'Premier chargement volumineux. Attendre la fin du téléchargement.',
+      'error.wasmJs':
+        'Bundle JavaScript WASM introuvable — lancez ./scripts/build_wasm.sh puis servez docs/.',
+      'error.wasmExports': 'Le bundle WASM ne contient pas les exports attendus.',
+      'error.wasmBinary':
+        'Binaire WASM introuvable ou invalide — relancez ./scripts/build_wasm.sh ou le workflow Pages.',
       'error.canvas': 'Le canvas n\'a pas démarré — recharger la page.',
       'error.run': 'Erreur au lancement du jeu — voir la console.',
     },
@@ -57,11 +61,11 @@
       'lang.fr': 'Français',
       'lang.en': 'English',
       'home.title': 'Quantum Tetris',
-      'home.subtitle': 'Tetris — random draws from quantum circuits',
+      'home.subtitle': 'Tetris — stochastic events from quantum circuits',
       'home.lead':
-        'Standard Tetris rules. Piece, cadence, bonuses: each draw runs a predefined circuit; measured bits drive the in-game effect.',
+        'Standard Tetris rules. Piece, spawn state, cadence, bonuses: each stochastic event runs a predefined circuit; measured bits drive the in-game effect.',
       'home.stack':
-        '<strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. Same circuit presets on every backend: <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default, locally and online (cross-checked against Qiskit in CI). Desktop option: Qiskit Aer via Python.',
+        '<strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online; Qiskit Aer remains available on desktop for parity, diagrams, and CI.',
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
       'home.quantumTitle': 'Mechanics',
@@ -70,7 +74,7 @@
       'home.moment.piece.title': 'Active piece & “next”',
       'home.moment.piece.game': 'Sets the active shape and the next preview.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> (×2) — entangled pair; measured bits pick the family (I, O, T…) and variant.',
+        '<code>quantum-teleportation-gate-v1</code> (×2) — teleportation-inspired Bell measurement; measured bits pick the family (I, O, T…) and variant.',
       'home.moment.brain.title': 'Rotation & column',
       'home.moment.brain.game': 'Sets spawn orientation and entry column.',
       'home.moment.brain.quantum':
@@ -93,8 +97,12 @@
       'play.starting': 'Loading…',
       'play.downloading': 'Downloading game…',
       'play.initializing': 'Starting engine…',
-      'play.hint': 'Initial download (~70 MB). Wait for the progress bar to finish.',
-      'error.wasm': 'Game unavailable — WASM build missing (./scripts/build_wasm.sh)',
+      'play.hint': 'Large initial download. Wait for the progress bar to finish.',
+      'error.wasmJs':
+        'WASM JavaScript bundle missing — run ./scripts/build_wasm.sh, then serve docs/.',
+      'error.wasmExports': 'WASM bundle is present but does not expose the expected game entry points.',
+      'error.wasmBinary':
+        'WASM binary missing or invalid — rerun ./scripts/build_wasm.sh or the Pages workflow.',
       'error.canvas': 'Canvas did not start — reload the page.',
       'error.run': 'Game failed to start — see console.',
     },

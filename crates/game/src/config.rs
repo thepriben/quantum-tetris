@@ -102,3 +102,21 @@ impl QuantumSession {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn wasm_defaults_to_rustqip_quantum() {
+        let config = GameConfig::wasm();
+        assert_eq!(config.platform, GamePlatform::Wasm);
+        assert_eq!(config.backend_kind, BackendKind::Quantum);
+    }
+
+    #[test]
+    fn fallback_session_keeps_quantum_when_available() {
+        let session = QuantumSession::with_fallback(BackendKind::Quantum);
+        assert_eq!(session.kind, BackendKind::Quantum);
+    }
+}

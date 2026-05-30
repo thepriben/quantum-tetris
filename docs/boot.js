@@ -102,13 +102,13 @@ export async function bootGame({ frameInner, loader, errorEl }) {
     mod = await import(WASM_JS.href);
   } catch (e) {
     console.error(e);
-    fail(t('error.wasm', 'WASM load failed'));
+    fail(t('error.wasmJs', 'WASM JavaScript bundle missing'));
     return;
   }
 
   const { default: init, run_wasm, set_web_locale } = mod;
   if (typeof init !== 'function' || typeof run_wasm !== 'function') {
-    fail(t('error.wasm', 'WASM exports missing'));
+    fail(t('error.wasmExports', 'WASM exports missing'));
     return;
   }
 
@@ -134,7 +134,7 @@ export async function bootGame({ frameInner, loader, errorEl }) {
     await init(await WebAssembly.compile(wasmBytes));
   } catch (e) {
     console.error(e);
-    fail(t('error.wasm', 'WASM init failed'));
+    fail(t('error.wasmBinary', 'WASM binary unavailable or failed to initialize'));
     return;
   }
 

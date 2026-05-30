@@ -1,4 +1,4 @@
-//! Quantum Tetris — classic or Qiskit piece picker.
+//! Quantum Tetris — Bevy app wired to classic, RustQIP, or Qiskit backends.
 
 use crate::board::Board;
 use crate::config::{GameConfig, QuantumSession};
