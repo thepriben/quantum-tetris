@@ -19,6 +19,20 @@ fn python_executable() -> String {
         .unwrap_or_else(|_| "python3".into())
 }
 
+/// Quick probe used before selecting the Qiskit backend (import check only).
+pub fn qiskit_available() -> bool {
+    if !shim_path().is_file() {
+        return false;
+    }
+    Command::new(python_executable())
+        .args(["-c", "import qiskit_aer"])
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map(|status| status.success())
+        .unwrap_or(false)
+}
+
 /// Run `circuit` through `scripts/quantum_shim.py` (Qiskit Aer).
 pub fn run_qiskit(circuit: &QuantumCircuit) -> Result<Measurement, QuantumError> {
     const BACKEND: &str = "qiskit";

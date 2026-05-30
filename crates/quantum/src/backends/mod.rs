@@ -64,7 +64,15 @@ pub fn build_backend(kind: BackendKind) -> Result<Box<dyn QuantumBackend>, Quant
         BackendKind::Quantum => {
             #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
             {
-                Ok(Box::new(QiskitBackend))
+                if crate::python_shim::qiskit_available() {
+                    Ok(Box::new(QiskitBackend))
+                } else {
+                    eprintln!(
+                        "[quantum] Qiskit Aer unavailable (pip install -r scripts/requirements.txt), \
+                         using Born-rule simulator"
+                    );
+                    Ok(Box::new(BornBackend))
+                }
             }
             #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
             {

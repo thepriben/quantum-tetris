@@ -117,12 +117,7 @@ fn observe_hard_drop(session: &QuantumSession, board: &mut Board, run: &mut Game
     } {}
     active.y += 1;
 
-    let measurement = session
-        .backend
-        .lock()
-        .expect("backend")
-        .run(&observe_circuit())
-        .expect("observe");
+    let measurement = session.run_circuit(&observe_circuit());
     record_measurement(run, &measurement);
     let fx = observe_from_bits(&measurement.bits);
     run.score += fx.score_bonus;
@@ -149,12 +144,7 @@ fn lock_and_continue(session: &QuantumSession, board: &mut Board, run: &mut Game
 fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
     let cleared = board.clear_lines();
     if cleared > 0 {
-        let m = session
-            .backend
-            .lock()
-            .expect("backend")
-            .run(&line_circuit())
-            .expect("line");
+        let m = session.run_circuit(&line_circuit());
         record_measurement(run, &m);
         let bonus = line_clear_bonus(&m.bits, cleared);
         run.lines += cleared;
@@ -166,12 +156,10 @@ fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
 }
 
 fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
-    let mut backend = session.backend.lock().expect("backend");
-
-    let tele_now = backend.run(&piece_circuit()).expect("teleport now");
-    let tele_next = backend.run(&piece_circuit()).expect("teleport next");
-    let rot_m = backend.run(&rotation_circuit()).expect("rotation");
-    let speed_m = backend.run(&speed_circuit()).expect("speed");
+    let tele_now = session.run_circuit(&piece_circuit());
+    let tele_next = session.run_circuit(&piece_circuit());
+    let rot_m = session.run_circuit(&rotation_circuit());
+    let speed_m = session.run_circuit(&speed_circuit());
 
     record_measurement(run, &tele_now);
 
