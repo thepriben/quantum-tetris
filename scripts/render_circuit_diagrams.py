@@ -16,12 +16,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "docs" / "circuits"
 
-BLUE = "#123a63"
-WIRE = "#1e3a5f"
-CLASSICAL = "#53657d"
+WIRE = "#82aee0"
+CLASSICAL = "#8492a6"
 GATE = "#f84b5c"
 ROT = "#a9165a"
-MEASURE = "#b3b3b3"
+MEASURE = "#a6a6a6"
+LABEL = "#dbe5f2"
+CX = "#5b8dff"
 
 # (filename stem, qubits, gates) - same IR as the Rust game crate.
 GAMEPLAY_CIRCUITS: list[tuple[str, int, list[dict[str, Any]]]] = [
@@ -101,8 +102,8 @@ def render_circuit(stem: str, qubits: int, gates: list[dict[str, Any]]) -> None:
     width = columns * 1.25 + 1.7
     height = qubits * 0.9 + 1.6
     fig, ax = plt.subplots(figsize=(width, height), dpi=180)
-    fig.patch.set_facecolor("white")
-    ax.set_facecolor("white")
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
     ax.axis("off")
 
     y_positions = {q: qubits - q - 1 for q in range(qubits)}
@@ -111,12 +112,12 @@ def render_circuit(stem: str, qubits: int, gates: list[dict[str, Any]]) -> None:
 
     for q, y in y_positions.items():
         ax.plot([x_start, x_end], [y, y], color=WIRE, lw=2.4)
-        ax.text(0.35, y, f"q{q}", ha="right", va="center", fontsize=17, color="#172033")
+        ax.text(0.35, y, f"q{q}", ha="right", va="center", fontsize=17, color=LABEL)
 
     c_y = -0.75
     ax.plot([x_start, x_end], [c_y, c_y], color=CLASSICAL, lw=2.2)
     ax.plot([x_start, x_end], [c_y - 0.06, c_y - 0.06], color=CLASSICAL, lw=2.2)
-    ax.text(0.35, c_y, "meas", ha="right", va="center", fontsize=16, color="#172033")
+    ax.text(0.35, c_y, "meas", ha="right", va="center", fontsize=16, color=LABEL)
 
     for index, gate in enumerate(gates, start=1):
         x = x_start + index * 1.05
@@ -124,9 +125,9 @@ def render_circuit(stem: str, qubits: int, gates: list[dict[str, Any]]) -> None:
             control, target = _cx(gate)
             y1 = y_positions[control]
             y2 = y_positions[target]
-            ax.plot([x, x], [y1, y2], color="#0b3aae", lw=2.3)
-            ax.scatter([x], [y1], s=105, color="#0b3aae", zorder=5)
-            ax.scatter([x], [y2], s=520, color="#0b3aae", zorder=5)
+            ax.plot([x, x], [y1, y2], color=CX, lw=2.3)
+            ax.scatter([x], [y1], s=105, color=CX, zorder=5)
+            ax.scatter([x], [y2], s=520, color=CX, zorder=5)
             ax.text(x, y2, "+", ha="center", va="center", fontsize=23, color="white", zorder=6)
             continue
 
@@ -148,7 +149,7 @@ def render_circuit(stem: str, qubits: int, gates: list[dict[str, Any]]) -> None:
         )
         ax.add_patch(rect)
         ax.add_patch(Arc((measure_x, y - 0.05), 0.42, 0.38, theta1=15, theta2=175, lw=2.2))
-        ax.plot([measure_x + 0.03, measure_x + 0.22], [y - 0.03, y + 0.16], color="black", lw=2.0)
+        ax.plot([measure_x + 0.03, measure_x + 0.22], [y - 0.03, y + 0.16], color="#1b1f26", lw=2.0)
         ax.add_patch(
             FancyArrowPatch(
                 (measure_x, y - 0.34),
@@ -163,7 +164,7 @@ def render_circuit(stem: str, qubits: int, gates: list[dict[str, Any]]) -> None:
     ax.set_xlim(0, x_end + 0.2)
     ax.set_ylim(c_y - 0.45, qubits - 0.05)
     png_path = OUT_DIR / f"{stem}.png"
-    fig.savefig(png_path, facecolor="white", edgecolor="none", bbox_inches="tight", pad_inches=0.15)
+    fig.savefig(png_path, transparent=True, edgecolor="none", bbox_inches="tight", pad_inches=0.15)
     plt.close(fig)
     print(f"  OK {stem} -> {png_path.name}")
 
