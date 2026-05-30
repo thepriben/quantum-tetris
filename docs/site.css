@@ -120,6 +120,17 @@ code {
   color: var(--text);
   line-height: 1.65;
 }
+.col-guide .stack {
+  margin: 0.75rem 0 0;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.col-guide .stack code {
+  font-size: 0.92em;
+  color: #b8dcc8;
+  background: rgba(107, 191, 138, 0.08);
+}
 
 .col-guide h2 {
   margin: 1.75rem 0 0.75rem;
