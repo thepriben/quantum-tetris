@@ -1,6 +1,6 @@
 # Quantum layer — Quantum Tetris
 
-The game always calls `QuantumBackend::run(circuit)`. Only the **backend** changes how probabilities are assigned to bitstrings; gameplay reads bits the same way in both modes.
+The game always calls `QuantumBackend::run(circuit)`. The backend only changes *how* bitstrings are sampled; gameplay decodes the bits the same way in every mode.
 
 ---
 
@@ -8,23 +8,25 @@ The game always calls `QuantumBackend::run(circuit)`. Only the **backend** chang
 
 | Backend | Select with | What it does |
 | --- | --- | --- |
-| **Classic** | `QUANTUM_MODE=classic` (default) | Uniform random bits — fast arcade baseline |
-| **Quantum** | `QUANTUM_MODE=qiskit` (desktop) or in-game **QUANTUM** button | Born-rule histograms — Qiskit Aer on desktop, [RustQIP](https://github.com/Renmusxd/RustQIP) in WASM (Qiskit-matched) |
+| **Classic** | `QUANTUM_MODE=classic` or in-game **CLASSIC** | Uniform random bits — baseline without a simulator |
+| **Quantum (RustQIP)** | default, `QUANTUM_MODE=quantum`, or in-game **RUSTQIP** | In-process statevector via [RustQIP](https://github.com/Renmusxd/RustQIP) — desktop and browser |
+| **Qiskit Aer** | `QUANTUM_MODE=qiskit` or in-game **QISKIT** (desktop only) | Aer via Python `scripts/quantum_shim.py` — development and CI parity |
 
 ```bash
 # .env or shell
-QUANTUM_MODE=classic   # uniform
-QUANTUM_MODE=qiskit    # Aer (needs Python + qiskit)
+QUANTUM_MODE=quantum    # RustQIP (default)
+QUANTUM_MODE=classic   # uniform baseline
+QUANTUM_MODE=qiskit    # Aer (desktop only, needs Python)
 
 # alias
-QUANTUM_BACKEND=classic|qiskit
+QUANTUM_BACKEND=classic|quantum|qiskit
 ```
 
-**Classic**: every outcome in the histogram has equal weight — confidence stays flat.
+**Classic** — every bitstring has equal weight; useful to compare against quantum sampling.
 
-**Quantum (desktop)**: Python Qiskit Aer via `scripts/quantum_shim.py`.
+**RustQIP** — same gate list everywhere; probabilities checked against Qiskit in CI (`rustqip_qiskit_parity`).
 
-**Quantum (browser)**: [RustQIP](https://github.com/Renmusxd/RustQIP) via `RustQipBackend` — same gates, probabilities verified against Qiskit in CI.
+**Qiskit Aer** — optional on desktop; not available in the browser (no Python runtime).
 
 ---
 

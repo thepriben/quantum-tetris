@@ -7,8 +7,8 @@
 //! | Backend | Platform | Description |
 //! | --- | --- | --- |
 //! | Classic | all | Uniform random baseline |
-//! | Quantum | desktop + `backend-qiskit` | Qiskit Aer via `scripts/quantum_shim.py` |
-//! | Quantum | WASM / no Python | [RustQIP](https://github.com/Renmusxd/RustQIP) statevector (Qiskit-matched) |
+//! | Quantum | desktop + WASM | [RustQIP](https://github.com/Renmusxd/RustQIP) statevector (Qiskit-matched) |
+//! | Qiskit | desktop + `backend-qiskit` | Qiskit Aer via `scripts/quantum_shim.py` |
 //!
 //! ## Example
 //!

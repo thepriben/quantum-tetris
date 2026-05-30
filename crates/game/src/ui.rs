@@ -39,9 +39,14 @@ pub(crate) struct NextPreviewCell {
 #[derive(Component)]
 pub(crate) struct HudBits;
 #[derive(Component)]
-pub(crate) struct ModeClassicBtn;
+pub(crate) struct ModeBtn(pub BackendKind);
 #[derive(Component)]
-pub(crate) struct ModeQuantumBtn;
+pub(crate) struct ModeClassicLabel;
+#[derive(Component)]
+pub(crate) struct ModeRustqipLabel;
+#[cfg(not(target_arch = "wasm32"))]
+#[derive(Component)]
+pub(crate) struct ModeQiskitLabel;
 #[cfg(not(target_arch = "wasm32"))]
 #[derive(Component)]
 pub(crate) struct LangToggleBtn;
@@ -53,10 +58,6 @@ pub(crate) struct HudCircuitTitle;
 pub(crate) struct HudCircuit;
 #[derive(Component)]
 pub(crate) struct HudEvent;
-#[derive(Component)]
-pub(crate) struct ModeClassicLabel;
-#[derive(Component)]
-pub(crate) struct ModeQuantumLabel;
 #[derive(Component)]
 pub(crate) struct HintMoveLabel;
 #[derive(Component)]
@@ -140,7 +141,7 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
     parent.spawn(panel_node()).with_children(|p| {
         #[cfg(not(target_arch = "wasm32"))]
         spawn_lang_row(p, locale);
-        spawn_mode_row(p, run.is_quantum, locale);
+        spawn_mode_row(p, run.backend_kind, locale);
         spawn_controls_hint(p, locale);
         p.spawn((
             HudScore,
@@ -213,34 +214,44 @@ fn spawn_lang_row(parent: &mut ChildSpawnerCommands, locale: Locale) {
         });
 }
 
-fn spawn_mode_row(parent: &mut ChildSpawnerCommands, quantum: bool, locale: Locale) {
+fn spawn_mode_row(parent: &mut ChildSpawnerCommands, active: BackendKind, locale: Locale) {
     parent
         .spawn(Node {
             flex_direction: FlexDirection::Row,
-            column_gap: Val::Px(8.0),
+            flex_wrap: FlexWrap::Wrap,
+            column_gap: Val::Px(6.0),
+            row_gap: Val::Px(6.0),
             ..default()
         })
         .with_children(|row| {
             spawn_mode_button(
                 row,
-                ModeClassicBtn,
+                ModeBtn(BackendKind::Classic),
                 ModeClassicLabel,
                 i18n::mode_classic(locale),
-                !quantum,
+                active == BackendKind::Classic,
             );
             spawn_mode_button(
                 row,
-                ModeQuantumBtn,
-                ModeQuantumLabel,
-                i18n::mode_quantum(locale),
-                quantum,
+                ModeBtn(BackendKind::Quantum),
+                ModeRustqipLabel,
+                i18n::mode_rustqip(locale),
+                active == BackendKind::Quantum,
+            );
+            #[cfg(not(target_arch = "wasm32"))]
+            spawn_mode_button(
+                row,
+                ModeBtn(BackendKind::Qiskit),
+                ModeQiskitLabel,
+                i18n::mode_qiskit(locale),
+                active == BackendKind::Qiskit,
             );
         });
 }
 
 fn spawn_mode_button(
     parent: &mut ChildSpawnerCommands,
-    marker: impl Component,
+    mode: ModeBtn,
     label_marker: impl Component,
     label: &str,
     selected: bool,
@@ -248,12 +259,12 @@ fn spawn_mode_button(
     let (bg, border, text_c) = mode_button_colors(selected);
     parent
         .spawn((
-            marker,
+            mode,
             Button,
             Node {
-                width: Val::Px(108.0),
+                width: Val::Px(76.0),
                 height: Val::Px(36.0),
-                min_width: Val::Px(108.0),
+                min_width: Val::Px(76.0),
                 min_height: Val::Px(36.0),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
@@ -411,28 +422,17 @@ pub(crate) fn handle_mode_buttons(
     locale: Res<Locale>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
-    mut buttons: ParamSet<(
-        Query<&Interaction, (Changed<Interaction>, With<ModeClassicBtn>, With<Button>)>,
-        Query<&Interaction, (Changed<Interaction>, With<ModeQuantumBtn>, With<Button>)>,
-    )>,
+    buttons: Query<(&ModeBtn, &Interaction), (Changed<Interaction>, With<Button>)>,
 ) {
-    let pick_classic = buttons.p0().iter().any(|i| *i == Interaction::Pressed);
-    let pick_quantum = buttons.p1().iter().any(|i| *i == Interaction::Pressed);
-
-    if pick_classic {
+    for (mode, interaction) in &buttons {
+        if *interaction != Interaction::Pressed {
+            continue;
+        }
         apply_mode(
             &mut session,
             &mut board,
             &mut run,
-            BackendKind::Classic,
-            *locale,
-        );
-    } else if pick_quantum {
-        apply_mode(
-            &mut session,
-            &mut board,
-            &mut run,
-            BackendKind::Quantum,
+            mode.0,
             *locale,
         );
     }
@@ -459,15 +459,11 @@ pub(crate) fn refresh_ui(
     mut bg_queries: ParamSet<(
         Query<(&GridCell, &mut BackgroundColor)>,
         Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
-        Query<
-            (&mut BackgroundColor, &mut BorderColor),
-            (With<ModeClassicBtn>, Without<ModeQuantumBtn>),
-        >,
-        Query<
-            (&mut BackgroundColor, &mut BorderColor),
-            (With<ModeQuantumBtn>, Without<ModeClassicBtn>),
-        >,
     )>,
+    mut mode_buttons: Query<
+        (&ModeBtn, &mut BackgroundColor, &mut BorderColor),
+        With<Button>,
+    >,
     mut texts: Query<
         (
             &mut Text,
@@ -479,7 +475,7 @@ pub(crate) fn refresh_ui(
             Has<HudCircuitTitle>,
             Has<HudCircuit>,
             Has<ModeClassicLabel>,
-            Has<ModeQuantumLabel>,
+            Has<ModeRustqipLabel>,
             Has<HintMoveLabel>,
             Has<HintRotateLabel>,
             Has<HintFasterLabel>,
@@ -495,13 +491,17 @@ pub(crate) fn refresh_ui(
             With<HudCircuitTitle>,
             With<HudCircuit>,
             With<ModeClassicLabel>,
-            With<ModeQuantumLabel>,
+            With<ModeRustqipLabel>,
             With<HintMoveLabel>,
             With<HintRotateLabel>,
             With<HintFasterLabel>,
             With<HintDropLabel>,
             With<LangToggleLabel>,
         )>,
+    >,
+    #[cfg(not(target_arch = "wasm32"))] mut qiskit_labels: Query<
+        &mut Text,
+        (With<ModeQiskitLabel>, Without<ModeClassicLabel>, Without<ModeRustqipLabel>),
     >,
 ) {
     for (cell, mut bg) in bg_queries.p0().iter_mut() {
@@ -512,16 +512,15 @@ pub(crate) fn refresh_ui(
         *bg = BackgroundColor(preview_color(board.next, cell.col, cell.row).unwrap_or(GRID));
     }
 
-    let quantum = run.is_quantum;
-    if let Ok((mut bg, mut border)) = bg_queries.p2().single_mut() {
-        let (c, b, _) = mode_button_colors(!quantum);
+    for (mode, mut bg, mut border) in mode_buttons.iter_mut() {
+        let (c, b, _) = mode_button_colors(mode.0 == run.backend_kind);
         *bg = BackgroundColor(c);
         *border = BorderColor::all(b);
     }
-    if let Ok((mut bg, mut border)) = bg_queries.p3().single_mut() {
-        let (c, b, _) = mode_button_colors(quantum);
-        *bg = BackgroundColor(c);
-        *border = BorderColor::all(b);
+
+    #[cfg(not(target_arch = "wasm32"))]
+    for mut label in qiskit_labels.iter_mut() {
+        **label = i18n::mode_qiskit(*locale).into();
     }
 
     for (
@@ -534,7 +533,7 @@ pub(crate) fn refresh_ui(
         circ_title,
         circ,
         classic,
-        quantum,
+        rustqip,
         move_l,
         rotate_l,
         faster_l,
@@ -568,8 +567,8 @@ pub(crate) fn refresh_ui(
             **t = i18n::circuit_explain(*locale, run.last_moment).into();
         } else if classic {
             **t = i18n::mode_classic(*locale).into();
-        } else if quantum {
-            **t = i18n::mode_quantum(*locale).into();
+        } else if rustqip {
+            **t = i18n::mode_rustqip(*locale).into();
         } else if move_l {
             **t = i18n::hint_move(*locale).into();
         } else if rotate_l {
@@ -599,8 +598,8 @@ fn panel_node() -> impl Bundle {
             flex_direction: FlexDirection::Column,
             row_gap: Val::Px(8.0),
             padding: UiRect::all(Val::Px(14.0)),
-            min_width: Val::Px(248.0),
-            max_width: Val::Px(248.0),
+            min_width: Val::Px(260.0),
+            max_width: Val::Px(260.0),
             border: UiRect::all(Val::Px(2.0)),
             border_radius: BorderRadius::all(Val::Px(12.0)),
             ..default()

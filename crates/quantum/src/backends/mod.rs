@@ -17,42 +17,41 @@ use crate::{QuantumBackend, QuantumError};
 pub enum BackendKind {
     /// Uniform random bitstrings — arcade baseline.
     Classic,
-    /// Born-rule distributions: Qiskit Aer on desktop, RustQIP statevector in WASM.
+    /// Statevector via [RustQIP](https://github.com/Renmusxd/RustQIP) — desktop and WASM.
     Quantum,
+    /// Qiskit Aer — desktop only (Python subprocess).
+    Qiskit,
 }
 
 impl BackendKind {
-    /// Parse `classic`, `quantum`, `qiskit`, or `born`.
+    /// Parse `classic`, `quantum` / `rustqip`, or `qiskit`.
     pub fn parse(name: &str) -> Self {
         match name.trim().to_ascii_lowercase().as_str() {
             "classic" | "random" | "rand" => Self::Classic,
-            "quantum" | "qiskit" | "aer" | "born" => Self::Quantum,
-            _ => Self::Classic,
+            "quantum" | "rustqip" => Self::Quantum,
+            "qiskit" | "aer" => Self::Qiskit,
+            _ => Self::Quantum,
         }
     }
 
-    /// `QUANTUM_MODE` defaults to `classic`.
+    pub fn is_quantum(self) -> bool {
+        !matches!(self, Self::Classic)
+    }
+
+    /// `QUANTUM_MODE` defaults to `quantum` (RustQIP).
     pub fn from_env() -> Self {
         Self::parse(
             &std::env::var("QUANTUM_MODE")
                 .or_else(|_| std::env::var("QUANTUM_BACKEND"))
-                .unwrap_or_else(|_| "classic".into()),
+                .unwrap_or_else(|_| "quantum".into()),
         )
     }
 
     pub fn label(self) -> &'static str {
         match self {
             Self::Classic => "classic (uniform)",
-            Self::Quantum => {
-                #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
-                {
-                    "quantum (Qiskit Aer)"
-                }
-                #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
-                {
-                    "quantum (RustQIP · Qiskit-matched)"
-                }
-            }
+            Self::Quantum => "quantum (RustQIP)",
+            Self::Qiskit => "quantum (Qiskit Aer)",
         }
     }
 }
@@ -61,22 +60,25 @@ impl BackendKind {
 pub fn build_backend(kind: BackendKind) -> Result<Box<dyn QuantumBackend>, QuantumError> {
     match kind {
         BackendKind::Classic => Ok(Box::new(ClassicBackend)),
-        BackendKind::Quantum => {
+        BackendKind::Quantum => Ok(Box::new(RustQipBackend)),
+        BackendKind::Qiskit => {
             #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
             {
                 if crate::python_shim::qiskit_available() {
                     Ok(Box::new(QiskitBackend))
                 } else {
-                    eprintln!(
-                        "[quantum] Qiskit Aer unavailable (pip install -r scripts/requirements.txt), \
-                         using RustQIP simulator"
-                    );
-                    Ok(Box::new(RustQipBackend))
+                    Err(QuantumError::Config(
+                        "Qiskit Aer unavailable — pip install -r scripts/requirements.txt \
+                         (or use QUANTUM_MODE=quantum for RustQIP)"
+                            .into(),
+                    ))
                 }
             }
             #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
             {
-                Ok(Box::new(RustQipBackend))
+                Err(QuantumError::Config(
+                    "Qiskit Aer is desktop-only — use QUANTUM_MODE=quantum for RustQIP".into(),
+                ))
             }
         }
     }
@@ -89,10 +91,11 @@ mod tests {
     #[test]
     fn parse_backend_names() {
         assert_eq!(BackendKind::parse("classic"), BackendKind::Classic);
-        assert_eq!(BackendKind::parse("qiskit"), BackendKind::Quantum);
         assert_eq!(BackendKind::parse("quantum"), BackendKind::Quantum);
-        assert_eq!(BackendKind::parse("born"), BackendKind::Quantum);
-        assert_eq!(BackendKind::parse("unknown"), BackendKind::Classic);
+        assert_eq!(BackendKind::parse("rustqip"), BackendKind::Quantum);
+        assert_eq!(BackendKind::parse("qiskit"), BackendKind::Qiskit);
+        assert_eq!(BackendKind::parse("aer"), BackendKind::Qiskit);
+        assert_eq!(BackendKind::parse("unknown"), BackendKind::Quantum);
     }
 
     #[test]

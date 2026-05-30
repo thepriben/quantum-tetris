@@ -31,4 +31,4 @@ if [[ "$AVAIL_KB" -lt "$MIN_KB" ]]; then
   exit 1
 fi
 
-echo "OK — cargo run -p quantum-tetris   or   QUANTUM_MODE=qiskit cargo run -p quantum-tetris"
+echo "OK — cargo run -p quantum-tetris   or   QUANTUM_MODE=classic|qiskit cargo run -p quantum-tetris"

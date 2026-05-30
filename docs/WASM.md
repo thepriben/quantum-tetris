@@ -1,8 +1,8 @@
 # WASM / GitHub Pages
 
-Run **Quantum Tetris** in the browser with **quantum mode** enabled by default.
+The browser build ships with **quantum mode** (RustQIP) enabled by default.
 
-The WASM build uses **[RustQIP](https://github.com/Renmusxd/RustQIP)** (`RustQipBackend`) — same gates as Qiskit Aer. Probabilities are verified against Qiskit in CI (`rustqip_qiskit_parity` test). Use the in-game **CLASSIC** / **QUANTUM** buttons to switch modes.
+**RustQIP** runs the same circuit presets as desktop. Probabilities are cross-checked against Qiskit Aer in CI (`rustqip_qiskit_parity`). Switch modes in-game with **CLASSIC** / **RUSTQIP** (Qiskit needs a local Python install — it does not run in a tab).
 
 ---
 
@@ -58,7 +58,7 @@ Push to `main` triggers `.github/workflows/pages.yml`:
 
 Live URL: `https://thepriben.github.io/quantum-tetris/`
 
-Desktop **Qiskit Aer** (Python subprocess) is not available in the browser; RustQIP reproduces the same Born probabilities.
+**Qiskit Aer** needs Python and does not run in the browser. **RustQIP** is the default simulator locally and on GitHub Pages.
 
 ---
 
