@@ -14,7 +14,7 @@
       'home.lead':
         'Règles Tetris classiques. Chaque tirage aléatoire (pièce, vitesse, bonus) est une mesure sur un preset de circuit quantique.',
       'home.stack':
-        '<strong>Chaîne technique.</strong> Moteur Bevy (Rust) → WASM dans le navigateur. Les circuits sont les mêmes partout ; le desktop appelle Qiskit Aer (Python), le navigateur exécute <code>BornBackend</code> — simulateur statevector Rust intégré, probabilités vérifiées contre Qiskit en CI. Qiskit ne tourne pas dans un onglet (Python) ; ce n\'est pas RustQIP non plus, mais un backend maison calibré sur les mêmes portes.',
+        '<strong>Chaîne technique.</strong> Moteur Bevy (Rust) → WASM dans le navigateur. Les circuits sont les mêmes partout ; le desktop appelle Qiskit Aer (Python), le navigateur exécute <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) — probabilités vérifiées contre Qiskit en CI. Qiskit ne tourne pas dans un onglet (Python).',
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
       'home.quantumTitle': 'Mécaniques',
@@ -61,7 +61,7 @@
       'home.lead':
         'Standard Tetris rules. Every random outcome (piece, speed, bonus) is a measurement on a quantum circuit preset.',
       'home.stack':
-        '<strong>Stack.</strong> Bevy game engine (Rust) → WASM in the browser. Circuits are shared presets; desktop calls Qiskit Aer (Python), the browser runs <code>BornBackend</code> — built-in Rust statevector simulator, probabilities verified against Qiskit in CI. Qiskit does not run in a tab (Python); this is not RustQIP either, but a custom backend matched to the same gates.',
+        '<strong>Stack.</strong> Bevy game engine (Rust) → WASM in the browser. Circuits are shared presets; desktop calls Qiskit Aer (Python), the browser runs <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) — probabilities verified against Qiskit in CI. Qiskit does not run in a tab (Python).',
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
       'home.quantumTitle': 'Mechanics',

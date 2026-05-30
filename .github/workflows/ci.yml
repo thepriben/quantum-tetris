@@ -50,4 +50,4 @@ jobs:
       - name: qiskit integration tests
         env:
           QUANTUM_PYTHON: python
-        run: cargo test -p quantum-tetris-quantum --features backend-qiskit --test python_backends --test shim_direct --test born_qiskit_parity
+        run: cargo test -p quantum-tetris-quantum --features backend-qiskit --test python_backends --test shim_direct --test rustqip_qiskit_parity

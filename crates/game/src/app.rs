@@ -89,7 +89,7 @@ pub fn run_game(config: GameConfig) {
         "\n\
          Quantum Tetris — {}\n\
          ─────────────────────────────────────\n\
-         • Backends: classic (uniform) or Qiskit Aer (Born rule)\n\
+         • Backends: classic (uniform) or Qiskit Aer / RustQIP (Born rule)\n\
          • Teleporter: Bell bits → family, message qubit → shape\n\
          • ↑ rotate · ↓ faster · Space = observe (hard drop)\n\
          ─────────────────────────────────────\n",

@@ -12,7 +12,7 @@ Tetris where **every stochastic outcome** comes from a quantum circuit — not a
 
 > **The player:** ← → ↑ ↓ and Space · **The game:** everything else.
 
-**Stack:** Bevy (Rust) → WASM in the browser. Desktop → **Qiskit Aer** (Python subprocess). Browser → **`BornBackend`** (built-in Rust statevector simulator, Qiskit-matched in CI) — not RustQIP, not Qiskit in the tab.
+**Stack:** Bevy (Rust) → WASM in the browser. Desktop → **Qiskit Aer** (Python subprocess). Browser → **[RustQIP](https://github.com/Renmusxd/RustQIP)** (`RustQipBackend`, Qiskit-matched in CI).
 
 ---
 
@@ -117,7 +117,7 @@ flowchart TB
 
   subgraph quantum["crates/quantum — simulation"]
     IR["circuit.rs — QuantumCircuit + Gate"]
-    BE["backends/ — Classic · Born · Qiskit"]
+    BE["backends/ — Classic · RustQIP · Qiskit"]
     SHIM["python_shim.rs ↔ quantum_shim.py"]
   end
 
@@ -160,12 +160,12 @@ sequenceDiagram
 | Backend | Where | Mechanism |
 | --- | --- | --- |
 | **Classic** | everywhere | uniform `rand` — arcade baseline |
-| **Born** | WASM + desktop fallback | Rust statevector, Born rule |
+| **RustQIP** | WASM + desktop fallback | [RustQIP](https://github.com/Renmusxd/RustQIP) statevector, Born rule |
 | **Qiskit Aer** | desktop (+ CI) | subprocess → `quantum_shim.py` |
 
 - `QUANTUM_MODE=classic|qiskit` (alias `QUANTUM_BACKEND`)
 - In-game **CLASSIC** / **QUANTUM** toggle
-- Born ↔ Qiskit parity in CI (`born_qiskit_parity`)
+- RustQIP ↔ Qiskit parity in CI (`rustqip_qiskit_parity`)
 
 ---
 

@@ -8,7 +8,7 @@
 //! | --- | --- | --- |
 //! | Classic | all | Uniform random baseline |
 //! | Quantum | desktop + `backend-qiskit` | Qiskit Aer via `scripts/quantum_shim.py` |
-//! | Quantum | WASM / no Python | Born-rule statevector (Qiskit-matched) |
+//! | Quantum | WASM / no Python | [RustQIP](https://github.com/Renmusxd/RustQIP) statevector (Qiskit-matched) |
 //!
 //! ## Example
 //!
@@ -31,7 +31,9 @@ mod python_shim;
 
 #[cfg(feature = "backend-qiskit")]
 pub use backends::QiskitBackend;
-pub use backends::{born_probabilities, build_backend, BackendKind, BornBackend, ClassicBackend};
+pub use backends::{
+    build_backend, rustqip_probabilities, BackendKind, ClassicBackend, RustQipBackend,
+};
 pub use circuit::{Gate, QuantumCircuit};
 pub use error::QuantumError;
 pub use measurement::{EnemyBehavior, Measurement};
@@ -60,8 +62,8 @@ mod tests {
     }
 
     #[test]
-    fn preset_circuits_run_on_born() {
-        let mut backend = BornBackend;
+    fn preset_circuits_run_on_rustqip() {
+        let mut backend = RustQipBackend;
         assert!(backend.run(&QuantumCircuit::imp_brain()).is_ok());
         assert!(backend.run(&QuantumCircuit::teleporter()).is_ok());
     }

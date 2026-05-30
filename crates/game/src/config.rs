@@ -1,4 +1,4 @@
-//! Runtime configuration — desktop (classic / Qiskit) and WASM (classic / Born quantum).
+//! Runtime configuration — desktop (classic / Qiskit) and WASM (classic / RustQIP quantum).
 
 use bevy::prelude::*;
 use quantum_tetris_quantum::{
@@ -32,7 +32,7 @@ impl GameConfig {
         }
     }
 
-    /// Browser: Born-rule quantum by default (Qiskit-matched statevector).
+    /// Browser: RustQIP quantum by default (Qiskit-matched).
     pub fn wasm() -> Self {
         Self {
             platform: GamePlatform::Wasm,

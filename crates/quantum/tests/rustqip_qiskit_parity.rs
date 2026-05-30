@@ -1,6 +1,6 @@
-//! Born probabilities must match Qiskit Aer for all gameplay circuits.
+//! RustQIP probabilities must match Qiskit Aer for all gameplay circuits.
 
-use quantum_tetris_quantum::{born_probabilities, QuantumCircuit};
+use quantum_tetris_quantum::{rustqip_probabilities, QuantumCircuit};
 
 fn python_ready() -> bool {
     if std::env::var("QUANTUM_SKIP_PYTHON_TESTS").is_ok() {
@@ -57,19 +57,19 @@ fn qiskit_probabilities(circuit: &QuantumCircuit) -> Option<Vec<(String, f32)>> 
     Some(probabilities)
 }
 
-fn assert_close(born: &[(String, f32)], qiskit: &[(String, f32)]) {
-    assert_eq!(born.len(), qiskit.len());
-    for ((born_bits, born_p), (qiskit_bits, qiskit_p)) in born.iter().zip(qiskit.iter()) {
-        assert_eq!(born_bits, qiskit_bits);
+fn assert_close(rustqip: &[(String, f32)], qiskit: &[(String, f32)]) {
+    assert_eq!(rustqip.len(), qiskit.len());
+    for ((rust_bits, rust_p), (qiskit_bits, qiskit_p)) in rustqip.iter().zip(qiskit.iter()) {
+        assert_eq!(rust_bits, qiskit_bits);
         assert!(
-            (born_p - qiskit_p).abs() < 1e-4,
-            "{born_bits}: born={born_p} qiskit={qiskit_p}"
+            (rust_p - qiskit_p).abs() < 1e-4,
+            "{rust_bits}: rustqip={rust_p} qiskit={qiskit_p}"
         );
     }
 }
 
 #[test]
-fn born_matches_qiskit_on_gameplay_circuits() {
+fn rustqip_matches_qiskit_on_gameplay_circuits() {
     if !python_ready() {
         eprintln!("skip: install scripts/requirements.txt");
         return;
@@ -85,8 +85,8 @@ fn born_matches_qiskit_on_gameplay_circuits() {
         QuantumCircuit::shard_stabilizer(),
         QuantumCircuit::teleporter(),
     ] {
-        let born = born_probabilities(&circuit).expect("born");
+        let rustqip = rustqip_probabilities(&circuit).expect("rustqip");
         let qiskit = qiskit_probabilities(&circuit).expect("qiskit shim");
-        assert_close(&born, &qiskit);
+        assert_close(&rustqip, &qiskit);
     }
 }
