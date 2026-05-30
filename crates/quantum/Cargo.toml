@@ -1,0 +1,17 @@
+[package]
+name = "quantum-doom-quantum"
+description = "Quantum circuits and pluggable backends for Quantum Town: LA"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+reqwest = { workspace = true, optional = true }
+
+[features]
+default = ["backend-qip"]
+backend-qip = []
+backend-qiskit = []
+backend-bluequbit = ["dep:reqwest"]

@@ -1,0 +1,21 @@
+[package]
+name = "quantum-town-la"
+description = "Quantum Town: LA — cute FPS with quantum-driven AI and teleporters"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "quantum-town-la"
+path = "src/main.rs"
+
+[dependencies]
+bevy = { workspace = true }
+quantum-doom-quantum = { path = "../quantum", package = "quantum-doom-quantum" }
+quantum-doom-osm = { path = "../osm", package = "quantum-doom-osm" }
+
+[features]
+default = ["desktop"]
+desktop = []
+wasm = []
