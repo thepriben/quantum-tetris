@@ -52,7 +52,8 @@
     </section>
 
     <section class="col-guide">
-      <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Every random outcome (piece, speed, bonus) comes from a quantum circuit measurement — Qiskit Aer on desktop; Rust Born simulator in the browser (same gates, Qiskit-matched probabilities, no Python).</p>
+      <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Every random outcome (piece, speed, bonus) is a measurement on a quantum circuit preset.</p>
+      <p class="stack" data-i18n="home.stack" data-i18n-html><strong>Stack.</strong> Bevy game engine (Rust) → WASM in the browser. Circuits are shared presets; desktop calls Qiskit Aer (Python), the browser runs <code>BornBackend</code> — built-in Rust statevector simulator, probabilities verified against Qiskit in CI. Qiskit does not run in a tab (Python); this is not RustQIP either, but a custom backend matched to the same gates.</p>
       <p class="principle" data-i18n="home.principle" data-i18n-html><strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
 
       <h2 data-i18n="home.quantumTitle">Mechanics</h2>
