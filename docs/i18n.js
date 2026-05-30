@@ -10,34 +10,31 @@
       'lang.fr': 'Français',
       'lang.en': 'English',
       'home.title': 'Quantum Tetris',
-      'home.subtitle': 'Tetris où le hasard vient de mesures quantiques',
+      'home.subtitle': 'Tetris — le hasard vient des circuits, pas d\'un dé',
       'home.lead':
-        'Chaque tirage aléatoire — quelle pièce tombe, à quelle vitesse, quel bonus — est le résultat d\'une <strong>mesure quantique</strong> (règle de Born), via Qiskit sur desktop ou un simulateur calibré dans le navigateur.',
+        'En surface, c\'est du Tetris. Sous le capot, <strong>chaque tirage</strong> (pièce, vitesse, bonus) passe par un circuit Qiskit — ou son équivalent dans le navigateur. Toi, tu bouges ; le reste, c\'est la mesure.',
       'home.principle':
-        '<strong>Classique :</strong> tes flèches ← → ↑ ↓ et la barre d\'espace (actions volontaires).<br>' +
-        '<strong>Quantique :</strong> tout ce que le jeu «&nbsp;tire au sort&nbsp;» sans ton action directe.',
-      'home.quantumTitle': 'Quand le jeu mesure un circuit',
+        '<strong>Toi :</strong> ← → ↑ ↓ et Espace.<br>' +
+        '<strong>Le jeu :</strong> tout le reste.',
+      'home.quantumTitle': 'Mécaniques',
       'home.moment.spawn.title': 'Nouvelle pièce',
       'home.moment.spawn.text':
-        'Quatre circuits s\'enchaînent :<br>' +
-        '· <span class="circuit">quantum-teleportation-gate-v1</span> ×2 — pièce en jeu et aperçu «&nbsp;suiv.&nbsp;» (famille I/O/T… puis variante)<br>' +
-        '· <span class="circuit">imp-brain-v1</span> — rotation initiale et colonne d\'apparition<br>' +
-        '· <span class="circuit">enemy-profile-hunter-v1</span> — intervalle de chute',
-      'home.moment.observe.title': 'Barre d\'espace',
+        'Quatre tirs à l\'apparition : deux téléportations pour la pièce en jeu et le «&nbsp;suiv.&nbsp;», puis rotation/colonne et cadence de chute.',
+      'home.moment.observe.title': 'Espace — chute forcée',
       'home.moment.observe.text':
-        'Le circuit <span class="circuit">observation-pulse-v1</span> modélise une mesure volontaire : la pièce est posée tout de suite et tu peux gagner un bonus de score (parfois une ligne bonus).',
+        'Pose immédiate + tirage bonus. Parfois une ligne en cadeau.',
       'home.moment.line.title': 'Ligne complétée',
       'home.moment.line.text':
-        'Le circuit <span class="circuit">q-shard-stabilizer-v1</span> tire un multiplicateur de points (×1 à ×4) après la stabilisation de la grille.',
+        'Multiplicateur de score tiré au sort — ×1 à ×4.',
       'home.classicalNote':
-        'Seuls les déplacements au clavier restent entièrement classiques. Le panneau de droite dans le jeu affiche le circuit actif et les bits mesurés.',
-      'home.localClassic': 'Classique local :',
-      'home.localQiskit': 'Qiskit Aer local :',
-      'home.circuitsLink': 'Circuits quantiques',
+        'Les flèches restent 100&nbsp;% classiques. Le HUD in-game affiche le circuit actif et les bits mesurés.',
+      'home.localClassic': 'Desktop classique :',
+      'home.localQiskit': 'Desktop Qiskit Aer :',
+      'home.circuitsLink': 'Référence circuits',
       'home.github': 'GitHub',
       'home.readme': 'Architecture',
-      'play.starting': 'Chargement du moteur quantique…',
-      'error.wasm': 'Erreur WASM — lance ./scripts/build_wasm.sh',
+      'play.starting': 'Chargement…',
+      'error.wasm': 'Jeu indisponible — build WASM manquant (./scripts/build_wasm.sh)',
     },
     en: {
       'meta.title': 'Quantum Tetris',
@@ -45,34 +42,31 @@
       'lang.fr': 'Français',
       'lang.en': 'English',
       'home.title': 'Quantum Tetris',
-      'home.subtitle': 'Tetris where randomness comes from quantum measurements',
+      'home.subtitle': 'Tetris — randomness from circuits, not a dice roll',
       'home.lead':
-        'Every random draw — which piece falls, how fast, what bonus — is the outcome of a <strong>quantum measurement</strong> (Born rule), via Qiskit on desktop or a matched simulator in the browser.',
+        'Looks like Tetris. Under the hood, <strong>every roll</strong> (piece, speed, bonus) runs through a Qiskit circuit — or its browser twin. You move; the rest is measurement.',
       'home.principle':
-        '<strong>Classical:</strong> your arrow keys ← → ↑ ↓ and Space (voluntary actions).<br>' +
-        '<strong>Quantum:</strong> everything the game “rolls” without your direct input.',
-      'home.quantumTitle': 'When the game runs a circuit',
+        '<strong>You:</strong> ← → ↑ ↓ and Space.<br>' +
+        '<strong>The game:</strong> everything else.',
+      'home.quantumTitle': 'Mechanics',
       'home.moment.spawn.title': 'New piece',
       'home.moment.spawn.text':
-        'Four circuits run in sequence:<br>' +
-        '· <span class="circuit">quantum-teleportation-gate-v1</span> ×2 — active piece and “next” preview (I/O/T… family, then variant)<br>' +
-        '· <span class="circuit">imp-brain-v1</span> — starting rotation and spawn column<br>' +
-        '· <span class="circuit">enemy-profile-hunter-v1</span> — drop interval',
-      'home.moment.observe.title': 'Space bar',
+        'Four draws on spawn: two teleportations for the active piece and “next”, then rotation/column and drop cadence.',
+      'home.moment.observe.title': 'Space — hard drop',
       'home.moment.observe.text':
-        'The <span class="circuit">observation-pulse-v1</span> circuit models a deliberate measurement: the piece locks instantly and you may earn a score bonus (sometimes an extra line).',
+        'Instant lock plus a bonus roll. Sometimes an extra line.',
       'home.moment.line.title': 'Line clear',
       'home.moment.line.text':
-        'The <span class="circuit">q-shard-stabilizer-v1</span> circuit draws a score multiplier (×1 to ×4) after the board stabilizes.',
+        'Random score multiplier — ×1 to ×4.',
       'home.classicalNote':
-        'Only keyboard moves stay fully classical. The in-game side panel shows the active circuit and measured bits.',
-      'home.localClassic': 'Local classic:',
-      'home.localQiskit': 'Local Qiskit Aer:',
-      'home.circuitsLink': 'Quantum circuits',
+        'Arrow keys stay 100% classical. The in-game HUD shows the active circuit and measured bits.',
+      'home.localClassic': 'Desktop classic:',
+      'home.localQiskit': 'Desktop Qiskit Aer:',
+      'home.circuitsLink': 'Circuit reference',
       'home.github': 'GitHub',
       'home.readme': 'Architecture',
-      'play.starting': 'Loading quantum engine…',
-      'error.wasm': 'WASM error — run ./scripts/build_wasm.sh first',
+      'play.starting': 'Loading…',
+      'error.wasm': 'Game unavailable — WASM build missing (./scripts/build_wasm.sh)',
     },
   };
 

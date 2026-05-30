@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
   <link rel="stylesheet" href="site.css">
+  <link rel="modulepreload" href="boot.js">
   <script src="i18n.js" defer></script>
 </head>
 <body>
   <header class="site-header">
     <div>
       <h1 data-i18n="home.title">Quantum Tetris</h1>
-      <p class="tagline" data-i18n="home.subtitle">Tetris où le hasard vient de mesures quantiques</p>
+      <p class="tagline" data-i18n="home.subtitle">Tetris — le hasard vient des circuits</p>
     </div>
     <div class="lang-flags" role="group" aria-label="Langue">
       <button type="button" class="lang-btn" data-lang="fr" data-i18n="lang.fr" data-i18n-attr="title" title="Français" aria-label="Français">
@@ -52,78 +53,66 @@
 
     <section class="col-guide">
       <p class="lead" data-i18n="home.lead" data-i18n-html></p>
+      <p class="principle" data-i18n="home.principle" data-i18n-html></p>
 
-      <div class="principle" data-i18n="home.principle" data-i18n-html></div>
-
-      <h2 data-i18n="home.quantumTitle">Quand le jeu mesure un circuit</h2>
+      <h2 data-i18n="home.quantumTitle">Mécaniques</h2>
       <ul class="moment-list">
         <li class="moment">
           <h3 data-i18n="home.moment.spawn.title">Nouvelle pièce</h3>
-          <p data-i18n="home.moment.spawn.text" data-i18n-html></p>
+          <p data-i18n="home.moment.spawn.text"></p>
+          <div class="circuit-strip circuit-strip--3" aria-hidden="true">
+            <img src="circuits/quantum-teleportation-gate-v1.png" alt="" loading="lazy" decoding="async" width="240" height="60">
+            <img src="circuits/imp-brain-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
+            <img src="circuits/enemy-profile-hunter-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
+          </div>
         </li>
         <li class="moment">
-          <h3 data-i18n="home.moment.observe.title">Barre d'espace</h3>
-          <p data-i18n="home.moment.observe.text" data-i18n-html></p>
+          <h3 data-i18n="home.moment.observe.title">Espace</h3>
+          <p data-i18n="home.moment.observe.text"></p>
+          <div class="circuit-strip" aria-hidden="true">
+            <img src="circuits/observation-pulse-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
+          </div>
         </li>
         <li class="moment">
           <h3 data-i18n="home.moment.line.title">Ligne complétée</h3>
-          <p data-i18n="home.moment.line.text" data-i18n-html></p>
+          <p data-i18n="home.moment.line.text"></p>
+          <div class="circuit-strip" aria-hidden="true">
+            <img src="circuits/q-shard-stabilizer-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
+          </div>
         </li>
       </ul>
 
       <p class="classical-note" data-i18n="home.classicalNote" data-i18n-html></p>
 
       <footer class="footer-dev">
-        <p><strong data-i18n="home.localClassic">Classique local :</strong> <code>cargo run -p quantum-tetris</code></p>
-        <p><strong data-i18n="home.localQiskit">Qiskit Aer local :</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
+        <details class="dev-details">
+          <summary data-i18n="home.readme">Architecture</summary>
+          <p><code>cargo run -p quantum-tetris</code></p>
+          <p><code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
+        </details>
         <p>
-          <a href="QUANTUM.md" data-i18n="home.circuitsLink">Circuits quantiques</a> ·
-          <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a> ·
-          <a href="README.md" data-i18n="home.readme">Architecture</a>
+          <a href="QUANTUM.md" data-i18n="home.circuitsLink">Référence circuits</a> ·
+          <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a>
         </p>
       </footer>
     </section>
   </div>
 
   <script type="module">
-    import init, { run_wasm, set_web_locale } from './wasm/quantum_tetris.js';
-
-    window.__qtSetWebLocale = set_web_locale;
+    import { bootGame, bindLocaleSync } from './boot.js';
 
     const loader = document.getElementById('loader');
     const errorEl = document.getElementById('error');
     const frameInner = document.getElementById('frame-inner');
 
-    function mountCanvas() {
-      const canvas = document.querySelector('canvas');
-      if (!canvas) {
-        requestAnimationFrame(mountCanvas);
-        return;
-      }
-      loader.classList.add('hidden');
-      frameInner.appendChild(canvas);
-    }
-
-    async function boot() {
-      const lang = window.qtI18n?.getLocale?.() ?? 'fr';
-      await init();
-      set_web_locale(lang);
-      run_wasm();
-      mountCanvas();
-    }
-
-    boot().catch((e) => {
-      loader.classList.add('hidden');
+    bootGame({ frameInner, loader, errorEl }).catch((e) => {
+      loader?.classList.add('hidden');
       errorEl.textContent = window.qtI18n?.t?.('error.wasm') ?? 'WASM error';
       errorEl.classList.add('visible');
       console.error(e);
     });
 
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'qt-lang') {
-        set_web_locale(window.qtI18n?.getLocale?.() ?? 'fr');
-      }
-    });
+    bindLocaleSync((lang) => window.__qtSetWebLocale?.(lang));
   </script>
 </body>
 </html>
