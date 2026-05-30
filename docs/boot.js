@@ -1,8 +1,9 @@
 /** WASM boot — progress UI, canvas mount, locale sync. */
 
 const MOUNT_TIMEOUT_MS = 60_000;
-const WASM_JS = new URL('./wasm/quantum_tetris.js', import.meta.url);
-const WASM_BIN = new URL('./wasm/quantum_tetris_bg.wasm', import.meta.url);
+const WASM_ASSET_VERSION = String(Date.now());
+const WASM_JS = wasmAssetUrl('./wasm/quantum_tetris.js');
+const WASM_BIN = wasmAssetUrl('./wasm/quantum_tetris_bg.wasm');
 
 let bootStarted = false;
 let pendingLocale = null;
@@ -19,6 +20,12 @@ function loaderText(msg) {
 
 function t(key, fallback) {
   return window.qtI18n?.t?.(key) ?? fallback;
+}
+
+function wasmAssetUrl(path) {
+  const url = new URL(path, import.meta.url);
+  url.searchParams.set('v', WASM_ASSET_VERSION);
+  return url;
 }
 
 /** Called from i18n.js before WASM is ready. */
@@ -83,6 +90,26 @@ async function fetchWasmBytes(url, onProgress) {
   return out.buffer;
 }
 
+function assertWasmMagic(buffer) {
+  const magic = new Uint8Array(buffer, 0, Math.min(4, buffer.byteLength));
+  if (
+    magic.length !== 4 ||
+    magic[0] !== 0x00 ||
+    magic[1] !== 0x61 ||
+    magic[2] !== 0x73 ||
+    magic[3] !== 0x6d
+  ) {
+    throw new Error('response is not a WebAssembly binary');
+  }
+}
+
+function errorDetail(error) {
+  if (error instanceof Error && error.message) {
+    return ` (${error.message})`;
+  }
+  return '';
+}
+
 export async function bootGame({ frameInner, loader, errorEl }) {
   if (bootStarted) return;
   bootStarted = true;
@@ -130,11 +157,12 @@ export async function bootGame({ frameInner, loader, errorEl }) {
       const mb = (total / (1024 * 1024)).toFixed(0);
       loaderText(`${t('play.downloading', 'Downloading game…')} ${pct}% (~${mb} MB)`);
     });
+    assertWasmMagic(wasmBytes);
     loaderText(t('play.initializing', 'Starting engine…'));
-    await init(await WebAssembly.compile(wasmBytes));
+    await init(wasmBytes);
   } catch (e) {
     console.error(e);
-    fail(t('error.wasmBinary', 'WASM binary unavailable or failed to initialize'));
+    fail(`${t('error.wasmBinary', 'WASM binary unavailable or failed to initialize')}${errorDetail(e)}`);
     return;
   }
 
