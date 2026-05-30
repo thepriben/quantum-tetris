@@ -15,6 +15,12 @@ jobs:
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
+      - name: Install Linux system dependencies (Bevy)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev \
+            pkg-config
       - name: cargo fmt
         run: cargo fmt --all -- --check
       - name: cargo clippy

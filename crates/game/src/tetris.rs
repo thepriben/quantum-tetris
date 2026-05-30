@@ -198,30 +198,24 @@ fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
         board.phase = RunPhase::GameOver;
         board.active = None;
         run.last_event = format!("Game over — score {}", run.score);
-        run.hint = "Space — new game".into();
+        run.hint = "Space — retry".into();
         return;
     }
 
     board.active = Some(candidate);
-    run.last_event = format!(
-        "{} {} r{rotation}  bell[{bell}] msg={msg}  next={nf} {nk}  brain[{tr}] grav[{tg}] {drop:.2}s",
-        now_readout.family.label(),
-        kind_label(kind),
-        bell = now_readout.bell,
-        msg = if now_readout.message { 1 } else { 0 },
-        nf = next_readout.family.label(),
-        nk = kind_label(next_kind),
-        tr = rot_m.bits,
-        tg = speed_m.bits,
-        drop = run.drop_interval,
-    );
+    run.last_event = format!("[{}] {}", now_readout.bell, kind_label(kind));
 }
 
 fn reset_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
     *board = Board::default();
     *run = GameRun::new(session.kind);
-    run.last_event = "New game".into();
+    run.last_event.clear();
     spawn_next(session, board, run);
+}
+
+/// New board after mode change or game-over restart.
+pub fn restart_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
+    reset_game(session, board, run);
 }
 
 fn kind_label(k: PieceKind) -> &'static str {

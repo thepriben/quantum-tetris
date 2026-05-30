@@ -32,7 +32,13 @@ impl Plugin for TetrisPlugin {
             .add_systems(Startup, tetris::init_first_piece.after(ui::setup_ui))
             .add_systems(
                 Update,
-                (tetris::tick_gravity, tetris::handle_input, ui::refresh_ui).chain(),
+                (
+                    ui::handle_mode_buttons,
+                    tetris::tick_gravity,
+                    tetris::handle_input,
+                    ui::refresh_ui,
+                )
+                    .chain(),
             );
     }
 }

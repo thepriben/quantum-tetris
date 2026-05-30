@@ -65,4 +65,22 @@ impl QuantumSession {
             Self::new(BackendKind::Classic).expect("classic backend")
         })
     }
+
+    /// Hot-swap backend (classic ↔ Qiskit) and return whether it succeeded.
+    pub fn switch_to(&mut self, kind: BackendKind) -> bool {
+        if self.kind == kind {
+            return true;
+        }
+        match Self::new(kind) {
+            Ok(next) => {
+                self.kind = next.kind;
+                self.backend = next.backend;
+                true
+            }
+            Err(error) => {
+                eprintln!("[quantum] cannot switch to {kind:?}: {error}");
+                false
+            }
+        }
+    }
 }
