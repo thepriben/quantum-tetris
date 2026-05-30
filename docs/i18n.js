@@ -21,12 +21,20 @@
       'home.circuitsLink': 'Circuits quantiques',
       'home.github': 'GitHub',
       'home.circuitsTitle': 'Circuits Qiskit par action',
-      'home.circuit.spawn':
-        '<strong>Nouvelle pièce</strong> — <code>quantum-teleportation-gate-v1</code> (3 qubits) : une paire de Bell choisit la famille (I, O, T, J/L/S/Z), le qubit message fixe la variante. Aussi <code>imp-brain-v1</code> (rotation + colonne) et <code>enemy-profile-hunter-v1</code> (vitesse).',
-      'home.circuit.observe':
-        '<strong>Espace (chute forcée)</strong> — <code>observation-pulse-v1</code> (2 qubits) : mesure volontaire → bonus de score (parfois une ligne bonus).',
-      'home.circuit.line':
-        '<strong>Ligne effacée</strong> — <code>q-shard-stabilizer-v1</code> (2 qubits) : stabilisation → multiplicateur de points (×1 à ×4).',
+      'home.circuit.spawn.title': 'Nouvelle pièce',
+      'home.circuit.spawn.text':
+        'Trois circuits s\'enchaînent à chaque apparition : la <strong>téléportation</strong> choisit la forme (paire de Bell + qubit message), <strong>imp-brain</strong> fixe rotation et colonne, <strong>hunter profile</strong> règle la vitesse de chute.',
+      'home.circuit.observe.title': 'Espace — chute forcée',
+      'home.circuit.observe.text':
+        'Le circuit <code>observation-pulse-v1</code> simule une mesure volontaire : bonus de score, parfois une ligne bonus.',
+      'home.circuit.line.title': 'Ligne effacée',
+      'home.circuit.line.text':
+        'Le circuit <code>q-shard-stabilizer-v1</code> stabilise la grille après effacement et multiplie les points (×1 à ×4).',
+      'circuit.teleport.alt': 'Diagramme Qiskit — quantum-teleportation-gate-v1 (3 qubits)',
+      'circuit.imp.alt': 'Diagramme Qiskit — imp-brain-v1 (rotation et colonne)',
+      'circuit.hunter.alt': 'Diagramme Qiskit — enemy-profile-hunter-v1 (vitesse)',
+      'circuit.observe.alt': 'Diagramme Qiskit — observation-pulse-v1 (mesure volontaire)',
+      'circuit.line.alt': 'Diagramme Qiskit — q-shard-stabilizer-v1 (multiplicateur)',
       'play.home': '← Accueil',
       'play.loading': 'Chargement…',
       'play.starting': 'Démarrage du mode quantique…',
@@ -50,12 +58,20 @@
       'home.circuitsLink': 'Quantum circuits',
       'home.github': 'GitHub',
       'home.circuitsTitle': 'Qiskit circuits per action',
-      'home.circuit.spawn':
-        '<strong>New piece</strong> — <code>quantum-teleportation-gate-v1</code> (3 qubits): a Bell pair picks the family (I, O, T, J/L/S/Z); the message qubit sets the variant. Also <code>imp-brain-v1</code> (rotation + column) and <code>enemy-profile-hunter-v1</code> (speed).',
-      'home.circuit.observe':
-        '<strong>Space (hard drop)</strong> — <code>observation-pulse-v1</code> (2 qubits): deliberate measure → score bonus (sometimes an extra line).',
-      'home.circuit.line':
-        '<strong>Line clear</strong> — <code>q-shard-stabilizer-v1</code> (2 qubits): stabilizer → score multiplier (×1 to ×4).',
+      'home.circuit.spawn.title': 'New piece',
+      'home.circuit.spawn.text':
+        'Three circuits run on every spawn: <strong>teleportation</strong> picks the shape (Bell pair + message qubit), <strong>imp-brain</strong> sets rotation and column, <strong>hunter profile</strong> sets drop speed.',
+      'home.circuit.observe.title': 'Space — hard drop',
+      'home.circuit.observe.text':
+        'The <code>observation-pulse-v1</code> circuit models a deliberate measure: score bonus, sometimes an extra line.',
+      'home.circuit.line.title': 'Line clear',
+      'home.circuit.line.text':
+        'The <code>q-shard-stabilizer-v1</code> circuit stabilizes the board after a clear and multiplies points (×1 to ×4).',
+      'circuit.teleport.alt': 'Qiskit diagram — quantum-teleportation-gate-v1 (3 qubits)',
+      'circuit.imp.alt': 'Qiskit diagram — imp-brain-v1 (rotation and column)',
+      'circuit.hunter.alt': 'Qiskit diagram — enemy-profile-hunter-v1 (speed)',
+      'circuit.observe.alt': 'Qiskit diagram — observation-pulse-v1 (deliberate measure)',
+      'circuit.line.alt': 'Qiskit diagram — q-shard-stabilizer-v1 (multiplier)',
       'play.home': '← Home',
       'play.loading': 'Loading…',
       'play.starting': 'Starting quantum mode…',
@@ -82,7 +98,10 @@
       const key = el.getAttribute('data-i18n');
       const val = dict[key];
       if (val == null) return;
-      if (el.hasAttribute('data-i18n-html')) {
+      const attr = el.getAttribute('data-i18n-attr');
+      if (attr) {
+        el.setAttribute(attr, val);
+      } else if (el.hasAttribute('data-i18n-html')) {
         el.innerHTML = val;
       } else {
         el.textContent = val;
