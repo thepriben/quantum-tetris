@@ -46,7 +46,7 @@
             <div class="spinner" aria-hidden="true"></div>
             <span id="loader-text" data-i18n="play.starting">Chargement…</span>
           </div>
-          <p id="error"></p>
+          <p id="error" role="alert"></p>
         </div>
       </div>
     </section>
@@ -55,43 +55,73 @@
       <p class="lead" data-i18n="home.lead" data-i18n-html></p>
       <p class="principle" data-i18n="home.principle" data-i18n-html></p>
 
-      <h2 data-i18n="home.quantumTitle">Mécaniques</h2>
+      <h2 data-i18n="home.classicalTitle">Classique — toi</h2>
       <ul class="moment-list">
-        <li class="moment">
-          <h3 data-i18n="home.moment.spawn.title">Nouvelle pièce</h3>
-          <p data-i18n="home.moment.spawn.text"></p>
-          <div class="circuit-strip circuit-strip--3" aria-hidden="true">
-            <img src="circuits/quantum-teleportation-gate-v1.png" alt="" loading="lazy" decoding="async" width="240" height="60">
-            <img src="circuits/imp-brain-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
-            <img src="circuits/enemy-profile-hunter-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
-          </div>
-        </li>
-        <li class="moment">
-          <h3 data-i18n="home.moment.observe.title">Espace</h3>
-          <p data-i18n="home.moment.observe.text"></p>
-          <div class="circuit-strip" aria-hidden="true">
-            <img src="circuits/observation-pulse-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
-          </div>
-        </li>
-        <li class="moment">
-          <h3 data-i18n="home.moment.line.title">Ligne complétée</h3>
-          <p data-i18n="home.moment.line.text"></p>
-          <div class="circuit-strip" aria-hidden="true">
-            <img src="circuits/q-shard-stabilizer-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
-          </div>
+        <li class="moment moment--classical">
+          <h3 data-i18n="home.moment.controls.title">Déplacements</h3>
+          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
+          <p class="moment-game" data-i18n="home.moment.controls.game"></p>
+          <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
+          <p class="moment-quantum" data-i18n="home.moment.controls.quantum"></p>
         </li>
       </ul>
 
-      <p class="classical-note" data-i18n="home.classicalNote" data-i18n-html></p>
+      <h2 data-i18n="home.quantumTitle">Quantique — le jeu</h2>
+      <ul class="moment-list">
+        <li class="moment moment--quantum">
+          <h3 data-i18n="home.moment.piece.title">Pièce en cours</h3>
+          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
+          <p class="moment-game" data-i18n="home.moment.piece.game"></p>
+          <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
+          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html></p>
+          <figure class="circuit-fig">
+            <img src="circuits/quantum-teleportation-gate-v1.png" alt="" loading="lazy" decoding="async" width="240" height="60">
+          </figure>
+        </li>
+        <li class="moment moment--quantum">
+          <h3 data-i18n="home.moment.brain.title">Rotation & colonne</h3>
+          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
+          <p class="moment-game" data-i18n="home.moment.brain.game"></p>
+          <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
+          <p class="moment-quantum" data-i18n="home.moment.brain.quantum" data-i18n-html></p>
+          <figure class="circuit-fig">
+            <img src="circuits/imp-brain-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
+          </figure>
+        </li>
+        <li class="moment moment--quantum">
+          <h3 data-i18n="home.moment.hunter.title">Cadence de chute</h3>
+          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
+          <p class="moment-game" data-i18n="home.moment.hunter.game"></p>
+          <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
+          <p class="moment-quantum" data-i18n="home.moment.hunter.quantum" data-i18n-html></p>
+          <figure class="circuit-fig">
+            <img src="circuits/enemy-profile-hunter-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
+          </figure>
+        </li>
+        <li class="moment moment--quantum">
+          <h3 data-i18n="home.moment.observe.title">Espace</h3>
+          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
+          <p class="moment-game" data-i18n="home.moment.observe.game"></p>
+          <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
+          <p class="moment-quantum" data-i18n="home.moment.observe.quantum" data-i18n-html></p>
+          <figure class="circuit-fig">
+            <img src="circuits/observation-pulse-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
+          </figure>
+        </li>
+        <li class="moment moment--quantum">
+          <h3 data-i18n="home.moment.line.title">Ligne complétée</h3>
+          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
+          <p class="moment-game" data-i18n="home.moment.line.game"></p>
+          <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
+          <p class="moment-quantum" data-i18n="home.moment.line.quantum" data-i18n-html></p>
+          <figure class="circuit-fig">
+            <img src="circuits/q-shard-stabilizer-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
+          </figure>
+        </li>
+      </ul>
 
       <footer class="footer-dev">
-        <details class="dev-details">
-          <summary data-i18n="home.readme">Architecture</summary>
-          <p><code>cargo run -p quantum-tetris</code></p>
-          <p><code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
-        </details>
         <p>
-          <a href="QUANTUM.md" data-i18n="home.circuitsLink">Référence circuits</a> ·
           <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a>
         </p>
       </footer>
@@ -99,11 +129,15 @@
   </div>
 
   <script type="module">
-    import { bootGame, bindLocaleSync } from './boot.js';
+    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js';
+
+    window.__qtQueueLocale = queueWebLocale;
 
     const loader = document.getElementById('loader');
     const errorEl = document.getElementById('error');
     const frameInner = document.getElementById('frame-inner');
+
+    guardCircuitImages();
 
     bootGame({ frameInner, loader, errorEl }).catch((e) => {
       loader?.classList.add('hidden');
