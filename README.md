@@ -21,6 +21,20 @@ cargo run -p quantum-town-la
 
 Qiskit needs Python 3 and `pip install -r scripts/requirements.txt`. If Aer is unavailable, the game falls back to classic.
 
+### What works where
+
+| Where | Classic | Qiskit (Python Aer) |
+| --- | --- | --- |
+| **Your Mac** (`cargo run`) | yes | yes — `QUANTUM_MODE=qiskit` |
+| **GitHub Actions CI** | yes (tests) | yes — job `quantum-qiskit` on every push |
+| **Browser / GitHub Pages** | yes (WASM) | **no** — no Python in the browser |
+
+The site deploys a **WASM** build: circuits run in Rust with uniform random bits. **Qiskit cannot run inside a web page**; it needs a Python subprocess (desktop only).
+
+On GitHub, Qiskit is validated by CI (`cargo test` + `scripts/quantum_shim.py`). To **play** with Born-rule distributions, use the desktop game with Qiskit locally.
+
+**GitHub Pages** also requires a **public** repository on the free plan (private repos block Pages).
+
 ---
 
 ## Controls (arcade)

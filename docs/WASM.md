@@ -46,11 +46,18 @@ docs/
 
 Push to `main` triggers `.github/workflows/pages.yml`:
 
-1. `cargo build` wasm32 release
+1. `cargo build` wasm32 release (~11 min on CI)
 2. `wasm-bindgen` → `docs/wasm/`
 3. Deploy `docs/` folder
 
-Live URL: project GitHub Pages settings.
+**Requirements:**
+
+- Repository must be **public** (free plan) or GitHub Pro (private Pages).
+- Settings → Pages → source: **GitHub Actions**.
+
+Live URL (once deployed): `https://<user>.github.io/quantum-town-la/play.html`
+
+**Qiskit does not run in the browser.** The web build is classic mode only. Qiskit is tested in the separate CI job `quantum-qiskit`.
 
 ---
 
