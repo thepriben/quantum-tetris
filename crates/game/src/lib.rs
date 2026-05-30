@@ -4,6 +4,7 @@ pub mod app;
 pub mod board;
 pub mod config;
 pub mod game_state;
+pub mod i18n;
 pub mod input;
 pub mod measurement_fx;
 pub mod pieces;
