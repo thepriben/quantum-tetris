@@ -17,8 +17,9 @@ fn build_backend_matches_env_parse() {
     #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
     {
         let qiskit = build_backend(BackendKind::parse("qiskit"));
-        let has_aer = std::process::Command::new("python3")
-            .args(["-c", "import qiskit_aer"])
+        let python = std::env::var("QUANTUM_PYTHON").unwrap_or_else(|_| "python3".into());
+        let has_aer = std::process::Command::new(python)
+            .args(["-c", "import qiskit, qiskit_aer"])
             .status()
             .map(|s| s.success())
             .unwrap_or(false);

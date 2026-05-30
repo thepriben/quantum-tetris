@@ -1,17 +1,17 @@
 # Design — Quantum Tetris
 
-2D neon Tetris built with **Bevy 0.18**. No 3D assets — pure UI grid + arcade HUD.
+2D neon Tetris built with **Bevy 0.18**. No 3D assets — pure UI grid + arcade HUD. The default runtime path is quantum: RustQIP samples the circuit statevector locally and in WASM; Classic is only a baseline mode.
 
 ---
 
 ## Game loop
 
-1. **Startup** — spawn UI, run first teleporter pair, drop first piece.
+1. **Startup** — spawn UI, run first teleportation-inspired pair, drop first piece.
 2. **Update** (chained systems):
    - `tick_gravity` — timed drop from hunter-profile interval
    - `handle_input` — arrows + Space
    - `refresh_ui` — grid colors + HUD text
-3. **Lock** — piece lands → optional line clear (stabilizer circuit) → next teleporter pair.
+3. **Lock** — piece lands → optional line clear (stabilizer circuit) → next teleportation-inspired pair.
 
 ---
 

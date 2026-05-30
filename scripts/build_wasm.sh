@@ -35,7 +35,7 @@ if command -v wasm-opt >/dev/null; then
   echo "→ wasm-opt…"
   wasm-opt -Oz "$OUT/quantum_tetris_bg.wasm" -o "$OUT/quantum_tetris_bg.wasm"
 else
-  echo "TIP: install binaryen (wasm-opt) to shrink the ~70 MB WASM bundle"
+  echo "TIP: install binaryen (wasm-opt) to shrink the WASM bundle"
 fi
 
 echo "OK — serve docs/ with a static server (see docs/WASM.md)"

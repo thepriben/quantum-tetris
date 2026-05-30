@@ -6,7 +6,6 @@ use crate::game_state::GameRun;
 use crate::i18n::{self, Locale};
 use crate::pieces::PieceKind;
 use crate::tetris;
-use bevy::ecs::query::Or;
 use bevy::ecs::system::ParamSet;
 use bevy::prelude::*;
 use quantum_tetris_quantum::BackendKind;
@@ -44,12 +43,13 @@ pub(crate) struct ModeBtn(pub BackendKind);
 pub(crate) struct ModeClassicLabel;
 #[derive(Component)]
 pub(crate) struct ModeRustqipLabel;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 #[derive(Component)]
 pub(crate) struct ModeQiskitLabel;
 #[cfg(not(target_arch = "wasm32"))]
 #[derive(Component)]
 pub(crate) struct LangToggleBtn;
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 #[derive(Component)]
 pub(crate) struct LangToggleLabel;
 #[derive(Component)]
@@ -66,6 +66,26 @@ pub(crate) struct HintRotateLabel;
 pub(crate) struct HintFasterLabel;
 #[derive(Component)]
 pub(crate) struct HintDropLabel;
+
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
+#[derive(Component, Clone, Copy)]
+pub(crate) enum TextSlot {
+    Score,
+    Lines,
+    Next,
+    Event,
+    Bits,
+    CircuitTitle,
+    Circuit,
+    ModeClassic,
+    ModeRustqip,
+    ModeQiskit,
+    HintMove,
+    HintRotate,
+    HintFaster,
+    HintDrop,
+    LangToggle,
+}
 
 pub(crate) fn setup_ui(mut commands: Commands, run: Res<GameRun>, locale: Res<Locale>) {
     commands.spawn(Camera2d);
@@ -145,37 +165,44 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
         spawn_controls_hint(p, locale);
         p.spawn((
             HudScore,
+            TextSlot::Score,
             Text::new("0"),
             text_style(28.0, Color::srgb(1.0, 0.92, 0.35)),
         ));
         p.spawn((
             HudLines,
+            TextSlot::Lines,
             Text::new(i18n::lines_level(locale, 0, 1)),
             text_style(14.0, Color::srgb(0.7, 0.85, 0.95)),
         ));
         spawn_next_preview(p);
         p.spawn((
             HudNext,
+            TextSlot::Next,
             Text::new(i18n::next_piece(locale, "T")),
             text_style(13.0, Color::srgb(0.65, 0.78, 0.92)),
         ));
         p.spawn((
             HudEvent,
+            TextSlot::Event,
             Text::new("—"),
             text_style(12.0, Color::srgb(0.72, 0.82, 0.92)),
         ));
         p.spawn((
             HudBits,
+            TextSlot::Bits,
             Text::new("—"),
             text_style(13.0, Color::srgb(0.55, 0.9, 0.75)),
         ));
         p.spawn((
             HudCircuitTitle,
+            TextSlot::CircuitTitle,
             Text::new(i18n::circuit_heading(locale)),
             text_style(11.0, Color::srgb(0.55, 0.75, 0.95)),
         ));
         p.spawn((
             HudCircuit,
+            TextSlot::Circuit,
             Text::new("—"),
             text_style_multiline(10.0, Color::srgb(0.62, 0.78, 0.88)),
         ));
@@ -207,6 +234,7 @@ fn spawn_lang_row(parent: &mut ChildSpawnerCommands, locale: Locale) {
             .with_children(|btn| {
                 btn.spawn((
                     LangToggleLabel,
+                    TextSlot::LangToggle,
                     Text::new(locale.toggle_label()),
                     text_style(11.0, Color::srgb(0.75, 0.88, 1.0)),
                 ));
@@ -228,6 +256,7 @@ fn spawn_mode_row(parent: &mut ChildSpawnerCommands, active: BackendKind, locale
                 row,
                 ModeBtn(BackendKind::Classic),
                 ModeClassicLabel,
+                TextSlot::ModeClassic,
                 i18n::mode_classic(locale),
                 active == BackendKind::Classic,
             );
@@ -235,6 +264,7 @@ fn spawn_mode_row(parent: &mut ChildSpawnerCommands, active: BackendKind, locale
                 row,
                 ModeBtn(BackendKind::Quantum),
                 ModeRustqipLabel,
+                TextSlot::ModeRustqip,
                 i18n::mode_rustqip(locale),
                 active == BackendKind::Quantum,
             );
@@ -243,6 +273,7 @@ fn spawn_mode_row(parent: &mut ChildSpawnerCommands, active: BackendKind, locale
                 row,
                 ModeBtn(BackendKind::Qiskit),
                 ModeQiskitLabel,
+                TextSlot::ModeQiskit,
                 i18n::mode_qiskit(locale),
                 active == BackendKind::Qiskit,
             );
@@ -253,6 +284,7 @@ fn spawn_mode_button(
     parent: &mut ChildSpawnerCommands,
     mode: ModeBtn,
     label_marker: impl Component,
+    slot: TextSlot,
     label: &str,
     selected: bool,
 ) {
@@ -283,6 +315,7 @@ fn spawn_mode_button(
                     ..default()
                 },
                 label_marker,
+                slot,
                 Text::new(label),
                 text_style(12.0, text_c),
             ));
@@ -299,10 +332,34 @@ fn spawn_controls_hint(parent: &mut ChildSpawnerCommands, locale: Locale) {
             ..default()
         })
         .with_children(|row| {
-            spawn_hint_chip(row, "LR", i18n::hint_move(locale), HintMoveLabel);
-            spawn_hint_chip(row, "^", i18n::hint_rotate(locale), HintRotateLabel);
-            spawn_hint_chip(row, "v", i18n::hint_faster(locale), HintFasterLabel);
-            spawn_hint_chip(row, "Sp", i18n::hint_drop(locale), HintDropLabel);
+            spawn_hint_chip(
+                row,
+                "LR",
+                i18n::hint_move(locale),
+                HintMoveLabel,
+                TextSlot::HintMove,
+            );
+            spawn_hint_chip(
+                row,
+                "^",
+                i18n::hint_rotate(locale),
+                HintRotateLabel,
+                TextSlot::HintRotate,
+            );
+            spawn_hint_chip(
+                row,
+                "v",
+                i18n::hint_faster(locale),
+                HintFasterLabel,
+                TextSlot::HintFaster,
+            );
+            spawn_hint_chip(
+                row,
+                "Sp",
+                i18n::hint_drop(locale),
+                HintDropLabel,
+                TextSlot::HintDrop,
+            );
         });
 }
 
@@ -311,6 +368,7 @@ fn spawn_hint_chip(
     key: &str,
     action: &str,
     label_marker: impl Component,
+    slot: TextSlot,
 ) {
     parent
         .spawn(Node {
@@ -338,6 +396,7 @@ fn spawn_hint_chip(
             });
             chip.spawn((
                 label_marker,
+                slot,
                 Text::new(action),
                 text_style(10.0, Color::srgb(0.78, 0.88, 0.98)),
             ));
@@ -454,50 +513,11 @@ pub(crate) fn refresh_ui(
         Query<(&GridCell, &mut BackgroundColor)>,
         Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
     )>,
-    mut mode_buttons: Query<(&ModeBtn, &mut BackgroundColor, &mut BorderColor), With<Button>>,
-    mut texts: Query<
-        (
-            &mut Text,
-            Has<HudScore>,
-            Has<HudLines>,
-            Has<HudNext>,
-            Has<HudBits>,
-            Has<HudEvent>,
-            Has<HudCircuitTitle>,
-            Has<HudCircuit>,
-            Has<ModeClassicLabel>,
-            Has<ModeRustqipLabel>,
-            Has<HintMoveLabel>,
-            Has<HintRotateLabel>,
-            Has<HintFasterLabel>,
-            Has<HintDropLabel>,
-            Has<LangToggleLabel>,
-        ),
-        Or<(
-            With<HudScore>,
-            With<HudLines>,
-            With<HudNext>,
-            With<HudBits>,
-            With<HudEvent>,
-            With<HudCircuitTitle>,
-            With<HudCircuit>,
-            With<ModeClassicLabel>,
-            With<ModeRustqipLabel>,
-            With<HintMoveLabel>,
-            With<HintRotateLabel>,
-            With<HintFasterLabel>,
-            With<HintDropLabel>,
-            With<LangToggleLabel>,
-        )>,
+    mut mode_buttons: Query<
+        (&ModeBtn, &mut BackgroundColor, &mut BorderColor),
+        (With<Button>, Without<GridCell>, Without<NextPreviewCell>),
     >,
-    #[cfg(not(target_arch = "wasm32"))] mut qiskit_labels: Query<
-        &mut Text,
-        (
-            With<ModeQiskitLabel>,
-            Without<ModeClassicLabel>,
-            Without<ModeRustqipLabel>,
-        ),
-    >,
+    mut texts: Query<(&TextSlot, &mut Text)>,
 ) {
     for (cell, mut bg) in bg_queries.p0().iter_mut() {
         *bg = BackgroundColor(board.display_color(cell.col, cell.row).unwrap_or(GRID));
@@ -513,68 +533,38 @@ pub(crate) fn refresh_ui(
         *border = BorderColor::all(b);
     }
 
-    #[cfg(not(target_arch = "wasm32"))]
-    for mut label in qiskit_labels.iter_mut() {
-        **label = i18n::mode_qiskit(*locale).into();
-    }
-
-    for (
-        mut t,
-        score,
-        lines,
-        next,
-        bits,
-        event,
-        circ_title,
-        circ,
-        classic,
-        rustqip,
-        move_l,
-        rotate_l,
-        faster_l,
-        drop_l,
-        lang,
-    ) in texts.iter_mut()
-    {
-        if score {
-            **t = run.score.to_string();
-        } else if lines {
-            **t = i18n::lines_level(*locale, run.lines, run.level);
-        } else if next {
-            **t = i18n::next_piece(*locale, next_label(board.next));
-        } else if bits {
-            **t = if run.last_bits.is_empty() {
-                "—".into()
-            } else if run.is_quantum {
-                format!("[{}] {:.0}%", run.last_bits, run.last_confidence)
-            } else {
-                format!("[{}]", run.last_bits)
-            };
-        } else if event {
-            **t = if run.last_event.is_empty() {
-                "—".into()
-            } else {
-                run.last_event.clone()
-            };
-        } else if circ_title {
-            **t = i18n::circuit_heading(*locale).into();
-        } else if circ {
-            **t = i18n::circuit_explain(*locale, run.last_moment).into();
-        } else if classic {
-            **t = i18n::mode_classic(*locale).into();
-        } else if rustqip {
-            **t = i18n::mode_rustqip(*locale).into();
-        } else if move_l {
-            **t = i18n::hint_move(*locale).into();
-        } else if rotate_l {
-            **t = i18n::hint_rotate(*locale).into();
-        } else if faster_l {
-            **t = i18n::hint_faster(*locale).into();
-        } else if drop_l {
-            **t = i18n::hint_drop(*locale).into();
-        } else if lang {
-            **t = locale.toggle_label().into();
-        }
+    for (slot, mut t) in texts.iter_mut() {
+        **t = match slot {
+            TextSlot::Score => run.score.to_string(),
+            TextSlot::Lines => i18n::lines_level(*locale, run.lines, run.level),
+            TextSlot::Next => i18n::next_piece(*locale, next_label(board.next)),
+            TextSlot::Bits => {
+                if run.last_bits.is_empty() {
+                    "—".into()
+                } else if run.is_quantum {
+                    format!("[{}] {:.0}%", run.last_bits, run.last_confidence)
+                } else {
+                    format!("[{}]", run.last_bits)
+                }
+            }
+            TextSlot::Event => {
+                if run.last_event.is_empty() {
+                    "—".into()
+                } else {
+                    run.last_event.clone()
+                }
+            }
+            TextSlot::CircuitTitle => i18n::circuit_heading(*locale).into(),
+            TextSlot::Circuit => i18n::circuit_explain(*locale, run.last_moment).into(),
+            TextSlot::ModeClassic => i18n::mode_classic(*locale).into(),
+            TextSlot::ModeRustqip => i18n::mode_rustqip(*locale).into(),
+            TextSlot::ModeQiskit => i18n::mode_qiskit(*locale).into(),
+            TextSlot::HintMove => i18n::hint_move(*locale).into(),
+            TextSlot::HintRotate => i18n::hint_rotate(*locale).into(),
+            TextSlot::HintFaster => i18n::hint_faster(*locale).into(),
+            TextSlot::HintDrop => i18n::hint_drop(*locale).into(),
+            TextSlot::LangToggle => locale.toggle_label().into(),
+        };
     }
 }
 

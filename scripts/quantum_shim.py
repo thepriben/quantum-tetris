@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""JSON stdin → Qiskit Aer shot → JSON stdout for Quantum Town: LA.
+"""JSON stdin → Qiskit Aer shot → JSON stdout for Quantum Tetris.
 
 Used locally and on GitHub Actions (see .github/workflows/ci.yml).
 

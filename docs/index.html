@@ -11,7 +11,7 @@
   <header class="site-header">
     <div>
       <h1 data-i18n="home.title">Quantum Tetris</h1>
-      <p class="tagline" data-i18n="home.subtitle">Tetris — randomness from quantum circuits</p>
+      <p class="tagline" data-i18n="home.subtitle">Tetris — stochastic events from quantum circuits</p>
     </div>
     <div class="lang-flags" role="group" aria-label="Language">
       <button type="button" class="lang-btn" data-lang="en" data-i18n="lang.en" data-i18n-attr="title" title="English" aria-label="English">
@@ -44,7 +44,7 @@
           <div id="loader">
             <div class="spinner" aria-hidden="true"></div>
             <span id="loader-text" data-i18n="play.starting">Loading…</span>
-            <span class="loader-hint" data-i18n="play.hint">Initial download (~70 MB). Wait for the progress bar to finish.</span>
+            <span class="loader-hint" data-i18n="play.hint">Large initial download. Wait for the progress bar to finish.</span>
           </div>
           <p id="error" role="alert"></p>
         </div>
@@ -52,8 +52,8 @@
     </section>
 
     <section class="col-guide">
-      <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Piece, cadence, bonuses: each draw runs a predefined circuit; measured bits drive the in-game effect.</p>
-      <p class="stack" data-i18n="home.stack" data-i18n-html><strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. Same circuit presets on every backend: <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default, locally and online (cross-checked against Qiskit in CI). Desktop option: Qiskit Aer via Python.</p>
+      <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Piece, spawn state, cadence, bonuses: each stochastic event runs a predefined circuit; measured bits drive the in-game effect.</p>
+      <p class="stack" data-i18n="home.stack" data-i18n-html><strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online; Qiskit Aer remains available on desktop for parity, diagrams, and CI.</p>
       <p class="principle" data-i18n="home.principle" data-i18n-html><strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
 
       <h2 data-i18n="home.quantumTitle">Mechanics</h2>
@@ -63,7 +63,7 @@
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
           <p class="moment-game" data-i18n="home.moment.piece.game">Sets the active shape and the next preview.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> (×2) — entangled pair; measured bits pick the family (I, O, T…) and variant.</p>
+          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> (×2) — teleportation-inspired Bell measurement; measured bits pick the family (I, O, T…) and variant.</p>
           <figure class="circuit-fig">
             <img src="circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" loading="lazy" decoding="async">
           </figure>
@@ -132,7 +132,7 @@
       window.qtI18n?.apply?.();
       bootGame({ frameInner, loader, errorEl }).catch((e) => {
         loader?.classList.add('hidden');
-        errorEl.textContent = window.qtI18n?.t?.('error.wasm') ?? 'WASM error';
+        errorEl.textContent = window.qtI18n?.t?.('error.run') ?? 'WASM error';
         errorEl.classList.add('visible');
         console.error(e);
       });
