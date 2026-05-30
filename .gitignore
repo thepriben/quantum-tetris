@@ -1,6 +1,9 @@
 /target
+.venv/
 **/*.rs.bk
 .DS_Store
 *.pbf
 .env
 dist/wasm/
+docs/wasm/
+docs/assets/

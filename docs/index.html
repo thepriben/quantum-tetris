@@ -1,126 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum Town: LA</title>
-  <meta name="description" content="A cute FPS where quantum circuits drive enemy AI and probabilistic teleporters. Rust, Bevy, OSM Los Angeles.">
+  <title>Quantum Sub: LA</title>
+  <meta name="description" content="Sous-marin cute — circuits 2–3 qubits, classique ou QIP.">
   <style>
-    :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #2c3e50;
-      --muted: #7f8c8d;
-      --accent: #6c5ce7;
-      --mint: #00b894;
-      --border: #dfe6e9;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", system-ui, sans-serif;
-      background: linear-gradient(160deg, #eef9ff 0%, #f4f7fb 40%, #fef6ff 100%);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    .wrap { max-width: 820px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
-    header { text-align: center; margin-bottom: 2.5rem; }
-    h1 { font-size: 2.2rem; margin: 0 0 0.25rem; letter-spacing: -0.02em; }
-    .tagline { color: var(--muted); font-size: 1.05rem; max-width: 36rem; margin: 0 auto; }
-    .badge {
-      display: inline-block;
-      background: var(--mint);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      margin-top: 0.75rem;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.25rem 1.4rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 6px 24px rgba(44, 62, 80, 0.06);
-    }
-    h2 { font-size: 1.05rem; margin: 0 0 0.75rem; color: var(--accent); }
-    p { margin: 0 0 0.75rem; }
-    p:last-child { margin-bottom: 0; }
-    ul { margin: 0; padding-left: 1.2rem; }
-    li { margin: 0.35rem 0; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-    th, td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); }
-    th { color: var(--muted); font-weight: 600; }
-    code { background: #eef2f7; padding: 0.12rem 0.35rem; border-radius: 4px; font-size: 0.88em; }
-    .links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
-    a.btn {
-      display: inline-block;
-      text-decoration: none;
-      background: var(--accent);
-      color: #fff;
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-    a.btn.secondary { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
-    footer { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 2rem; }
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #234; background: #eef9ff; }
+    h1 { font-size: 1.75rem; }
+    .cta { display: inline-block; margin: 1rem 0; padding: 0.65rem 1.2rem; background: #087; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; }
+    .cta:hover { background: #065; }
+    code { background: #fff; padding: 0.1em 0.35em; border-radius: 4px; }
+    a { color: #087; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Quantum Town: LA</h1>
-      <p class="tagline">A cute first-person playground where <strong>real quantum circuits</strong> drive monster moods and capricious teleporters.</p>
-      <span class="badge">Browser demo — Sprint 7</span>
-    </header>
-
-    <div class="card">
-      <h2>Play (coming soon)</h2>
-      <p>The WASM build lands in <strong>Sprint 7</strong>. For now, clone the repo and run the desktop prototype:</p>
-      <p><code>cargo run -p quantum-town-la</code></p>
-      <div class="links">
-        <a class="btn" href="https://github.com/thepriben/quantum-town-la">GitHub repository</a>
-        <a class="btn secondary" href="https://github.com/thepriben/quantum-town-la/blob/main/docs/DESIGN.md">Design doc</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Research question</h2>
-      <p><em>What could a quantum computer actually do in a video game?</em></p>
-      <ul>
-        <li><strong>Quantum Imp AI</strong> — 2-qubit circuit picks attack, flank, flee, or ambush.</li>
-        <li><strong>Schrödinger Gates</strong> — 3-qubit measurement picks one of eight exits.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Quantum backends</h2>
-      <table>
-        <thead><tr><th>Backend</th><th>Mode</th><th>Use case</th></tr></thead>
-        <tbody>
-          <tr><td><code>qip</code></td><td>Rust in-process</td><td>Dev, offline, WASM</td></tr>
-          <tr><td><code>qiskit</code></td><td>Local Python</td><td>IBM-style simulator demo</td></tr>
-          <tr><td><code>bluequbit</code></td><td>Cloud API</td><td>Remote runs, benchmarks</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h2>Documentation</h2>
-      <ul>
-        <li><a href="https://github.com/thepriben/quantum-town-la/blob/main/docs/DESIGN.md">Design</a></li>
-        <li><a href="https://github.com/thepriben/quantum-town-la/blob/main/docs/ARTICLE.md">Article plan (arXiv + Programmez!)</a></li>
-        <li><a href="https://github.com/thepriben/quantum-town-la/blob/main/docs/WASM.md">WASM build</a></li>
-        <li><a href="https://github.com/thepriben/quantum-town-la/blob/main/docs/RECORDS.md">Records &amp; scoring</a></li>
-      </ul>
-    </div>
-
-    <footer>
-      MIT License · <a href="https://github.com/thepriben">thepriben</a> · Formerly <em>Quantum Doom LA</em>
-    </footer>
-  </div>
+  <h1>Quantum Sub: LA</h1>
+  <p>Pilote un sous-marin, collecte 3 cellules, sors par le portail sud. <strong>Flèches</strong> + <strong>Espace</strong>. Chaque action passe par un mini-circuit ; les bits mesurés pilotent le jeu.</p>
+  <p>
+    <a class="cta" href="play.html">Jouer dans le navigateur</a>
+    <a class="cta" href="play.html?mode=quantum" style="background:#356">Mode QIP</a>
+  </p>
+  <p><strong>Local (Rust) :</strong></p>
+  <pre><code>git clone https://github.com/thepriben/quantum-town-la.git
+cd quantum-town-la
+cp .env.example .env
+cargo run -p quantum-town-la</code></pre>
+  <p>
+    <a href="https://github.com/thepriben/quantum-town-la">Code</a> ·
+    <a href="QUANTUM.md">Aspects quantiques</a> ·
+    <a href="WASM.md">Build WASM</a>
+  </p>
 </body>
 </html>
