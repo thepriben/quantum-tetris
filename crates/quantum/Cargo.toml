@@ -1,6 +1,6 @@
 [package]
 name = "quantum-town-quantum"
-description = "Circuits and backends for Quantum Sub: LA"
+description = "Circuits and backends for Quantum Tetris: LA"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -10,7 +10,6 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 rand = "0.9"
-qip = { version = "1.5", optional = true }
 
 [dev-dependencies]
 serde_json = { workspace = true }
@@ -24,8 +23,5 @@ name = "shim_direct"
 required-features = ["backend-qiskit"]
 
 [features]
-default = ["backend-qip"]
-backend-qip = ["dep:qip"]
-# Academic/reference option (Python Qiskit), not enabled by default.
-backend-qiskit = ["backend-python"]
-backend-python = []
+default = []
+backend-qiskit = []

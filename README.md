@@ -3,7 +3,7 @@
 [![CI](https://github.com/thepriben/quantum-town-la/actions/workflows/ci.yml/badge.svg)](https://github.com/thepriben/quantum-town-la/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Quantum Tetris** — a pretty neon stacker where **every piece and special move comes from a small quantum circuit**. Same rules in **classic** (uniform random) and **QIP** (Born rule) modes.
+**Quantum Tetris** — neon arcade stacker where **every piece, spin, and drop speed** comes from a small quantum circuit. Play in **classic** mode (uniform random) or **Qiskit Aer** (Born-rule distributions).
 
 ---
 
@@ -16,19 +16,21 @@ cargo run -p quantum-town-la
 
 | Mode | Command |
 | --- | --- |
-| **Classic** | `QUANTUM_MODE=classic cargo run -p quantum-town-la` |
-| **Quantum** | `QUANTUM_MODE=quantum cargo run -p quantum-town-la` |
+| **Classic** (default) | `QUANTUM_MODE=classic cargo run -p quantum-town-la` |
+| **Qiskit** | `QUANTUM_MODE=qiskit cargo run -p quantum-town-la` |
+
+Qiskit needs Python 3 and `pip install -r scripts/requirements.txt`. If Aer is unavailable, the game falls back to classic.
 
 ---
 
-## Controls
+## Controls (arcade)
 
 | Key | Action |
 | --- | --- |
 | **← →** | Move piece |
-| **↑** | Rotate |
-| **↓** | Soft drop |
-| **Space** | **Observe** — hard drop + `observation-pulse-v1` bonus |
+| **↑** | **Rotate** |
+| **↓** | **Speed up** (soft drop) |
+| **Space** | **Observe!** — hard drop + quantum bonus |
 
 ---
 
@@ -36,14 +38,26 @@ cargo run -p quantum-town-la
 
 | When | Circuit | Effect |
 | --- | --- | --- |
-| New piece | `quantum-teleportation-gate-v1` | 3 bits → piece type (I–L) |
-| Spawn pose | `imp-brain-v1` | 2 bits → rotation + column |
-| Space | `observation-pulse-v1` | 2 bits → score / line bonus |
-| Line clear | `q-shard-stabilizer-v1` | 2 bits → score multiplier |
+| Each spawn | `quantum-teleportation-gate-v1` ×2 | Bell bits → **family**; message qubit → shape; second shot → **next** piece |
+| Spawn pose | `imp-brain-v1` | Rotation + spawn column |
+| Gravity | `enemy-profile-hunter-v1` | Drop interval for this piece |
+| Space | `observation-pulse-v1` | Score / line bonus |
+| Line clear | `q-shard-stabilizer-v1` | Score multiplier |
 
-HUD shows `[bits]` and **confidence %** after each measurement.
+HUD shows teleporter readout, family, and confidence %.
 
 Details → [docs/QUANTUM.md](docs/QUANTUM.md) · Browser → [docs/WASM.md](docs/WASM.md)
+
+---
+
+## Project layout
+
+```
+crates/game/     Bevy Tetris + HUD
+crates/quantum/  Circuit IR + classic / Qiskit backends
+docs/            WASM bundle + GitHub Pages
+scripts/         build_wasm.sh, quantum_shim.py
+```
 
 ---
 

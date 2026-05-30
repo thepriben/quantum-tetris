@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build Quantum Sub for GitHub Pages (docs/wasm + docs/assets).
+# Build Quantum Tetris for GitHub Pages (docs/wasm).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -31,12 +31,5 @@ wasm-bindgen --out-dir "$OUT" --target web \
   --no-typescript \
   target/wasm32-unknown-unknown/release/quantum_town_la.wasm
 
-echo "→ assets…"
-rm -rf "$ROOT/docs/assets"
-mkdir -p "$ROOT/docs/assets"
-if [[ -d "$ROOT/assets/models" ]]; then
-  cp -R "$ROOT/assets/models" "$ROOT/docs/assets/"
-fi
-
 echo "OK — open docs/play.html via a local server (see docs/WASM.md)"
-du -sh "$OUT" "$ROOT/docs/assets" 2>/dev/null || true
+du -sh "$OUT" 2>/dev/null || true

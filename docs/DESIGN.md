@@ -1,23 +1,47 @@
 # Design — Quantum Tetris: LA
 
-10×20 stacker, **2D neon UI**, arrows + Space.
+2D neon Tetris built with **Bevy 0.18**. No 3D assets — pure UI grid + arcade HUD.
 
-## Loop
+---
 
-1. **Teleporter** circuit → next piece (I–L).
-2. **Imp-brain** → rotation + spawn column.
-3. Player moves / rotates / soft-drops.
-4. **Space** → hard drop + **observation-pulse** bonus.
-5. Line clear → **shard-stabilizer** score multiplier.
+## Game loop
 
-## Modules
+1. **Startup** — spawn UI, run first teleporter pair, drop first piece.
+2. **Update** (chained systems):
+   - `tick_gravity` — timed drop from hunter-profile interval
+   - `handle_input` — arrows + Space
+   - `refresh_ui` — grid colors + HUD text
+3. **Lock** — piece lands → optional line clear (stabilizer circuit) → next teleporter pair.
 
-| File | Role |
+---
+
+## Modules (`crates/game/src/`)
+
+| Module | Role |
 | --- | --- |
-| `board.rs` | Grid, collision, line clear |
-| `pieces.rs` | Tetromino shapes |
-| `tetris.rs` | Systems + quantum spawn |
-| `measurement_fx.rs` | Bits → gameplay |
-| `ui.rs` | Grid + HUD |
+| `app.rs` | `TetrisPlugin`, window, Bevy setup |
+| `board.rs` | 10×20 grid, hidden spawn buffer, collision |
+| `pieces.rs` | Tetromino shapes, colors, families |
+| `tetris.rs` | Gravity, input, quantum spawn pipeline |
+| `measurement_fx.rs` | Bitstring → gameplay parameters |
+| `ui.rs` | Neon grid + arcade control panel |
+| `config.rs` | `QUANTUM_MODE`, backend session |
+| `game_state.rs` | Score, lines, HUD strings |
 
-Quantum details → [QUANTUM.md](QUANTUM.md).
+---
+
+## Quantum crate (`crates/quantum/`)
+
+Portable circuit IR (`Gate`, `QuantumCircuit`) and backends:
+
+- **Classic** — always compiled
+- **Qiskit** — feature `backend-qiskit`, subprocess to `scripts/quantum_shim.py`
+
+Game enables Qiskit via its own `qiskit` feature (on by default for desktop).
+
+---
+
+## Backends removed
+
+- **QIP** (Rust in-process simulator) — removed; use classic or Qiskit instead.
+- **BlueQubit** — never shipped in this repo.

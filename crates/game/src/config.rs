@@ -1,17 +1,17 @@
-//! Runtime configuration — Quantum Sub (desktop ; WASM entry kept for later).
+//! Runtime configuration — desktop (classic / Qiskit) and WASM (classic only).
 
 use bevy::prelude::*;
 use quantum_town_quantum::{build_backend, BackendKind, QuantumBackend, QuantumError};
 use std::sync::Mutex;
 
-/// How the game is launched (native binary vs future WASM bundle).
+/// How the game is launched (native binary vs WASM bundle).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GamePlatform {
     Desktop,
     Wasm,
 }
 
-/// Session-wide options for [`crate::app::DrivePlugin`].
+/// Session-wide options for [`crate::app::TetrisPlugin`].
 #[derive(Resource, Debug, Clone)]
 pub struct GameConfig {
     pub platform: GamePlatform,
@@ -20,7 +20,7 @@ pub struct GameConfig {
 }
 
 impl GameConfig {
-    /// Native build: `QUANTUM_MODE=classic|quantum`; default is QIP Rust.
+    /// Native: `QUANTUM_MODE=classic|qiskit` (default `classic`).
     pub fn desktop() -> Self {
         Self {
             platform: GamePlatform::Desktop,
@@ -29,12 +29,12 @@ impl GameConfig {
         }
     }
 
-    /// Browser: classic by default; `?mode=quantum` for QIP (see `play.html`).
-    pub fn wasm(kind: BackendKind) -> Self {
+    /// Browser: classic uniform random only (no Python).
+    pub fn wasm() -> Self {
         Self {
             platform: GamePlatform::Wasm,
             window_title: "Quantum Tetris: LA",
-            backend_kind: kind,
+            backend_kind: BackendKind::Classic,
         }
     }
 
@@ -61,7 +61,7 @@ impl QuantumSession {
 
     pub fn with_fallback(kind: BackendKind) -> Self {
         Self::new(kind).unwrap_or_else(|error| {
-            eprintln!("[quantum] {kind:?} unavailable ({error}), using classic");
+            eprintln!("[quantum] {kind:?} unavailable ({error}), falling back to classic");
             Self::new(BackendKind::Classic).expect("classic backend")
         })
     }

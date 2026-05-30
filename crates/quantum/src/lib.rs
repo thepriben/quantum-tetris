@@ -1,24 +1,23 @@
 //! # quantum-town-quantum
 //!
-//! Quantum simulation layer for **Quantum Sub: LA**.
+//! Quantum simulation layer for **Quantum Tetris: LA**.
 //!
-//! This crate defines a small circuit IR, measurement results, and a
-//! [`QuantumBackend`] trait with three adapters:
+//! Small circuit IR, measurement results, and [`QuantumBackend`] adapters:
 //!
 //! | Backend | Feature | Description |
 //! | --- | --- | --- |
-//! | Classic | always | Uniform `rand` baseline |
-//! | QIP | `backend-qip` | In-process [qip](https://crates.io/crates/qip) quantum runtime |
+//! | Classic | always | Uniform random baseline (WASM + desktop) |
+//! | Qiskit | `backend-qiskit` | Python Qiskit Aer via `scripts/quantum_shim.py` |
 //!
 //! ## Example
 //!
 //! ```rust
 //! use quantum_town_quantum::{BackendKind, QuantumBackend, QuantumCircuit, build_backend};
 //!
-//! let mut backend = build_backend(BackendKind::Qip).unwrap();
+//! let mut backend = build_backend(BackendKind::Classic).unwrap();
 //! let circuit = QuantumCircuit::imp_brain();
 //! let measurement = backend.run(&circuit).unwrap();
-//! println!("Imp behavior bits: {}", measurement.bits);
+//! println!("Imp brain bits: {}", measurement.bits);
 //! ```
 
 pub mod backends;
@@ -28,11 +27,7 @@ pub mod measurement;
 
 #[cfg(feature = "backend-qiskit")]
 mod python_shim;
-#[cfg(feature = "backend-qip")]
-mod qip_runner;
 
-#[cfg(feature = "backend-qip")]
-pub use backends::QipBackend;
 #[cfg(feature = "backend-qiskit")]
 pub use backends::QiskitBackend;
 pub use backends::{build_backend, BackendKind, ClassicBackend};
@@ -57,8 +52,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn preset_circuits_run_on_qip() {
-        let mut backend = build_backend(BackendKind::Qip).expect("qip");
+    fn preset_circuits_run_on_classic() {
+        let mut backend = build_backend(BackendKind::Classic).expect("classic");
         assert!(backend.run(&QuantumCircuit::imp_brain()).is_ok());
         assert!(backend.run(&QuantumCircuit::teleporter()).is_ok());
     }

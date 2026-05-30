@@ -31,9 +31,6 @@ jobs:
       - name: Install wasm-bindgen-cli
         run: cargo install wasm-bindgen-cli --locked
 
-      - name: Fetch GLB assets
-        run: ./scripts/fetch_assets.sh
-
       - name: Build WASM bundle
         run: ./scripts/build_wasm.sh
 

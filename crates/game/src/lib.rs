@@ -1,4 +1,4 @@
-//! **Quantum Tetris: LA** — circuit-driven piece picker, classic or QIP.
+//! **Quantum Tetris: LA** — circuit-driven Tetris, classic or Qiskit.
 
 pub mod app;
 pub mod board;
@@ -19,11 +19,5 @@ use wasm_bindgen::prelude::*;
 #[cfg_attr(all(feature = "wasm", target_arch = "wasm32"), wasm_bindgen)]
 #[cfg(feature = "wasm")]
 pub fn run_wasm() {
-    run_game(GameConfig::wasm(quantum_town_quantum::BackendKind::Classic));
-}
-
-#[cfg_attr(all(feature = "wasm", target_arch = "wasm32"), wasm_bindgen)]
-#[cfg(feature = "wasm")]
-pub fn run_wasm_quantum() {
-    run_game(GameConfig::wasm(quantum_town_quantum::BackendKind::Qip));
+    run_game(GameConfig::wasm());
 }

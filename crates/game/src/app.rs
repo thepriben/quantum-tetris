@@ -1,4 +1,4 @@
-//! Quantum Tetris — classic or QIP piece picker.
+//! Quantum Tetris — classic or Qiskit piece picker.
 
 use crate::board::Board;
 use crate::config::{GameConfig, QuantumSession};
@@ -32,12 +32,7 @@ impl Plugin for TetrisPlugin {
             .add_systems(Startup, tetris::init_first_piece.after(ui::setup_ui))
             .add_systems(
                 Update,
-                (
-                    tetris::tick_gravity,
-                    tetris::handle_input,
-                    ui::refresh_ui,
-                )
-                    .chain(),
+                (tetris::tick_gravity, tetris::handle_input, ui::refresh_ui).chain(),
             );
     }
 }
@@ -82,9 +77,9 @@ pub fn run_game(config: GameConfig) {
         "\n\
          Quantum Tetris: LA — {}\n\
          ─────────────────────────────────────\n\
-         • Pieces from teleporter + imp-brain circuits\n\
-         • Space = observation pulse (hard drop + bonus)\n\
-         • Line clear = shard stabilizer circuit\n\
+         • Backends: classic (uniform) or Qiskit Aer (Born rule)\n\
+         • Teleporter: Bell bits → family, message qubit → shape\n\
+         • ↑ rotate · ↓ faster · Space = observe (hard drop)\n\
          ─────────────────────────────────────\n",
         config.backend_label()
     );

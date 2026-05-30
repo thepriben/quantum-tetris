@@ -1,4 +1,4 @@
-//! Native desktop binary for Quantum Sub: LA.
+//! Native desktop binary for Quantum Tetris: LA.
 
 use quantum_town_la::{run_game, GameConfig};
 
