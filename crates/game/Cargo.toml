@@ -1,6 +1,6 @@
 [package]
 name = "quantum-town-la"
-description = "Quantum Sub: LA — underwater driving, classic or QIP (local Bevy game)"
+description = "Quantum Tetris: LA — circuit-driven Tetris, classic or QIP"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

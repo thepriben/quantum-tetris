@@ -1,35 +1,25 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum Sub: LA</title>
-  <meta name="description" content="Sous-marin cute — circuits 2–3 qubits, classique ou QIP.">
+  <title>Quantum Tetris: LA</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #234; background: #eef9ff; }
-    h1 { font-size: 1.75rem; }
-    .cta { display: inline-block; margin: 1rem 0; padding: 0.65rem 1.2rem; background: #087; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; }
-    .cta:hover { background: #065; }
-    code { background: #fff; padding: 0.1em 0.35em; border-radius: 4px; }
-    a { color: #087; }
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; background: #0a1220; color: #cde; line-height: 1.5; }
+    h1 { color: #5ef; }
+    .cta { display: inline-block; margin: 1rem 0.5rem 1rem 0; padding: 0.65rem 1.2rem; background: #087; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; }
+    .cta.q { background: #356; }
+    code { background: #152033; padding: 0.1em 0.35em; border-radius: 4px; }
   </style>
 </head>
 <body>
-  <h1>Quantum Sub: LA</h1>
-  <p>Pilote un sous-marin, collecte 3 cellules, sors par le portail sud. <strong>Flèches</strong> + <strong>Espace</strong>. Chaque action passe par un mini-circuit ; les bits mesurés pilotent le jeu.</p>
+  <h1>Quantum Tetris: LA</h1>
+  <p>Neon Tetris where <strong>every piece</strong> is picked by a quantum circuit. Classic or QIP — same rules, different distributions.</p>
   <p>
-    <a class="cta" href="play.html">Jouer dans le navigateur</a>
-    <a class="cta" href="play.html?mode=quantum" style="background:#356">Mode QIP</a>
+    <a class="cta" href="play.html">Play in browser</a>
+    <a class="cta q" href="play.html?mode=quantum">QIP mode</a>
   </p>
-  <p><strong>Local (Rust) :</strong></p>
-  <pre><code>git clone https://github.com/thepriben/quantum-town-la.git
-cd quantum-town-la
-cp .env.example .env
-cargo run -p quantum-town-la</code></pre>
-  <p>
-    <a href="https://github.com/thepriben/quantum-town-la">Code</a> ·
-    <a href="QUANTUM.md">Aspects quantiques</a> ·
-    <a href="WASM.md">Build WASM</a>
-  </p>
+  <p><strong>Local:</strong> <code>cargo run -p quantum-town-la</code></p>
+  <p><a href="QUANTUM.md">Quantum circuits</a> · <a href="https://github.com/thepriben/quantum-town-la">GitHub</a></p>
 </body>
 </html>
