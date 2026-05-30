@@ -60,7 +60,10 @@ fn qiskit_probabilities(circuit: &QuantumCircuit) -> Option<Vec<(String, f32)>> 
 fn assert_close(rustqip: &[(String, f32)], qiskit: &[(String, f32)], label: &str) {
     assert_eq!(rustqip.len(), qiskit.len(), "{label}: length mismatch");
     for ((rust_bits, rust_p), (qiskit_bits, qiskit_p)) in rustqip.iter().zip(qiskit.iter()) {
-        assert_eq!(rust_bits, qiskit_bits, "{label}: bit order mismatch at {rust_bits}");
+        assert_eq!(
+            rust_bits, qiskit_bits,
+            "{label}: bit order mismatch at {rust_bits}"
+        );
         assert!(
             (rust_p - qiskit_p).abs() < 1e-4,
             "{label} {rust_bits}: rustqip={rust_p} qiskit={qiskit_p}"

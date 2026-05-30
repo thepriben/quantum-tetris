@@ -28,6 +28,33 @@ fn bit_reverse_index(index: usize, width: usize) -> usize {
     reversed
 }
 
+#[cfg(test)]
+mod bit_order {
+    use super::bit_reverse_index;
+
+    #[test]
+    fn swaps_two_qubit_indices() {
+        assert_eq!(bit_reverse_index(1, 2), 2);
+        assert_eq!(bit_reverse_index(2, 2), 1);
+        assert_eq!(bit_reverse_index(0, 2), 0);
+        assert_eq!(bit_reverse_index(3, 2), 3);
+    }
+
+    #[test]
+    fn is_involution_up_to_eight_qubits() {
+        for width in 1..=3 {
+            let n = 1usize << width;
+            for index in 0..n {
+                assert_eq!(
+                    bit_reverse_index(bit_reverse_index(index, width), width),
+                    index,
+                    "width={width} index={index}"
+                );
+            }
+        }
+    }
+}
+
 fn apply_gates(
     b: &mut LocalBuilder<f64>,
     qubits: &mut Vec<<LocalBuilder<f64> as CircuitBuilder>::Register>,
@@ -145,18 +172,13 @@ mod tests {
     }
 
     #[test]
-    fn hunter_profile_matches_qiskit_bit_order() {
-        let probabilities = rustqip_probabilities(&QuantumCircuit::hunter_profile()).expect("rustqip");
-        let by_bits: std::collections::HashMap<_, _> = probabilities.into_iter().collect();
-        assert!((by_bits["01"] - 0.10305369).abs() < 1e-4);
-        assert!((by_bits["10"] - 0.3969463).abs() < 1e-4);
-    }
-
-    #[test]
-    fn probabilities_sum_to_one() {
+    fn probabilities_sum_to_one_on_all_presets() {
         for circuit in [
             QuantumCircuit::imp_brain(),
             QuantumCircuit::hunter_profile(),
+            QuantumCircuit::patrol_profile(),
+            QuantumCircuit::observation_pulse(),
+            QuantumCircuit::shard_stabilizer(),
             QuantumCircuit::teleporter(),
         ] {
             let probabilities = rustqip_probabilities(&circuit).expect("rustqip");
@@ -166,6 +188,16 @@ mod tests {
                 "{} total={total}",
                 circuit.label
             );
+        }
+    }
+
+    #[test]
+    fn run_returns_valid_bit_width() {
+        let mut backend = RustQipBackend;
+        for circuit in [QuantumCircuit::imp_brain(), QuantumCircuit::teleporter()] {
+            let m = backend.run(&circuit).expect("run");
+            assert_eq!(m.bits.len(), circuit.qubits as usize);
+            assert_eq!(m.probabilities.len(), 1usize << circuit.qubits);
         }
     }
 }

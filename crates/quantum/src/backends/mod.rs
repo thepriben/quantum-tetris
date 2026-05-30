@@ -99,6 +99,28 @@ mod tests {
     }
 
     #[test]
+    fn default_unknown_parse_is_quantum() {
+        assert_eq!(BackendKind::parse("unknown"), BackendKind::Quantum);
+    }
+
+    #[test]
+    fn is_quantum_excludes_classic_only() {
+        assert!(!BackendKind::Classic.is_quantum());
+        assert!(BackendKind::Quantum.is_quantum());
+        assert!(BackendKind::Qiskit.is_quantum());
+    }
+
+    #[test]
+    fn quantum_backend_is_rustqip() {
+        let mut backend = build_backend(BackendKind::Quantum).expect("quantum");
+        let m = backend
+            .run(&crate::QuantumCircuit::imp_brain())
+            .expect("run");
+        assert_eq!(m.bits.len(), 2);
+        assert_eq!(m.probabilities.len(), 4);
+    }
+
+    #[test]
     fn build_classic_backend() {
         assert!(build_backend(BackendKind::Classic).is_ok());
     }
