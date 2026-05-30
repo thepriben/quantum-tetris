@@ -428,13 +428,7 @@ pub(crate) fn handle_mode_buttons(
         if *interaction != Interaction::Pressed {
             continue;
         }
-        apply_mode(
-            &mut session,
-            &mut board,
-            &mut run,
-            mode.0,
-            *locale,
-        );
+        apply_mode(&mut session, &mut board, &mut run, mode.0, *locale);
     }
 }
 
@@ -460,10 +454,7 @@ pub(crate) fn refresh_ui(
         Query<(&GridCell, &mut BackgroundColor)>,
         Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
     )>,
-    mut mode_buttons: Query<
-        (&ModeBtn, &mut BackgroundColor, &mut BorderColor),
-        With<Button>,
-    >,
+    mut mode_buttons: Query<(&ModeBtn, &mut BackgroundColor, &mut BorderColor), With<Button>>,
     mut texts: Query<
         (
             &mut Text,
@@ -501,7 +492,11 @@ pub(crate) fn refresh_ui(
     >,
     #[cfg(not(target_arch = "wasm32"))] mut qiskit_labels: Query<
         &mut Text,
-        (With<ModeQiskitLabel>, Without<ModeClassicLabel>, Without<ModeRustqipLabel>),
+        (
+            With<ModeQiskitLabel>,
+            Without<ModeClassicLabel>,
+            Without<ModeRustqipLabel>,
+        ),
     >,
 ) {
     for (cell, mut bg) in bg_queries.p0().iter_mut() {
