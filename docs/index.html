@@ -5,150 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
   <link rel="stylesheet" href="site.css">
-  <style>
-    .site-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      max-width: 72rem;
-      margin: 0 auto;
-      padding: 1rem 1.25rem 0.5rem;
-    }
-    .site-header h1 {
-      margin: 0;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--heading);
-    }
-    .site-header .tagline {
-      margin: 0.15rem 0 0;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
-      gap: 2rem 2.5rem;
-      max-width: 72rem;
-      margin: 0 auto;
-      padding: 1rem 1.25rem 3rem;
-      align-items: start;
-    }
-
-    .col-game {
-      position: sticky;
-      top: 1rem;
-    }
-    .col-game .controls-label {
-      margin: 0.85rem 0 0.35rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .col-guide h2 {
-      margin: 1.75rem 0 0.65rem;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--heading);
-      letter-spacing: 0.02em;
-    }
-    .col-guide h2:first-of-type { margin-top: 0; }
-
-    .lead {
-      margin: 0;
-      font-size: 1rem;
-      color: var(--text);
-    }
-
-    .principle {
-      margin-top: 1.25rem;
-      padding: 0.85rem 1rem;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.92rem;
-      color: var(--text-muted);
-    }
-    .principle strong { color: var(--text); }
-
-    .moment-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .moment {
-      padding: 0.85rem 1rem;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-    .moment h3 {
-      margin: 0 0 0.35rem;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--heading);
-    }
-    .moment p {
-      margin: 0;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-    .moment .circuit {
-      display: block;
-      margin-top: 0.45rem;
-      font: 600 0.78rem/1.4 ui-monospace, monospace;
-      color: var(--accent);
-    }
-
-    .classical-note {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-left: 3px solid var(--accent);
-      background: rgba(107, 191, 138, 0.06);
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .footer-dev {
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-    .footer-dev p { margin: 0.35rem 0; }
-    .footer-dev a { text-decoration: none; }
-    .footer-dev a:hover { text-decoration: underline; }
-
-    @media (max-width: 860px) {
-      .layout {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .col-game { position: static; }
-    }
-  </style>
   <script src="i18n.js" defer></script>
 </head>
-<body data-page="index">
+<body>
   <header class="site-header">
     <div>
       <h1 data-i18n="home.title">Quantum Tetris</h1>
       <p class="tagline" data-i18n="home.subtitle">Tetris où le hasard vient de mesures quantiques</p>
     </div>
-    <div class="lang-flags" role="group" aria-label="Language">
-      <button type="button" class="lang-btn" data-lang="fr" title="Français" aria-label="Français">🇫🇷</button>
-      <button type="button" class="lang-btn" data-lang="en" title="English" aria-label="English">🇬🇧</button>
+    <div class="lang-flags" role="group" aria-label="Langue">
+      <button type="button" class="lang-btn" data-lang="fr" data-i18n="lang.fr" data-i18n-attr="title" title="Français" aria-label="Français">
+        <svg class="flag" viewBox="0 0 3 2" aria-hidden="true">
+          <rect width="1" height="2" fill="#002395"/>
+          <rect x="1" width="1" height="2" fill="#fff"/>
+          <rect x="2" width="1" height="2" fill="#ed2939"/>
+        </svg>
+      </button>
+      <button type="button" class="lang-btn" data-lang="en" data-i18n="lang.en" data-i18n-attr="title" title="English" aria-label="English">
+        <svg class="flag" viewBox="0 0 60 30" aria-hidden="true">
+          <clipPath id="uk"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+          <clipPath id="uk-d"><path d="M30,15 h30 v15 z v-15 h-30 z h-30 v15 z v-15 h-30 z"/></clipPath>
+          <g clip-path="url(#uk)">
+            <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+            <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+            <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uk-d)" stroke="#C8102E" stroke-width="4"/>
+            <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+            <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+          </g>
+        </svg>
+      </button>
     </div>
   </header>
 
@@ -162,13 +47,6 @@
           </div>
           <p id="error"></p>
         </div>
-      </div>
-      <p class="controls-label" data-i18n="home.controlsTitle">Contrôles (classiques)</p>
-      <div class="keys">
-        <div class="hint"><kbd>LR</kbd><span data-i18n="hint.move">BOUGER</span></div>
-        <div class="hint"><kbd>^</kbd><span data-i18n="hint.rotate">TOURNER</span></div>
-        <div class="hint"><kbd>v</kbd><span data-i18n="hint.faster">VITE</span></div>
-        <div class="hint"><kbd>Sp</kbd><span data-i18n="hint.drop">POSER</span></div>
       </div>
     </section>
 
@@ -201,27 +79,20 @@
         <p>
           <a href="QUANTUM.md" data-i18n="home.circuitsLink">Circuits quantiques</a> ·
           <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a> ·
-          <a href="README.md" data-i18n="home.readme">Architecture</a> ·
-          <a href="play.html" data-i18n="home.fullscreen">Plein écran</a>
+          <a href="README.md" data-i18n="home.readme">Architecture</a>
         </p>
       </footer>
     </section>
   </div>
 
   <script type="module">
-    import init, { run_wasm } from './wasm/quantum_tetris.js';
+    import init, { run_wasm, set_web_locale } from './wasm/quantum_tetris.js';
+
+    window.__qtSetWebLocale = set_web_locale;
 
     const loader = document.getElementById('loader');
-    const loaderText = document.getElementById('loader-text');
     const errorEl = document.getElementById('error');
     const frameInner = document.getElementById('frame-inner');
-
-    function strings() {
-      const en = window.qtI18n?.getLocale?.() === 'en';
-      return en
-        ? { error: 'WASM error — run ./scripts/build_wasm.sh first' }
-        : { error: 'Erreur WASM — lance ./scripts/build_wasm.sh' };
-    }
 
     function mountCanvas() {
       const canvas = document.querySelector('canvas');
@@ -234,24 +105,23 @@
     }
 
     async function boot() {
+      const lang = window.qtI18n?.getLocale?.() ?? 'fr';
       await init();
+      set_web_locale(lang);
       run_wasm();
       mountCanvas();
     }
 
     boot().catch((e) => {
       loader.classList.add('hidden');
-      errorEl.textContent = strings().error;
+      errorEl.textContent = window.qtI18n?.t?.('error.wasm') ?? 'WASM error';
       errorEl.classList.add('visible');
       console.error(e);
     });
 
     window.addEventListener('storage', (e) => {
-      if (e.key === 'qt-lang' && !loader.classList.contains('hidden') && loaderText) {
-        const dict = window.qtI18n?.getLocale?.() === 'en'
-          ? 'Loading quantum engine…'
-          : 'Chargement du moteur quantique…';
-        loaderText.textContent = dict;
+      if (e.key === 'qt-lang') {
+        set_web_locale(window.qtI18n?.getLocale?.() ?? 'fr');
       }
     });
   </script>

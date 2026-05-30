@@ -1,4 +1,4 @@
-//! Neon Tetris UI — board grid + minimal HUD.
+//! Tetris UI — board grid + HUD.
 
 use crate::board::{Board, COLS, ROWS};
 use crate::config::QuantumSession;
@@ -41,6 +41,7 @@ pub(crate) struct HudBits;
 pub(crate) struct ModeClassicBtn;
 #[derive(Component)]
 pub(crate) struct ModeQuantumBtn;
+#[cfg(not(target_arch = "wasm32"))]
 #[derive(Component)]
 pub(crate) struct LangToggleBtn;
 #[derive(Component)]
@@ -134,6 +135,7 @@ fn grid_cell_bundle(col: usize, row: usize) -> impl Bundle {
 
 fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Locale) {
     parent.spawn(panel_node()).with_children(|p| {
+        #[cfg(not(target_arch = "wasm32"))]
         spawn_lang_row(p, locale);
         spawn_mode_row(p, run.is_quantum, locale);
         spawn_controls_hint(p, locale);
@@ -176,6 +178,7 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
     });
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn spawn_lang_row(parent: &mut ChildSpawnerCommands, locale: Locale) {
     parent
         .spawn(Node {
@@ -313,7 +316,10 @@ fn spawn_hint_chip(
                 BorderColor::all(Color::srgb(0.4, 0.58, 0.82)),
             ))
             .with_children(|k| {
-                k.spawn((Text::new(key), text_style(10.0, Color::srgb(1.0, 0.82, 0.4))));
+                k.spawn((
+                    Text::new(key),
+                    text_style(10.0, Color::srgb(1.0, 0.82, 0.4)),
+                ));
             });
             chip.spawn((
                 label_marker,
@@ -384,6 +390,7 @@ fn spawn_next_preview(parent: &mut ChildSpawnerCommands) {
         });
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 #[allow(clippy::type_complexity)]
 pub(crate) fn handle_lang_button(
     mut locale: ResMut<Locale>,
@@ -415,9 +422,21 @@ pub(crate) fn handle_mode_buttons(
     let pick_quantum = buttons.p1().iter().any(|i| *i == Interaction::Pressed);
 
     if pick_classic {
-        apply_mode(&mut session, &mut board, &mut run, BackendKind::Classic, *locale);
+        apply_mode(
+            &mut session,
+            &mut board,
+            &mut run,
+            BackendKind::Classic,
+            *locale,
+        );
     } else if pick_quantum {
-        apply_mode(&mut session, &mut board, &mut run, BackendKind::Quantum, *locale);
+        apply_mode(
+            &mut session,
+            &mut board,
+            &mut run,
+            BackendKind::Quantum,
+            *locale,
+        );
     }
 }
 

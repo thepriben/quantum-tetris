@@ -2,8 +2,8 @@
 
 use bevy::prelude::*;
 use quantum_tetris_quantum::{
-    build_backend, BackendKind, ClassicBackend, QuantumBackend, QuantumCircuit, QuantumError,
-    Measurement,
+    build_backend, BackendKind, ClassicBackend, Measurement, QuantumBackend, QuantumCircuit,
+    QuantumError,
 };
 use std::sync::Mutex;
 

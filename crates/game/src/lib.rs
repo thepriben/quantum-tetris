@@ -18,6 +18,12 @@ pub use config::{GameConfig, GamePlatform, QuantumSession};
 use wasm_bindgen::prelude::*;
 
 #[cfg_attr(all(feature = "wasm", target_arch = "wasm32"), wasm_bindgen)]
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+pub fn set_web_locale(lang: &str) {
+    crate::i18n::push_web_locale(lang);
+}
+
+#[cfg_attr(all(feature = "wasm", target_arch = "wasm32"), wasm_bindgen)]
 #[cfg(feature = "wasm")]
 pub fn run_wasm() {
     run_game(GameConfig::wasm());

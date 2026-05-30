@@ -1,15 +1,15 @@
 :root {
-  --bg: #0a0a0a;
-  --bg-panel: #121212;
+  --bg: #080808;
+  --bg-panel: #111;
   --bg-code: #1a1a1a;
-  --text: #d8d8d8;
-  --text-muted: #9a9a9a;
-  --heading: #f0f0f0;
+  --text: #ddd;
+  --text-muted: #888;
+  --heading: #eee;
   --accent: #6bbf8a;
   --link: #c9a962;
   --link-hover: #dfc07a;
-  --border: rgba(255, 255, 255, 0.1);
-  --kbd-fg: #e0b050;
+  --border: rgba(255, 255, 255, 0.09);
+  --kbd-fg: #d4a843;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -17,7 +17,7 @@
 html, body {
   margin: 0;
   min-height: 100%;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -26,7 +26,7 @@ html, body {
 a {
   color: var(--link);
   text-decoration: underline;
-  text-decoration-color: rgba(201, 169, 98, 0.45);
+  text-decoration-color: rgba(201, 169, 98, 0.4);
   text-underline-offset: 2px;
 }
 a:hover { color: var(--link-hover); }
@@ -35,38 +35,164 @@ code {
   background: var(--bg-code);
   padding: 0.12em 0.4em;
   border-radius: 4px;
-  font-size: 0.88em;
-  color: #e8e8e8;
+  font-size: 0.86em;
+  color: #e4e4e4;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.site-header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--heading);
+}
+.site-header .tagline {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 /* Language flags */
 .lang-flags {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.4rem;
   align-items: center;
 }
 .lang-btn {
-  padding: 0.25rem 0.4rem;
-  font-size: 1.15rem;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.45rem;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 5px;
   cursor: pointer;
-  opacity: 0.45;
-  filter: grayscale(0.4);
-  transition: opacity 0.15s, filter 0.15s, border-color 0.15s;
+  opacity: 0.5;
+  transition: opacity 0.15s, border-color 0.15s, background 0.15s;
 }
 .lang-btn:hover {
-  opacity: 0.8;
-  filter: grayscale(0.1);
+  opacity: 0.85;
+  background: var(--bg-panel);
 }
 .lang-btn.active {
   opacity: 1;
-  filter: none;
   border-color: var(--border);
   background: var(--bg-panel);
 }
+.lang-btn .flag {
+  width: 22px;
+  height: 15px;
+  display: block;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Two-column layout */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 1.05fr) minmax(300px, 1fr);
+  gap: 2rem 3rem;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
+  align-items: start;
+}
+
+.col-game {
+  position: sticky;
+  top: 1rem;
+}
+
+.col-guide .lead {
+  margin: 0;
+  font-size: 0.98rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.col-guide h2 {
+  margin: 1.75rem 0 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.col-guide h2:first-of-type { margin-top: 1.25rem; }
+
+.principle {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.principle strong { color: var(--text); }
+
+.moment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.moment {
+  padding: 0.85rem 1rem 0.85rem 0.95rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+.moment h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+.moment p {
+  margin: 0;
+  font-size: 0.87rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.moment .circuit {
+  font: 600 0.78rem/1.5 ui-monospace, monospace;
+  color: var(--accent);
+}
+
+.classical-note {
+  margin-top: 1.25rem;
+  padding: 0.8rem 1rem;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+.footer-dev {
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.footer-dev p { margin: 0.35rem 0; }
+.footer-dev a { text-decoration: none; }
+.footer-dev a:hover { text-decoration: underline; }
 
 /* Game frame */
 #frame {
@@ -77,7 +203,7 @@ code {
 }
 #frame-inner {
   line-height: 0;
-  background: #0d1117;
+  background: #0c0c0c;
 }
 #frame canvas {
   display: block;
@@ -94,16 +220,16 @@ code {
   align-items: center;
   justify-content: center;
   gap: 0.85rem;
-  min-height: 12rem;
+  min-height: 14rem;
   color: var(--text-muted);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
 }
 #loader.hidden { display: none; }
 
 .spinner {
-  width: 28px;
-  height: 28px;
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  width: 26px;
+  height: 26px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.85s linear infinite;
@@ -112,36 +238,20 @@ code {
 
 #error {
   display: none;
-  color: #e08080;
-  font-size: 0.85rem;
+  color: #c87070;
+  font-size: 0.84rem;
   text-align: center;
   padding: 0.75rem;
+  line-height: 1.5;
 }
 #error.visible { display: block; }
 
-/* Controls */
-.keys {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.85rem;
-}
-.hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-.hint kbd {
-  padding: 2px 6px;
-  font: 600 11px/1.2 ui-monospace, monospace;
-  color: var(--kbd-fg);
-  background: var(--bg-code);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-}
-.hint span {
-  color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+@media (max-width: 880px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.25rem 1rem 2.5rem;
+  }
+  .col-game { position: static; }
+  .site-header { padding: 0.85rem 1rem 0.65rem; }
 }

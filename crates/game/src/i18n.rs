@@ -1,6 +1,8 @@
 //! French-first UI strings and Qiskit circuit explanations.
 
 use bevy::prelude::*;
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 
 #[derive(Resource, Clone, Copy, PartialEq, Eq, Default, Debug)]
 pub enum Locale {
@@ -8,6 +10,11 @@ pub enum Locale {
     Fr,
     En,
 }
+
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+static WEB_LOCALE_DIRTY: AtomicBool = AtomicBool::new(false);
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+static WEB_LOCALE: AtomicU8 = AtomicU8::new(0);
 
 impl Locale {
     pub fn toggle(self) -> Self {
@@ -22,6 +29,45 @@ impl Locale {
             Self::Fr => "(en)",
             Self::En => "(fr)",
         }
+    }
+
+    #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+    pub fn from_web_storage() -> Self {
+        web_sys::window()
+            .and_then(|w| w.local_storage().ok())
+            .flatten()
+            .and_then(|s| s.get_item("qt-lang").ok())
+            .flatten()
+            .filter(|v| v == "en")
+            .map(|_| Self::En)
+            .unwrap_or(Self::Fr)
+    }
+}
+
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+pub fn push_web_locale(lang: &str) {
+    WEB_LOCALE.store(u8::from(lang == "en"), Ordering::Relaxed);
+    WEB_LOCALE_DIRTY.store(true, Ordering::Relaxed);
+}
+
+#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+pub fn sync_web_locale(mut locale: ResMut<Locale>) {
+    if WEB_LOCALE_DIRTY.swap(false, Ordering::Relaxed) {
+        *locale = match WEB_LOCALE.load(Ordering::Relaxed) {
+            1 => Locale::En,
+            _ => Locale::Fr,
+        };
+    }
+}
+
+pub fn initial_locale() -> Locale {
+    #[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+    {
+        Locale::from_web_storage()
+    }
+    #[cfg(not(all(feature = "wasm", target_arch = "wasm32")))]
+    {
+        Locale::default()
     }
 }
 
@@ -69,9 +115,7 @@ pub fn circuit_explain(locale: Locale, moment: GameplayMoment) -> &'static str {
         (Locale::Fr, GameplayMoment::GameOver) => {
             "Partie terminée — plus de place pour la nouvelle pièce."
         }
-        (Locale::En, GameplayMoment::GameOver) => {
-            "Game over — no room for the next piece."
-        }
+        (Locale::En, GameplayMoment::GameOver) => "Game over — no room for the next piece.",
         (_, GameplayMoment::None) => "—",
     }
 }
@@ -141,8 +185,8 @@ pub fn spawn_event(locale: Locale, bell: &str, piece: &str) -> String {
 
 pub fn observe_event(locale: Locale, bits: &str, fx_label: &str) -> String {
     match locale {
-        Locale::Fr => format!("observe [{bits}] {fx_label}"),
-        Locale::En => format!("observe [{bits}] {fx_label}"),
+        Locale::Fr => format!("observation [{bits}] {fx_label}"),
+        Locale::En => format!("observed [{bits}] {fx_label}"),
     }
 }
 
