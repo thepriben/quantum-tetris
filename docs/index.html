@@ -1,27 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
   <link rel="stylesheet" href="site.css">
-  <link rel="modulepreload" href="boot.js">
-  <script src="i18n.js" defer></script>
+  <script src="i18n.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div>
       <h1 data-i18n="home.title">Quantum Tetris</h1>
-      <p class="tagline" data-i18n="home.subtitle">Tetris — le hasard vient des circuits</p>
+      <p class="tagline" data-i18n="home.subtitle">Tetris — randomness from circuits, not a dice roll</p>
     </div>
-    <div class="lang-flags" role="group" aria-label="Langue">
-      <button type="button" class="lang-btn" data-lang="fr" data-i18n="lang.fr" data-i18n-attr="title" title="Français" aria-label="Français">
-        <svg class="flag" viewBox="0 0 3 2" aria-hidden="true">
-          <rect width="1" height="2" fill="#002395"/>
-          <rect x="1" width="1" height="2" fill="#fff"/>
-          <rect x="2" width="1" height="2" fill="#ed2939"/>
-        </svg>
-      </button>
+    <div class="lang-flags" role="group" aria-label="Language">
       <button type="button" class="lang-btn" data-lang="en" data-i18n="lang.en" data-i18n-attr="title" title="English" aria-label="English">
         <svg class="flag" viewBox="0 0 60 30" aria-hidden="true">
           <clipPath id="uk"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
@@ -35,6 +27,13 @@
           </g>
         </svg>
       </button>
+      <button type="button" class="lang-btn" data-lang="fr" data-i18n="lang.fr" data-i18n-attr="title" title="Français" aria-label="Français">
+        <svg class="flag" viewBox="0 0 3 2" aria-hidden="true">
+          <rect width="1" height="2" fill="#002395"/>
+          <rect x="1" width="1" height="2" fill="#fff"/>
+          <rect x="2" width="1" height="2" fill="#ed2939"/>
+        </svg>
+      </button>
     </div>
   </header>
 
@@ -44,7 +43,8 @@
         <div id="frame-inner">
           <div id="loader">
             <div class="spinner" aria-hidden="true"></div>
-            <span id="loader-text" data-i18n="play.starting">Chargement…</span>
+            <span id="loader-text" data-i18n="play.starting">Loading…</span>
+            <span class="loader-hint" data-i18n="play.hint">First load downloads ~70 MB — please wait.</span>
           </div>
           <p id="error" role="alert"></p>
         </div>
@@ -52,59 +52,59 @@
     </section>
 
     <section class="col-guide">
-      <p class="lead" data-i18n="home.lead" data-i18n-html></p>
-      <p class="principle" data-i18n="home.principle" data-i18n-html></p>
+      <p class="lead" data-i18n="home.lead" data-i18n-html>Looks like Tetris. Every roll (piece, speed, bonus) is a quantum measurement — Qiskit on desktop, matched simulator in the browser.</p>
+      <p class="principle" data-i18n="home.principle" data-i18n-html><strong>You:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
 
-      <h2 data-i18n="home.quantumTitle">Mécaniques</h2>
+      <h2 data-i18n="home.quantumTitle">Mechanics</h2>
       <ul class="moment-list">
         <li class="moment moment--quantum">
-          <h3 data-i18n="home.moment.piece.title">Pièce en cours</h3>
-          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
-          <p class="moment-game" data-i18n="home.moment.piece.game"></p>
+          <h3 data-i18n="home.moment.piece.title">Active piece & “next”</h3>
+          <p class="moment-label" data-i18n="home.label.game">In-game</p>
+          <p class="moment-game" data-i18n="home.moment.piece.game">Which shape plays, and what the next preview shows.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html></p>
+          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> ×2 — Bell pair → family (I, O, T…), message qubit → variant.</p>
           <figure class="circuit-fig">
-            <img src="circuits/quantum-teleportation-gate-v1.png" alt="" loading="lazy" decoding="async" width="240" height="60">
+            <img src="circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" loading="lazy" decoding="async">
           </figure>
         </li>
         <li class="moment moment--quantum">
-          <h3 data-i18n="home.moment.brain.title">Rotation & colonne</h3>
-          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
-          <p class="moment-game" data-i18n="home.moment.brain.game"></p>
+          <h3 data-i18n="home.moment.brain.title">Rotation & column</h3>
+          <p class="moment-label" data-i18n="home.label.game">In-game</p>
+          <p class="moment-game" data-i18n="home.moment.brain.game">Spawn orientation and which column the piece enters.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.brain.quantum" data-i18n-html></p>
+          <p class="moment-quantum" data-i18n="home.moment.brain.quantum" data-i18n-html><code>imp-brain-v1</code> — two measured bits mapped to rotation and column.</p>
           <figure class="circuit-fig">
-            <img src="circuits/imp-brain-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
+            <img src="circuits/imp-brain-v1.png" alt="imp-brain-v1" loading="lazy" decoding="async">
           </figure>
         </li>
         <li class="moment moment--quantum">
-          <h3 data-i18n="home.moment.hunter.title">Cadence de chute</h3>
-          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
-          <p class="moment-game" data-i18n="home.moment.hunter.game"></p>
+          <h3 data-i18n="home.moment.hunter.title">Drop cadence</h3>
+          <p class="moment-label" data-i18n="home.label.game">In-game</p>
+          <p class="moment-game" data-i18n="home.moment.hunter.game">Time between grid steps — speeds up with level.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.hunter.quantum" data-i18n-html></p>
+          <p class="moment-quantum" data-i18n="home.moment.hunter.quantum" data-i18n-html><code>enemy-profile-hunter-v1</code> — drop interval drawn on each new piece.</p>
           <figure class="circuit-fig">
-            <img src="circuits/enemy-profile-hunter-v1.png" alt="" loading="lazy" decoding="async" width="180" height="50">
+            <img src="circuits/enemy-profile-hunter-v1.png" alt="enemy-profile-hunter-v1" loading="lazy" decoding="async">
           </figure>
         </li>
         <li class="moment moment--quantum">
-          <h3 data-i18n="home.moment.observe.title">Espace</h3>
-          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
-          <p class="moment-game" data-i18n="home.moment.observe.game"></p>
+          <h3 data-i18n="home.moment.observe.title">Space — hard drop</h3>
+          <p class="moment-label" data-i18n="home.label.game">In-game</p>
+          <p class="moment-game" data-i18n="home.moment.observe.game">Locks instantly; score bonus, sometimes an extra line.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.observe.quantum" data-i18n-html></p>
+          <p class="moment-quantum" data-i18n="home.moment.observe.quantum" data-i18n-html><code>observation-pulse-v1</code> — deliberate measure, 2 bits → bonus type.</p>
           <figure class="circuit-fig">
-            <img src="circuits/observation-pulse-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
+            <img src="circuits/observation-pulse-v1.png" alt="observation-pulse-v1" loading="lazy" decoding="async">
           </figure>
         </li>
         <li class="moment moment--quantum">
-          <h3 data-i18n="home.moment.line.title">Ligne complétée</h3>
-          <p class="moment-label" data-i18n="home.label.game">En jeu</p>
-          <p class="moment-game" data-i18n="home.moment.line.game"></p>
+          <h3 data-i18n="home.moment.line.title">Line clear</h3>
+          <p class="moment-label" data-i18n="home.label.game">In-game</p>
+          <p class="moment-game" data-i18n="home.moment.line.game">Score multiplier ×1 to ×4 from the draw.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.line.quantum" data-i18n-html></p>
+          <p class="moment-quantum" data-i18n="home.moment.line.quantum" data-i18n-html><code>q-shard-stabilizer-v1</code> — post-clear stabilizer, bits → multiplier.</p>
           <figure class="circuit-fig">
-            <img src="circuits/q-shard-stabilizer-v1.png" alt="" loading="lazy" decoding="async" width="200" height="55">
+            <img src="circuits/q-shard-stabilizer-v1.png" alt="q-shard-stabilizer-v1" loading="lazy" decoding="async">
           </figure>
         </li>
       </ul>
@@ -121,21 +121,28 @@
     import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js';
 
     window.__qtQueueLocale = queueWebLocale;
+    guardCircuitImages();
 
     const loader = document.getElementById('loader');
     const errorEl = document.getElementById('error');
     const frameInner = document.getElementById('frame-inner');
 
-    guardCircuitImages();
+    function startBoot() {
+      window.qtI18n?.apply?.();
+      bootGame({ frameInner, loader, errorEl }).catch((e) => {
+        loader?.classList.add('hidden');
+        errorEl.textContent = window.qtI18n?.t?.('error.wasm') ?? 'WASM error';
+        errorEl.classList.add('visible');
+        console.error(e);
+      });
+      bindLocaleSync((lang) => window.__qtSetWebLocale?.(lang));
+    }
 
-    bootGame({ frameInner, loader, errorEl }).catch((e) => {
-      loader?.classList.add('hidden');
-      errorEl.textContent = window.qtI18n?.t?.('error.wasm') ?? 'WASM error';
-      errorEl.classList.add('visible');
-      console.error(e);
-    });
-
-    bindLocaleSync((lang) => window.__qtSetWebLocale?.(lang));
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startBoot);
+    } else {
+      startBoot();
+    }
   </script>
 </body>
 </html>

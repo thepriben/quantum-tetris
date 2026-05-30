@@ -31,5 +31,12 @@ wasm-bindgen --out-dir "$OUT" --target web \
   --no-typescript \
   target/wasm32-unknown-unknown/release/quantum_tetris.wasm
 
-echo "OK — open docs/index.html via a local server (see docs/WASM.md)"
+if command -v wasm-opt >/dev/null; then
+  echo "→ wasm-opt…"
+  wasm-opt -Oz "$OUT/quantum_tetris_bg.wasm" -o "$OUT/quantum_tetris_bg.wasm"
+else
+  echo "TIP: install binaryen (wasm-opt) to shrink the ~70 MB WASM bundle"
+fi
+
+echo "OK — serve docs/ with a static server (see docs/WASM.md)"
 du -sh "$OUT" 2>/dev/null || true

@@ -1,7 +1,7 @@
-/** French-first i18n — syncs with in-game WASM locale via set_web_locale. */
+/** English-first i18n — syncs with in-game WASM locale via set_web_locale. */
 (function () {
   const STORAGE_KEY = 'qt-lang';
-  const DEFAULT = 'fr';
+  const DEFAULT = 'en';
 
   const T = {
     fr: {
@@ -42,6 +42,9 @@
       'home.github': 'GitHub',
       'home.readme': 'Build local',
       'play.starting': 'Chargement…',
+      'play.downloading': 'Téléchargement du jeu…',
+      'play.initializing': 'Démarrage du moteur…',
+      'play.hint': 'Premier chargement ~70 Mo — patientez.',
       'error.wasm': 'Jeu indisponible — build WASM manquant (./scripts/build_wasm.sh)',
       'error.canvas': 'Le canvas n\'a pas démarré — recharger la page.',
       'error.run': 'Erreur au lancement du jeu — voir la console.',
@@ -84,6 +87,9 @@
       'home.github': 'GitHub',
       'home.readme': 'Local build',
       'play.starting': 'Loading…',
+      'play.downloading': 'Downloading game…',
+      'play.initializing': 'Starting engine…',
+      'play.hint': 'First load downloads ~70 MB — please wait.',
       'error.wasm': 'Game unavailable — WASM build missing (./scripts/build_wasm.sh)',
       'error.canvas': 'Canvas did not start — reload the page.',
       'error.run': 'Game failed to start — see console.',
@@ -93,7 +99,7 @@
   function getLocale() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored === 'en' ? 'en' : DEFAULT;
+      return stored === 'fr' ? 'fr' : DEFAULT;
     } catch {
       return DEFAULT;
     }
@@ -156,12 +162,21 @@
 
   window.qtI18n = { getLocale, setLocale, apply, t };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    apply();
+  function bindLangButtons() {
     document.querySelectorAll('.lang-btn[data-lang]').forEach((btn) => {
       btn.addEventListener('click', () => {
         setLocale(btn.getAttribute('data-lang'));
       });
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      apply();
+      bindLangButtons();
+    });
+  } else {
+    apply();
+    bindLangButtons();
+  }
 })();

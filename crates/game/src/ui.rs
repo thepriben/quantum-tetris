@@ -468,7 +468,7 @@ pub(crate) fn refresh_ui(
             (With<ModeQuantumBtn>, Without<ModeClassicBtn>),
         >,
     )>,
-    mut hud_texts: Query<
+    mut texts: Query<
         (
             &mut Text,
             Has<HudScore>,
@@ -478,20 +478,6 @@ pub(crate) fn refresh_ui(
             Has<HudEvent>,
             Has<HudCircuitTitle>,
             Has<HudCircuit>,
-        ),
-        Or<(
-            With<HudScore>,
-            With<HudLines>,
-            With<HudNext>,
-            With<HudBits>,
-            With<HudEvent>,
-            With<HudCircuitTitle>,
-            With<HudCircuit>,
-        )>,
-    >,
-    mut label_texts: Query<
-        (
-            &mut Text,
             Has<ModeClassicLabel>,
             Has<ModeQuantumLabel>,
             Has<HintMoveLabel>,
@@ -501,6 +487,13 @@ pub(crate) fn refresh_ui(
             Has<LangToggleLabel>,
         ),
         Or<(
+            With<HudScore>,
+            With<HudLines>,
+            With<HudNext>,
+            With<HudBits>,
+            With<HudEvent>,
+            With<HudCircuitTitle>,
+            With<HudCircuit>,
             With<ModeClassicLabel>,
             With<ModeQuantumLabel>,
             With<HintMoveLabel>,
@@ -531,7 +524,24 @@ pub(crate) fn refresh_ui(
         *border = BorderColor::all(b);
     }
 
-    for (mut t, score, lines, next, bits, event, circ_title, circ) in hud_texts.iter_mut() {
+    for (
+        mut t,
+        score,
+        lines,
+        next,
+        bits,
+        event,
+        circ_title,
+        circ,
+        classic,
+        quantum,
+        move_l,
+        rotate_l,
+        faster_l,
+        drop_l,
+        lang,
+    ) in texts.iter_mut()
+    {
         if score {
             **t = run.score.to_string();
         } else if lines {
@@ -556,12 +566,7 @@ pub(crate) fn refresh_ui(
             **t = i18n::circuit_heading(*locale).into();
         } else if circ {
             **t = i18n::circuit_explain(*locale, run.last_moment).into();
-        }
-    }
-    for (mut t, classic, quantum, move_l, rotate_l, faster_l, drop_l, lang) in
-        label_texts.iter_mut()
-    {
-        if classic {
+        } else if classic {
             **t = i18n::mode_classic(*locale).into();
         } else if quantum {
             **t = i18n::mode_quantum(*locale).into();
