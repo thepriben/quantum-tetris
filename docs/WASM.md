@@ -2,7 +2,7 @@
 
 The browser build ships with **quantum mode** (RustQIP) enabled by default.
 
-**RustQIP** runs the same circuit presets as desktop. Probabilities are cross-checked against Qiskit Aer in CI (`rustqip_qiskit_parity`). Switch modes in-game with **CLASSIC** / **RUSTQIP** (Qiskit needs a local Python install — it does not run in a tab).
+**RustQIP** runs the same circuit presets as desktop. Switch modes in-game with **CLASSIC** / **RUSTQIP**.
 
 ---
 
@@ -39,7 +39,7 @@ docs/
 
 | Function | Default backend |
 | --- | --- |
-| `run_wasm()` | Quantum (RustQIP, Qiskit-matched) |
+| `run_wasm()` | Quantum (RustQIP) |
 
 ---
 
@@ -58,7 +58,7 @@ Push to `main` triggers `.github/workflows/pages.yml`:
 
 Live URL: `https://thepriben.github.io/quantum-tetris/`
 
-**Qiskit Aer** needs Python and does not run in the browser. **RustQIP** is the default simulator locally and on GitHub Pages.
+**RustQIP** is the default simulator locally and on GitHub Pages.
 
 ---
 

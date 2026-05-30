@@ -12,23 +12,19 @@ Default gameplay is quantum: desktop and browser both use the RustQIP statevecto
 | --- | --- | --- |
 | **Classic** | `QUANTUM_MODE=classic` or in-game **CLASSIC** | Uniform random bits — baseline without a simulator |
 | **Quantum (RustQIP)** | default, `QUANTUM_MODE=quantum`, or in-game **RUSTQIP** | In-process statevector via [RustQIP](https://github.com/Renmusxd/RustQIP) — desktop and browser |
-| **Qiskit Aer** | `QUANTUM_MODE=qiskit` or in-game **QISKIT** (desktop only) | Aer via Python `scripts/quantum_shim.py` — development and CI parity |
 
 ```bash
 # .env or shell
 QUANTUM_MODE=quantum    # RustQIP (default)
 QUANTUM_MODE=classic   # uniform baseline
-QUANTUM_MODE=qiskit    # Aer (desktop only, needs Python)
 
 # alias
-QUANTUM_BACKEND=classic|quantum|qiskit
+QUANTUM_BACKEND=classic|quantum
 ```
 
 **Classic** — every bitstring has equal weight; useful to compare against quantum sampling.
 
-**RustQIP** — same gate list everywhere; probabilities checked against Qiskit in CI (`rustqip_qiskit_parity`).
-
-**Qiskit Aer** — optional on desktop; not available in the browser (no Python runtime).
+**RustQIP** — same gate list everywhere; exact probabilities come from the in-process statevector backend.
 
 ---
 
@@ -89,25 +85,6 @@ println!("{}", m.bits); // e.g. "101"
 
 ---
 
-## Qiskit setup (optional)
-
-```bash
-python -m pip install -r scripts/requirements.txt
-QUANTUM_MODE=qiskit cargo run -p quantum-tetris
-```
-
-CI runs Qiskit integration tests separately (`cargo test -p quantum-tetris-quantum --features backend-qiskit`).
-
-Environment:
-
-| Variable | Purpose |
-| --- | --- |
-| `QUANTUM_PYTHON` | Python executable (default `python3`) |
-| `QUANTUM_PYTHON_SHIM` | Path to `quantum_shim.py` |
-| `QUANTUM_SHOTS` | Aer shots (default 1024) |
-
----
-
 ## WASM note
 
-The browser build uses **RustQIP quantum mode** by default. Qiskit does not run in the tab because it needs Python, but the RustQIP probabilities are checked against Qiskit Aer in CI. See [WASM.md](WASM.md).
+The browser build uses **RustQIP quantum mode** by default. See [WASM.md](WASM.md).

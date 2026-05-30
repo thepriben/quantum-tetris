@@ -1,4 +1,4 @@
-//! [RustQIP](https://github.com/Renmusxd/RustQIP) statevector backend — WASM-safe, Qiskit-matched in CI.
+//! [RustQIP](https://github.com/Renmusxd/RustQIP) statevector backend — WASM-safe.
 
 use crate::{Gate, Measurement, QuantumBackend, QuantumCircuit, QuantumError};
 use qip::builder::LocalBuilder;
@@ -12,12 +12,12 @@ fn map_circuit_error(err: qip::errors::CircuitError) -> QuantumError {
     }
 }
 
-/// Map a statevector index to a bitstring in Qiskit computational-basis order (q0 = LSB).
+/// Map a statevector index to a stable gameplay bitstring.
 fn index_to_bits(index: usize, width: usize) -> String {
     format!("{index:0width$b}")
 }
 
-/// RustQIP tensor index order differs from Qiskit; reverse index bits to align amplitudes.
+/// RustQIP tensor index order differs from the gameplay bitstring order.
 fn bit_reverse_index(index: usize, width: usize) -> usize {
     let mut reversed = 0usize;
     for bit in 0..width {
@@ -118,11 +118,11 @@ pub fn rustqip_probabilities(circuit: &QuantumCircuit) -> Result<Vec<(String, f3
     let (state, _) = builder.calculate_state();
     let width = n as usize;
     Ok((0..state.len())
-        .map(|qiskit_index| {
-            let rust_index = bit_reverse_index(qiskit_index, width);
+        .map(|gameplay_index| {
+            let rust_index = bit_reverse_index(gameplay_index, width);
             let amplitude = state[rust_index];
             let probability = (amplitude.re * amplitude.re + amplitude.im * amplitude.im) as f32;
-            (index_to_bits(qiskit_index, width), probability)
+            (index_to_bits(gameplay_index, width), probability)
         })
         .collect())
 }
@@ -142,7 +142,7 @@ fn sample(probabilities: &[(String, f32)]) -> String {
         .unwrap_or_default()
 }
 
-/// Samples from RustQIP statevector probabilities (Qiskit-matched in CI).
+/// Samples from RustQIP statevector probabilities.
 #[derive(Debug, Default)]
 pub struct RustQipBackend;
 

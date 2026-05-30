@@ -1,8 +1,6 @@
 //! Golden probabilities for every gameplay preset — no Python required.
 //!
-//! Values were cross-checked against Qiskit `Statevector` (same as CI
-//! `rustqip_qiskit_parity`). Catches bit-order and gate-mapping regressions
-//! locally without installing Qiskit.
+//! Values catch bit-order and gate-mapping regressions locally.
 
 #![allow(clippy::excessive_precision)]
 
@@ -106,7 +104,7 @@ fn teleporter_golden() {
 }
 
 #[test]
-fn golden_bitstrings_follow_qiskit_index_order() {
+fn golden_bitstrings_follow_gameplay_index_order() {
     for circuit in [
         QuantumCircuit::imp_brain(),
         QuantumCircuit::hunter_profile(),

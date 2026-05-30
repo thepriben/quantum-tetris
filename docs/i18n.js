@@ -14,7 +14,7 @@
       'home.lead':
         'Règles Tetris habituelles. Pièce, état d’apparition, cadence, bonus : chaque événement stochastique exécute un circuit prédéfini ; les bits mesurés déterminent l’effet en jeu.',
       'home.stack':
-        '<strong>Architecture.</strong> Bevy (Rust) → WASM dans le navigateur. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simule le statevector par défaut en local et en ligne ; Qiskit Aer reste disponible sur desktop pour la parité, les diagrammes et la CI.',
+        '<strong>Architecture.</strong> Bevy (Rust) → WASM dans le navigateur. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simule le statevector par défaut en local et en ligne.',
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
       'home.quantumTitle': 'Mécaniques',
@@ -65,7 +65,7 @@
       'home.lead':
         'Standard Tetris rules. Piece, spawn state, cadence, bonuses: each stochastic event runs a predefined circuit; measured bits drive the in-game effect.',
       'home.stack':
-        '<strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online; Qiskit Aer remains available on desktop for parity, diagrams, and CI.',
+        '<strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online.',
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
       'home.quantumTitle': 'Mechanics',

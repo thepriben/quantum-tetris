@@ -15,18 +15,5 @@ qip = "1.5.0"
 [dev-dependencies]
 serde_json = { workspace = true }
 
-[[test]]
-name = "python_backends"
-required-features = ["backend-qiskit"]
-
-[[test]]
-name = "shim_direct"
-required-features = ["backend-qiskit"]
-
-[[test]]
-name = "rustqip_qiskit_parity"
-required-features = ["backend-qiskit"]
-
 [features]
 default = []
-backend-qiskit = []

@@ -210,7 +210,7 @@ code {
   background: rgba(107, 191, 138, 0.08);
 }
 
-/* Circuit diagram — readable Qiskit strip under each gameplay moment */
+/* Circuit diagram strip under each gameplay moment */
 .circuit-fig {
   margin: 0.7rem 0 0;
   display: inline-block;

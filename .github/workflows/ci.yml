@@ -33,21 +33,3 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
       - name: wasm check
         run: cargo check -p quantum-tetris --no-default-features --features wasm --target wasm32-unknown-unknown
-
-  quantum-qiskit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@1.89
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - uses: Swatinem/rust-cache@v2
-      - name: install qiskit
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r scripts/requirements.txt
-      - name: qiskit integration tests
-        env:
-          QUANTUM_PYTHON: python
-        run: cargo test -p quantum-tetris-quantum --features backend-qiskit --test python_backends --test shim_direct --test rustqip_qiskit_parity
