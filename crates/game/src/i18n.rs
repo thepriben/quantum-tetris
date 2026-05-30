@@ -85,38 +85,38 @@ pub enum GameplayMoment {
 pub fn circuit_explain(locale: Locale, moment: GameplayMoment) -> &'static str {
     match (locale, moment) {
         (Locale::Fr, GameplayMoment::Spawn) => {
-            "Apparition — 4 circuits :\n\
-             • quantum-teleportation-gate-v1 ×2 : pièce active + suivante\n\
-             • imp-brain-v1 : rotation et colonne\n\
-             • enemy-profile-hunter-v1 : intervalle de chute"
+            "Apparition - 4 circuits:\n\
+             - quantum-teleportation-gate-v1 x2: piece active + suivante\n\
+             - imp-brain-v1: rotation et colonne\n\
+             - enemy-profile-hunter-v1: intervalle de chute"
         }
         (Locale::En, GameplayMoment::Spawn) => {
-            "Spawn — 4 circuits:\n\
-             • quantum-teleportation-gate-v1 ×2: active piece + next preview\n\
-             • imp-brain-v1: rotation and column\n\
-             • enemy-profile-hunter-v1: drop interval"
+            "Spawn - 4 circuits:\n\
+             - quantum-teleportation-gate-v1 x2: active piece + next preview\n\
+             - imp-brain-v1: rotation and column\n\
+             - enemy-profile-hunter-v1: drop interval"
         }
         (Locale::Fr, GameplayMoment::Observe) => {
-            "Espace — observation-pulse-v1 (2 qubits) :\n\
-             mesure à la pose forcée → bonus de score (parfois une ligne bonus)"
+            "Espace - observation-pulse-v1 (2 qubits):\n\
+             mesure a la pose forcee -> bonus de score (parfois une ligne bonus)"
         }
         (Locale::En, GameplayMoment::Observe) => {
-            "Space — observation-pulse-v1 (2 qubits):\n\
-             measure on hard drop → score bonus (sometimes an extra line)"
+            "Space - observation-pulse-v1 (2 qubits):\n\
+             measure on hard drop -> score bonus (sometimes an extra line)"
         }
         (Locale::Fr, GameplayMoment::LineClear) => {
-            "Ligne effacée — q-shard-stabilizer-v1 (2 qubits) :\n\
-             mesure après effacement → multiplicateur de points (×1 à ×4)"
+            "Ligne effacee - q-shard-stabilizer-v1 (2 qubits):\n\
+             mesure apres effacement -> multiplicateur de points (x1 a x4)"
         }
         (Locale::En, GameplayMoment::LineClear) => {
-            "Line clear — q-shard-stabilizer-v1 (2 qubits):\n\
-             post-clear stabilizer → score multiplier (×1 to ×4)"
+            "Line clear - q-shard-stabilizer-v1 (2 qubits):\n\
+             post-clear stabilizer -> score multiplier (x1 to x4)"
         }
         (Locale::Fr, GameplayMoment::GameOver) => {
-            "Partie terminée — plus de place pour la nouvelle pièce."
+            "Partie terminee - plus de place pour la nouvelle piece."
         }
-        (Locale::En, GameplayMoment::GameOver) => "Game over — no room for the next piece.",
-        (_, GameplayMoment::None) => "—",
+        (Locale::En, GameplayMoment::GameOver) => "Game over - no room for the next piece.",
+        (_, GameplayMoment::None) => "-",
     }
 }
 
@@ -131,13 +131,6 @@ pub fn mode_rustqip(locale: Locale) -> &'static str {
     match locale {
         Locale::Fr => "RUSTQIP",
         Locale::En => "RUSTQIP",
-    }
-}
-
-pub fn mode_qiskit(locale: Locale) -> &'static str {
-    match locale {
-        Locale::Fr => "QISKIT",
-        Locale::En => "QISKIT",
     }
 }
 
@@ -171,8 +164,8 @@ pub fn hint_drop(locale: Locale) -> &'static str {
 
 pub fn lines_level(locale: Locale, lines: u32, level: u32) -> String {
     match locale {
-        Locale::Fr => format!("lignes {lines} · niv {level}"),
-        Locale::En => format!("lines {lines} · lv {level}"),
+        Locale::Fr => format!("lignes {lines} / niv {level}"),
+        Locale::En => format!("lines {lines} / lv {level}"),
     }
 }
 
@@ -185,7 +178,7 @@ pub fn next_piece(locale: Locale, label: &str) -> String {
 
 pub fn spawn_event(locale: Locale, bell: &str, piece: &str) -> String {
     match locale {
-        Locale::Fr => format!("[{bell}] pièce {piece}"),
+        Locale::Fr => format!("[{bell}] piece {piece}"),
         Locale::En => format!("[{bell}] piece {piece}"),
     }
 }
@@ -206,23 +199,23 @@ pub fn line_clear_event(locale: Locale, cleared: u32, bits: &str, bonus: u32) ->
 
 pub fn game_over_event(locale: Locale, score: u32) -> String {
     match locale {
-        Locale::Fr => format!("Partie terminée — score {score}"),
-        Locale::En => format!("Game over — score {score}"),
+        Locale::Fr => format!("Partie terminee - score {score}"),
+        Locale::En => format!("Game over - score {score}"),
     }
 }
 
 pub fn retry_hint(locale: Locale) -> &'static str {
     match locale {
-        Locale::Fr => "Espace — rejouer",
-        Locale::En => "Space — retry",
+        Locale::Fr => "Espace - rejouer",
+        Locale::En => "Space - retry",
     }
 }
 
 pub fn observe_fx_label(locale: Locale, bits: &str) -> &'static str {
     match (locale, bits) {
         (Locale::Fr, "00") => "effondrement doux",
-        (Locale::Fr, "01") => "décalage de phase",
-        (Locale::Fr, "10") => "écho de ligne",
+        (Locale::Fr, "01") => "decalage de phase",
+        (Locale::Fr, "10") => "echo de ligne",
         (Locale::Fr, "11") => "mesure forte",
         (Locale::En, "00") => "soft collapse",
         (Locale::En, "01") => "phase shift",

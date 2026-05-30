@@ -43,9 +43,6 @@ pub(crate) struct ModeBtn(pub BackendKind);
 pub(crate) struct ModeClassicLabel;
 #[derive(Component)]
 pub(crate) struct ModeRustqipLabel;
-#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
-#[derive(Component)]
-pub(crate) struct ModeQiskitLabel;
 #[cfg(not(target_arch = "wasm32"))]
 #[derive(Component)]
 pub(crate) struct LangToggleBtn;
@@ -79,7 +76,6 @@ pub(crate) enum TextSlot {
     Circuit,
     ModeClassic,
     ModeRustqip,
-    ModeQiskit,
     HintMove,
     HintRotate,
     HintFaster,
@@ -185,13 +181,13 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
         p.spawn((
             HudEvent,
             TextSlot::Event,
-            Text::new("—"),
+            Text::new("-"),
             text_style(12.0, Color::srgb(0.72, 0.82, 0.92)),
         ));
         p.spawn((
             HudBits,
             TextSlot::Bits,
-            Text::new("—"),
+            Text::new("-"),
             text_style(13.0, Color::srgb(0.55, 0.9, 0.75)),
         ));
         p.spawn((
@@ -203,7 +199,7 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
         p.spawn((
             HudCircuit,
             TextSlot::Circuit,
-            Text::new("—"),
+            Text::new("-"),
             text_style_multiline(10.0, Color::srgb(0.62, 0.78, 0.88)),
         ));
     });
@@ -267,15 +263,6 @@ fn spawn_mode_row(parent: &mut ChildSpawnerCommands, active: BackendKind, locale
                 TextSlot::ModeRustqip,
                 i18n::mode_rustqip(locale),
                 active == BackendKind::Quantum,
-            );
-            #[cfg(not(target_arch = "wasm32"))]
-            spawn_mode_button(
-                row,
-                ModeBtn(BackendKind::Qiskit),
-                ModeQiskitLabel,
-                TextSlot::ModeQiskit,
-                i18n::mode_qiskit(locale),
-                active == BackendKind::Qiskit,
             );
         });
 }
@@ -540,7 +527,7 @@ pub(crate) fn refresh_ui(
             TextSlot::Next => i18n::next_piece(*locale, next_label(board.next)),
             TextSlot::Bits => {
                 if run.last_bits.is_empty() {
-                    "—".into()
+                    "-".into()
                 } else if run.is_quantum {
                     format!("[{}] {:.0}%", run.last_bits, run.last_confidence)
                 } else {
@@ -549,7 +536,7 @@ pub(crate) fn refresh_ui(
             }
             TextSlot::Event => {
                 if run.last_event.is_empty() {
-                    "—".into()
+                    "-".into()
                 } else {
                     run.last_event.clone()
                 }
@@ -558,7 +545,6 @@ pub(crate) fn refresh_ui(
             TextSlot::Circuit => i18n::circuit_explain(*locale, run.last_moment).into(),
             TextSlot::ModeClassic => i18n::mode_classic(*locale).into(),
             TextSlot::ModeRustqip => i18n::mode_rustqip(*locale).into(),
-            TextSlot::ModeQiskit => i18n::mode_qiskit(*locale).into(),
             TextSlot::HintMove => i18n::hint_move(*locale).into(),
             TextSlot::HintRotate => i18n::hint_rotate(*locale).into(),
             TextSlot::HintFaster => i18n::hint_faster(*locale).into(),

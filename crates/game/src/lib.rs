@@ -1,4 +1,4 @@
-//! **Quantum Tetris** — circuit-driven Tetris with classic, RustQIP, and Qiskit backends.
+//! **Quantum Tetris** — circuit-driven Tetris with classic and RustQIP backends.
 
 pub mod app;
 pub mod board;

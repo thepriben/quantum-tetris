@@ -5,7 +5,7 @@ fn backend_parse_aliases() {
     assert_eq!(BackendKind::parse("classic"), BackendKind::Classic);
     assert_eq!(BackendKind::parse("random"), BackendKind::Classic);
     assert_eq!(BackendKind::parse("quantum"), BackendKind::Quantum);
-    assert_eq!(BackendKind::parse("qiskit"), BackendKind::Qiskit);
+    assert_eq!(BackendKind::parse("unknown"), BackendKind::Quantum);
 }
 
 #[test]

@@ -7,8 +7,7 @@
 //! | Backend | Platform | Description |
 //! | --- | --- | --- |
 //! | Classic | all | Uniform random baseline |
-//! | Quantum | desktop + WASM | [RustQIP](https://github.com/Renmusxd/RustQIP) statevector (Qiskit-matched) |
-//! | Qiskit | desktop + `backend-qiskit` | Qiskit Aer via `scripts/quantum_shim.py` |
+//! | Quantum | desktop + WASM | [RustQIP](https://github.com/Renmusxd/RustQIP) statevector |
 //!
 //! ## Example
 //!
@@ -26,11 +25,6 @@ pub mod circuit;
 pub mod error;
 pub mod measurement;
 
-#[cfg(feature = "backend-qiskit")]
-mod python_shim;
-
-#[cfg(feature = "backend-qiskit")]
-pub use backends::QiskitBackend;
 pub use backends::{
     build_backend, rustqip_probabilities, BackendKind, ClassicBackend, RustQipBackend,
 };

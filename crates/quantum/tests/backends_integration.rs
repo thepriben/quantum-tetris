@@ -14,21 +14,6 @@ fn box_dyn_backend_delegates_run() {
 fn build_backend_matches_env_parse() {
     assert!(build_backend(BackendKind::parse("classic")).is_ok());
     assert!(build_backend(BackendKind::parse("quantum")).is_ok());
-    #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
-    {
-        let qiskit = build_backend(BackendKind::parse("qiskit"));
-        let python = std::env::var("QUANTUM_PYTHON").unwrap_or_else(|_| "python3".into());
-        let has_aer = std::process::Command::new(python)
-            .args(["-c", "import qiskit, qiskit_aer"])
-            .status()
-            .map(|s| s.success())
-            .unwrap_or(false);
-        if has_aer {
-            assert!(qiskit.is_ok(), "qiskit backend with Aer installed");
-        } else {
-            assert!(qiskit.is_err(), "qiskit backend without Python should fail");
-        }
-    }
 }
 
 #[test]

@@ -1,5 +1,2 @@
-# Qiskit simulator for local dev and GitHub Actions CI (Python 3.10+)
-qiskit>=1.0
-qiskit-aer>=0.14
-pylatexenc>=2.10
+# Circuit diagram rendering (Python 3.10+)
 matplotlib>=3.8

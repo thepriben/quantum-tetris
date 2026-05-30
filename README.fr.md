@@ -12,7 +12,7 @@ Tetris où les événements stochastiques (pièce, état d’apparition, cadence
 
 > **Le joueur :** ← → ↑ ↓ et Espace · **Le jeu :** tout le reste.
 
-**Exécution.** Bevy (Rust), en binaire desktop ou WASM dans le navigateur. Mode quantum par défaut : simulation statevector **RustQIP**, avec les mêmes circuits en local et en ligne. **Qiskit Aer** (Python) reste disponible sur desktop pour la parité, les diagrammes et la CI.
+**Exécution.** Bevy (Rust), en binaire desktop ou WASM dans le navigateur. Mode quantum par défaut : simulation statevector **RustQIP**, avec les mêmes circuits en local et en ligne.
 
 ---
 
@@ -80,7 +80,6 @@ cargo run -p quantum-tetris
 | --- | --- |
 | Quantum — RustQIP (défaut) | `cargo run -p quantum-tetris` |
 | Classique | `QUANTUM_MODE=classic cargo run -p quantum-tetris` |
-| Quantum — Qiskit (desktop uniquement) | `python -m pip install -r scripts/requirements.txt` puis `QUANTUM_MODE=qiskit cargo run -p quantum-tetris` |
 
 **Navigateur** (nécessite ~3 Go d’espace libre pour le build WASM release)
 
@@ -99,7 +98,7 @@ Si le linker échoue avec `errno=28`, libérez de l’espace disque ou lancez `.
 
 ## Architecture
 
-Le dépôt sépare le **moteur de jeu** (Bevy), la **couche quantique** (IR + backends) et **l’outillage** (Python Qiskit, build WASM, Pages).
+Le dépôt sépare le **moteur de jeu** (Bevy), la **couche quantique** (IR + backends) et **l’outillage** (rendu des diagrammes, build WASM, Pages).
 
 ```mermaid
 flowchart TB
@@ -118,8 +117,7 @@ flowchart TB
 
   subgraph quantum["crates/quantum — simulation"]
     IR["circuit.rs — QuantumCircuit + Gate"]
-    BE["backends/ — Classic · RustQIP · Qiskit"]
-    SHIM["python_shim.rs ↔ quantum_shim.py"]
+    BE["backends/ — Classic · RustQIP"]
   end
 
   DESK --> APP
@@ -129,11 +127,9 @@ flowchart TB
   TET --> CFG
   CFG --> BE
   BE --> IR
-  BE -.->|desktop| SHIM
-  SHIM -.->|subprocess JSON| PY["scripts/quantum_shim.py<br/>Qiskit Aer"]
 ```
 
-**Principe :** le jeu n’appelle que `QuantumBackend::run(circuit) → Measurement`, puis décode les bitstrings via `measurement_fx.rs`. Passer de Classic à RustQIP ou Qiskit ne modifie jamais la logique Tetris.
+**Principe :** le jeu n’appelle que `QuantumBackend::run(circuit) → Measurement`, puis décode les bitstrings via `measurement_fx.rs`. Passer de Classic à RustQIP ne modifie jamais la logique Tetris.
 
 ### Pipeline au spawn
 
@@ -162,11 +158,9 @@ sequenceDiagram
 | --- | --- | --- |
 | **Classic** | partout | `rand` uniforme — baseline sans simulateur |
 | **RustQIP** | desktop + navigateur | simulateur statevector in-process |
-| **Qiskit Aer** | desktop uniquement (+ CI) | subprocess Python → `quantum_shim.py` |
 
-- `QUANTUM_MODE=classic|quantum|qiskit` (alias `QUANTUM_BACKEND`)
-- Bascule **CLASSIQUE** / **RUSTQIP** in-game (navigateur) ; **QISKIT** aussi sur desktop
-- Parité RustQIP ↔ Qiskit en CI (`rustqip_qiskit_parity`)
+- `QUANTUM_MODE=classic|quantum` (alias `QUANTUM_BACKEND`)
+- Bascule **CLASSIQUE** / **RUSTQIP** in-game
 
 ---
 
@@ -179,13 +173,12 @@ quantum-tetris/
 │   └── quantum/           # IR circuits + backends + tests
 ├── docs/
 │   ├── index.html         # Jeu + guide (anglais par défaut)
-│   ├── circuits/*.png     # Diagrammes Qiskit
+│   ├── circuits/*.png     # Diagrammes de circuits
 │   ├── QUANTUM.md         # Référence circuits & bits
 │   └── WASM.md            # Notes build navigateur
 ├── scripts/
 │   ├── build_wasm.sh
 │   ├── clean_build.sh
-│   ├── quantum_shim.py
 │   └── render_circuit_diagrams.py
 └── .github/workflows/
     ├── ci.yml
@@ -198,7 +191,7 @@ quantum-tetris/
 
 | Workflow | Déclencheur | Actions |
 | --- | --- | --- |
-| **CI** | push / PR `main` | fmt, clippy, tests, check WASM, parité Qiskit |
+| **CI** | push / PR `main` | fmt, clippy, tests, check WASM |
 | **Pages** | push `main` | Build WASM release, PNG circuits, deploy `docs/` |
 
 En ligne : [thepriben.github.io/quantum-tetris/](https://thepriben.github.io/quantum-tetris/)

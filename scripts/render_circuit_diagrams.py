@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render gameplay quantum circuits to docs/circuits/ (Qiskit diagram export).
+"""Render gameplay quantum circuits to docs/circuits/.
 
 Mirrors gate definitions in crates/quantum/src/circuit.rs.
 
@@ -10,16 +10,20 @@ Usage:
 
 from __future__ import annotations
 
-import math
 from pathlib import Path
 from typing import Any
-
-from qiskit import QuantumCircuit
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "docs" / "circuits"
 
-# (filename stem, qubits, gates) — same IR as the Rust game crate.
+BLUE = "#123a63"
+WIRE = "#1e3a5f"
+CLASSICAL = "#53657d"
+GATE = "#f84b5c"
+ROT = "#a9165a"
+MEASURE = "#b3b3b3"
+
+# (filename stem, qubits, gates) - same IR as the Rust game crate.
 GAMEPLAY_CIRCUITS: list[tuple[str, int, list[dict[str, Any]]]] = [
     (
         "quantum-teleportation-gate-v1",
@@ -71,68 +75,104 @@ GAMEPLAY_CIRCUITS: list[tuple[str, int, list[dict[str, Any]]]] = [
 ]
 
 
-def _apply_gate(qc: QuantumCircuit, gate: dict[str, Any]) -> None:
+def _gate_label(gate: dict[str, Any]) -> tuple[str, int]:
     if "H" in gate:
-        qc.h(int(gate["H"]))
-    elif "X" in gate:
-        qc.x(int(gate["X"]))
-    elif "Z" in gate:
-        qc.z(int(gate["Z"]))
-    elif "Cx" in gate:
-        body = gate["Cx"]
-        qc.cx(int(body["control"]), int(body["target"]))
-    elif "Ry" in gate:
+        return "H", int(gate["H"])
+    if "X" in gate:
+        return "X", int(gate["X"])
+    if "Z" in gate:
+        return "Z", int(gate["Z"])
+    if "Ry" in gate:
         body = gate["Ry"]
-        qc.ry(math.radians(float(body["theta_deg"])), int(body["qubit"]))
-    else:
-        raise ValueError(f"unsupported gate: {gate}")
+        return f"Ry\n{float(body['theta_deg']):.0f} deg", int(body["qubit"])
+    raise ValueError(f"not a single-qubit gate: {gate}")
 
 
-def build_circuit(qubits: int, gates: list[dict[str, Any]]) -> QuantumCircuit:
-    qc = QuantumCircuit(qubits, qubits)
-    for gate in gates:
-        _apply_gate(qc, gate)
-    qc.measure_all()
-    return qc
+def _cx(gate: dict[str, Any]) -> tuple[int, int]:
+    body = gate["Cx"]
+    return int(body["control"]), int(body["target"])
 
 
-def render_circuit(qc: QuantumCircuit, stem: str) -> None:
-    png_path = OUT_DIR / f"{stem}.png"
-    style = {
-        "backgroundcolor": "#ffffff",
-        "textcolor": "#172033",
-        "linecolor": "#1e3a5f",
-        "creglinecolor": "#53657d",
-    }
-
+def render_circuit(stem: str, qubits: int, gates: list[dict[str, Any]]) -> None:
     import matplotlib.pyplot as plt
+    from matplotlib.patches import Arc, FancyArrowPatch, Rectangle
 
-    fig = qc.draw(
-        output="mpl",
-        scale=1.25,
-        fold=-1,
-        style=style,
-        plot_barriers=False,
-    )
-    fig.set_facecolor("#ffffff")
-    fig.savefig(
-        png_path,
-        dpi=180,
-        facecolor=fig.get_facecolor(),
-        edgecolor="none",
-        bbox_inches="tight",
-        pad_inches=0.12,
-    )
-    plt.close("all")
-    print(f"  OK {stem} → {png_path.name}")
+    columns = max(len(gates), 1) + 2
+    width = columns * 1.25 + 1.7
+    height = qubits * 0.9 + 1.6
+    fig, ax = plt.subplots(figsize=(width, height), dpi=180)
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+    ax.axis("off")
+
+    y_positions = {q: qubits - q - 1 for q in range(qubits)}
+    x_start = 0.8
+    x_end = columns * 1.18
+
+    for q, y in y_positions.items():
+        ax.plot([x_start, x_end], [y, y], color=WIRE, lw=2.4)
+        ax.text(0.35, y, f"q{q}", ha="right", va="center", fontsize=17, color="#172033")
+
+    c_y = -0.75
+    ax.plot([x_start, x_end], [c_y, c_y], color=CLASSICAL, lw=2.2)
+    ax.plot([x_start, x_end], [c_y - 0.06, c_y - 0.06], color=CLASSICAL, lw=2.2)
+    ax.text(0.35, c_y, "meas", ha="right", va="center", fontsize=16, color="#172033")
+
+    for index, gate in enumerate(gates, start=1):
+        x = x_start + index * 1.05
+        if "Cx" in gate:
+            control, target = _cx(gate)
+            y1 = y_positions[control]
+            y2 = y_positions[target]
+            ax.plot([x, x], [y1, y2], color="#0b3aae", lw=2.3)
+            ax.scatter([x], [y1], s=105, color="#0b3aae", zorder=5)
+            ax.scatter([x], [y2], s=520, color="#0b3aae", zorder=5)
+            ax.text(x, y2, "+", ha="center", va="center", fontsize=23, color="white", zorder=6)
+            continue
+
+        label, qubit = _gate_label(gate)
+        y = y_positions[qubit]
+        color = ROT if label.startswith("Ry") else GATE
+        rect = Rectangle((x - 0.32, y - 0.32), 0.64, 0.64, facecolor=color, edgecolor=color)
+        ax.add_patch(rect)
+        ax.text(x, y, label, ha="center", va="center", fontsize=13, color="white")
+
+    measure_x = x_start + (len(gates) + 1) * 1.05
+    for q, y in y_positions.items():
+        rect = Rectangle(
+            (measure_x - 0.34, y - 0.34),
+            0.68,
+            0.68,
+            facecolor=MEASURE,
+            edgecolor=MEASURE,
+        )
+        ax.add_patch(rect)
+        ax.add_patch(Arc((measure_x, y - 0.05), 0.42, 0.38, theta1=15, theta2=175, lw=2.2))
+        ax.plot([measure_x + 0.03, measure_x + 0.22], [y - 0.03, y + 0.16], color="black", lw=2.0)
+        ax.add_patch(
+            FancyArrowPatch(
+                (measure_x, y - 0.34),
+                (measure_x, c_y + 0.02),
+                arrowstyle="-|>",
+                mutation_scale=13,
+                lw=1.5,
+                color=CLASSICAL,
+            )
+        )
+
+    ax.set_xlim(0, x_end + 0.2)
+    ax.set_ylim(c_y - 0.45, qubits - 0.05)
+    png_path = OUT_DIR / f"{stem}.png"
+    fig.savefig(png_path, facecolor="white", edgecolor="none", bbox_inches="tight", pad_inches=0.15)
+    plt.close(fig)
+    print(f"  OK {stem} -> {png_path.name}")
 
 
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"→ Rendering {len(GAMEPLAY_CIRCUITS)} circuits to {OUT_DIR}/")
+    print(f"Rendering {len(GAMEPLAY_CIRCUITS)} circuits to {OUT_DIR}/")
     for stem, qubits, gates in GAMEPLAY_CIRCUITS:
-        qc = build_circuit(qubits, gates)
-        render_circuit(qc, stem)
+        render_circuit(stem, qubits, gates)
     print("Done.")
 
 

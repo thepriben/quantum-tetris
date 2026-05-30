@@ -1,6 +1,6 @@
 [package]
 name = "quantum-tetris"
-description = "Quantum Tetris — circuit-driven Tetris with RustQIP and Qiskit"
+description = "Quantum Tetris — circuit-driven Tetris with RustQIP"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -28,7 +28,6 @@ getrandom = { version = "0.3", features = ["wasm_js"] }
 web-sys = { version = "0.3", features = ["Storage", "Window"] }
 
 [features]
-default = ["desktop", "qiskit"]
+default = ["desktop"]
 desktop = ["dep:dotenvy"]
 wasm = ["dep:wasm-bindgen"]
-qiskit = ["quantum-tetris-quantum/backend-qiskit"]

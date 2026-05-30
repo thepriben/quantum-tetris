@@ -1,4 +1,4 @@
-//! Quantum Tetris — Bevy app wired to classic, RustQIP, or Qiskit backends.
+//! Quantum Tetris — Bevy app wired to classic or RustQIP backends.
 
 use crate::board::Board;
 use crate::config::{GameConfig, QuantumSession};
@@ -87,12 +87,12 @@ pub fn run_game(config: GameConfig) {
     #[cfg(feature = "desktop")]
     eprintln!(
         "\n\
-         Quantum Tetris — {}\n\
-         ─────────────────────────────────────\n\
-         • RustQIP by default; CLASSIC or QISKIT (desktop) in-game\n\
-         • Measured bits → piece, speed, bonuses\n\
-         • ↑ rotate · ↓ faster · Space = observe (hard drop)\n\
-         ─────────────────────────────────────\n",
+         Quantum Tetris - {}\n\
+         -------------------------------------\n\
+         - RustQIP by default; CLASSIC is the baseline mode\n\
+         - Measured bits -> piece, speed, bonuses\n\
+         - Up rotate / Down faster / Space = observe (hard drop)\n\
+         -------------------------------------\n",
         config.backend_label()
     );
     build_app(config).run();

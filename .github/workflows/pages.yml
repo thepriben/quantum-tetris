@@ -40,7 +40,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Render Qiskit circuit diagrams
+      - name: Render circuit diagrams
         run: |
           pip install -r scripts/requirements.txt
           python scripts/render_circuit_diagrams.py
