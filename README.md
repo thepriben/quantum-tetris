@@ -1,8 +1,5 @@
 # Quantum Tetris
 
-[![CI](https://github.com/thepriben/quantum-tetris/actions/workflows/ci.yml/badge.svg)](https://github.com/thepriben/quantum-tetris/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
 **Quantum Tetris** — neon arcade stacker where **every piece, spin, and drop speed** comes from a small quantum circuit. Play in **classic** mode (uniform random) or **quantum** mode (Born-rule distributions, Qiskit Aer on desktop).
 
 ---
@@ -79,4 +76,4 @@ scripts/         build_wasm.sh, quantum_shim.py
 
 ## License
 
-MIT — [LICENSE](LICENSE).
+MIT — [LICENSE](LICENSE)
