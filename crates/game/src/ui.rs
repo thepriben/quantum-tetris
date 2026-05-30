@@ -1,7 +1,7 @@
 //! Neon Tetris UI — board grid + minimal HUD.
 
 use crate::board::{Board, COLS, ROWS};
-use crate::config::{GameConfig, QuantumSession};
+use crate::config::QuantumSession;
 use crate::game_state::GameRun;
 use crate::pieces::PieceKind;
 use crate::tetris;
@@ -248,7 +248,6 @@ fn spawn_next_preview(parent: &mut ChildSpawnerCommands) {
 
 #[allow(clippy::type_complexity)]
 pub(crate) fn handle_mode_buttons(
-    _config: Res<GameConfig>,
     mut session: ResMut<QuantumSession>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
