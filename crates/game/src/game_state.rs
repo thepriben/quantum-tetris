@@ -1,5 +1,6 @@
 //! Score, quantum readout, HUD strings.
 
+use crate::pieces::PieceFamily;
 use bevy::prelude::*;
 use quantum_town_quantum::BackendKind;
 
@@ -12,6 +13,8 @@ pub struct GameRun {
     pub last_event: String,
     pub hint: String,
     pub drop_interval: f32,
+    pub active_family: PieceFamily,
+    pub next_family: PieceFamily,
     pub score: u32,
     pub lines: u32,
     pub level: u32,
@@ -21,12 +24,14 @@ impl GameRun {
     pub fn new(backend: BackendKind) -> Self {
         Self {
             backend_label: backend.label().into(),
-            is_quantum: backend == BackendKind::Qip,
+            is_quantum: backend != BackendKind::Classic,
             last_bits: String::new(),
             last_confidence: 0.0,
             last_event: "New game".into(),
-            hint: "← → move · ↑ rotate · ↓ drop · Space observe".into(),
+            hint: "↑ ROTATE  ↓ FASTER  SPACE OBSERVE!".into(),
             drop_interval: 0.85,
+            active_family: PieceFamily::Fork,
+            next_family: PieceFamily::Fork,
             score: 0,
             lines: 0,
             level: 1,

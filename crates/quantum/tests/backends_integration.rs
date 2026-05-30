@@ -2,7 +2,8 @@ use quantum_town_quantum::{build_backend, BackendKind, QuantumBackend, QuantumCi
 
 #[test]
 fn box_dyn_backend_delegates_run() {
-    let mut backend: Box<dyn QuantumBackend> = build_backend(BackendKind::Qip).expect("qip");
+    let mut backend: Box<dyn QuantumBackend> =
+        build_backend(BackendKind::Classic).expect("classic");
     let measurement = backend
         .run(&QuantumCircuit::imp_brain())
         .expect("run via trait object");
@@ -11,13 +12,14 @@ fn box_dyn_backend_delegates_run() {
 
 #[test]
 fn build_backend_matches_env_parse() {
-    assert!(build_backend(BackendKind::parse("quantum")).is_ok());
     assert!(build_backend(BackendKind::parse("classic")).is_ok());
+    #[cfg(feature = "backend-qiskit")]
+    assert!(build_backend(BackendKind::parse("qiskit")).is_ok());
 }
 
 #[test]
-fn teleporter_three_qubits_on_qip() {
-    let mut backend = build_backend(BackendKind::Qip).expect("qip");
+fn teleporter_three_qubits() {
+    let mut backend = build_backend(BackendKind::Classic).expect("classic");
     let measurement = backend
         .run(&QuantumCircuit::teleporter())
         .expect("teleporter");

@@ -1,12 +1,13 @@
 //! Quantum Tetris — gravity, input, circuit-driven spawns.
 
-use crate::board::{ActivePiece, Board, RunPhase, ROWS};
+use crate::board::{ActivePiece, Board, RunPhase, SPAWN_Y};
 use crate::config::QuantumSession;
 use crate::game_state::GameRun;
 use crate::input;
 use crate::measurement_fx::{
-    line_clear_bonus, line_circuit, observe_circuit, observe_from_bits, piece_circuit,
-    piece_index, record_measurement, rotation_circuit, rotation_from_bits, spawn_x_from_bits,
+    drop_interval_from_bits, line_circuit, line_clear_bonus, observe_circuit, observe_from_bits,
+    piece_circuit, pieces_from_teleport_pair, record_measurement, rotation_circuit,
+    rotation_from_bits, spawn_x_from_bits, speed_circuit,
 };
 use crate::pieces::PieceKind;
 use bevy::prelude::*;
@@ -19,13 +20,6 @@ pub fn init_first_piece(
     if board.active.is_some() {
         return;
     }
-    let next_m = session
-        .backend
-        .lock()
-        .expect("backend")
-        .run(&piece_circuit())
-        .expect("next");
-    board.next = PieceKind::from_index(piece_index(&next_m));
     spawn_next(&session, &mut board, &mut run);
 }
 
@@ -174,22 +168,30 @@ fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
 fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
     let mut backend = session.backend.lock().expect("backend");
 
-    let kind = board.next;
-    let piece_m = backend.run(&piece_circuit()).expect("piece");
+    let tele_now = backend.run(&piece_circuit()).expect("teleport now");
+    let tele_next = backend.run(&piece_circuit()).expect("teleport next");
     let rot_m = backend.run(&rotation_circuit()).expect("rotation");
-    let next_m = backend.run(&piece_circuit()).expect("next");
+    let speed_m = backend.run(&speed_circuit()).expect("speed");
 
-    record_measurement(run, &piece_m);
-    board.next = PieceKind::from_index(piece_index(&next_m));
+    record_measurement(run, &tele_now);
+
+    let (kind, next_kind, now_readout, next_readout) =
+        pieces_from_teleport_pair(&tele_now, &tele_next);
+
+    board.next = next_kind;
+    board.next_family = next_readout.family;
+    run.active_family = now_readout.family;
+    run.next_family = next_readout.family;
 
     let rotation = rotation_from_bits(&rot_m.bits);
     let x = spawn_x_from_bits(&rot_m.bits);
+    run.drop_interval = drop_interval_from_bits(&speed_m.bits, run.level);
 
     let candidate = ActivePiece {
         kind,
         rotation,
         x,
-        y: ROWS as i32 - 1,
+        y: SPAWN_Y,
     };
 
     if !board.fits(&candidate) {
@@ -202,10 +204,16 @@ fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
 
     board.active = Some(candidate);
     run.last_event = format!(
-        "piece {} r{rotation}  tele[{tp}] brain[{tr}]",
+        "{} {} r{rotation}  bell[{bell}] msg={msg}  next={nf} {nk}  brain[{tr}] grav[{tg}] {drop:.2}s",
+        now_readout.family.label(),
         kind_label(kind),
-        tp = piece_m.bits,
-        tr = rot_m.bits
+        bell = now_readout.bell,
+        msg = if now_readout.message { 1 } else { 0 },
+        nf = next_readout.family.label(),
+        nk = kind_label(next_kind),
+        tr = rot_m.bits,
+        tg = speed_m.bits,
+        drop = run.drop_interval,
     );
 }
 
@@ -213,15 +221,6 @@ fn reset_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
     *board = Board::default();
     *run = GameRun::new(session.kind);
     run.last_event = "New game".into();
-
-    let next_m = session
-        .backend
-        .lock()
-        .expect("backend")
-        .run(&piece_circuit())
-        .expect("next");
-    board.next = PieceKind::from_index(piece_index(&next_m));
-
     spawn_next(session, board, run);
 }
 

@@ -3,6 +3,39 @@
 use bevy::prelude::*;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum PieceFamily {
+    /// Bell `00` — straight tetromino.
+    Line,
+    /// Bell `01` — 2×2 square.
+    Block,
+    /// Bell `10` — T junction.
+    Fork,
+    /// Bell `11` — J, L, S, Z corners.
+    Corner,
+}
+
+impl PieceFamily {
+    /// Two Bell-measurement bits from the teleporter circuit (q0, q1).
+    pub fn from_bell(bell: &str) -> Self {
+        match bell {
+            "00" => Self::Line,
+            "01" => Self::Block,
+            "10" => Self::Fork,
+            _ => Self::Corner,
+        }
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Line => "Line",
+            Self::Block => "Block",
+            Self::Fork => "Fork",
+            Self::Corner => "Corner",
+        }
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum PieceKind {
     I = 0,
     O = 1,
@@ -14,6 +47,15 @@ pub enum PieceKind {
 }
 
 impl PieceKind {
+    pub fn family(self) -> PieceFamily {
+        match self {
+            Self::I => PieceFamily::Line,
+            Self::O => PieceFamily::Block,
+            Self::T => PieceFamily::Fork,
+            Self::J | Self::L | Self::S | Self::Z => PieceFamily::Corner,
+        }
+    }
+
     pub fn from_index(i: usize) -> Self {
         match i % 7 {
             0 => Self::I,
@@ -51,6 +93,14 @@ pub fn cells(kind: PieceKind, rotation: u8) -> [(i32, i32); 4] {
         PieceKind::J => J_ROT[r],
         PieceKind::L => L_ROT[r],
     }
+}
+
+/// Rotation-0 shape normalized into a 4×4 preview grid (col, row from top-left).
+pub fn preview_shape(kind: PieceKind) -> [(usize, usize); 4] {
+    let raw = cells(kind, 0);
+    let min_x = raw.iter().map(|(x, _)| *x).min().unwrap_or(0);
+    let min_y = raw.iter().map(|(_, y)| *y).min().unwrap_or(0);
+    raw.map(|(x, y)| ((x - min_x) as usize, (y - min_y) as usize))
 }
 
 const I_ROT: [[(i32, i32); 4]; 4] = [

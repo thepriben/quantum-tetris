@@ -1,17 +1,20 @@
-use quantum_town_quantum::{build_backend, BackendKind, QuantumBackend, QuantumCircuit};
+use quantum_town_quantum::{BackendKind, ClassicBackend, QuantumBackend, QuantumCircuit};
 
 #[test]
 fn backend_parse_aliases() {
     assert_eq!(BackendKind::parse("classic"), BackendKind::Classic);
-    assert_eq!(BackendKind::parse("quantum"), BackendKind::Qip);
-    assert_eq!(BackendKind::parse(""), BackendKind::Qip);
+    assert_eq!(BackendKind::parse("random"), BackendKind::Classic);
+    #[cfg(feature = "backend-qiskit")]
+    assert_eq!(BackendKind::parse("qiskit"), BackendKind::Qiskit);
 }
 
 #[test]
 fn classic_runs_many_times() {
-    let mut backend = build_backend(BackendKind::Classic).expect("classic");
+    let mut backend = ClassicBackend;
     for _ in 0..32 {
-        let measurement = backend.run(&QuantumCircuit::imp_brain()).expect("run");
-        assert_eq!(measurement.bits.len(), 2);
+        let m = backend
+            .run(&QuantumCircuit::imp_brain())
+            .expect("classic run");
+        assert_eq!(m.bits.len(), 2);
     }
 }

@@ -2,13 +2,13 @@ use quantum_town_quantum::{
     build_backend, BackendKind, EnemyBehavior, QuantumBackend, QuantumCircuit, QuantumError,
 };
 
-fn qip() -> Box<dyn QuantumBackend> {
-    build_backend(BackendKind::Qip).expect("qip backend")
+fn classic() -> Box<dyn QuantumBackend> {
+    build_backend(BackendKind::Classic).expect("classic backend")
 }
 
 #[test]
 fn imp_brain_yields_valid_two_bit_strings() {
-    let mut backend = qip();
+    let mut backend = classic();
     for _ in 0..8 {
         let measurement = backend
             .run(&QuantumCircuit::imp_brain())
@@ -20,8 +20,8 @@ fn imp_brain_yields_valid_two_bit_strings() {
 }
 
 #[test]
-fn imp_brain_histogram_is_uniform_bell_state() {
-    let mut backend = qip();
+fn imp_brain_histogram_is_uniform_classic() {
+    let mut backend = classic();
     let measurement = backend
         .run(&QuantumCircuit::imp_brain())
         .expect("imp brain run");
@@ -36,7 +36,7 @@ fn imp_brain_histogram_is_uniform_bell_state() {
 
 #[test]
 fn teleporter_yields_eight_outcomes() {
-    let mut backend = qip();
+    let mut backend = classic();
     let measurement = backend
         .run(&QuantumCircuit::quantum_teleportation())
         .expect("quantum teleportation run");
@@ -44,20 +44,11 @@ fn teleporter_yields_eight_outcomes() {
     assert_eq!(measurement.probabilities.len(), 8);
     let total: f32 = measurement.probabilities.iter().map(|(_, p)| p).sum();
     assert!((total - 1.0).abs() < 0.01);
-
-    let has_bias = measurement
-        .probabilities
-        .iter()
-        .any(|(_, probability)| (*probability - 0.125).abs() > 0.02);
-    assert!(
-        has_bias,
-        "teleportation circuit should expose a biased message qubit"
-    );
 }
 
 #[test]
-fn two_qubit_gameplay_decision_circuits_run_on_qip() {
-    let mut backend = qip();
+fn two_qubit_gameplay_decision_circuits_run() {
+    let mut backend = classic();
     for circuit in [
         QuantumCircuit::hunter_profile(),
         QuantumCircuit::patrol_profile(),
@@ -72,7 +63,7 @@ fn two_qubit_gameplay_decision_circuits_run_on_qip() {
 
 #[test]
 fn rejects_zero_qubits() {
-    let mut backend = qip();
+    let mut backend = classic();
     let circuit = QuantumCircuit {
         qubits: 0,
         gates: vec![],
@@ -84,7 +75,7 @@ fn rejects_zero_qubits() {
 
 #[test]
 fn rejects_more_than_eight_qubits() {
-    let mut backend = qip();
+    let mut backend = classic();
     let circuit = QuantumCircuit {
         qubits: 9,
         gates: vec![quantum_town_quantum::Gate::H(0)],

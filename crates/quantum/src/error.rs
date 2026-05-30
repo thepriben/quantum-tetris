@@ -35,10 +35,10 @@ mod tests {
         assert!(error.to_string().contains('9'));
 
         let error = QuantumError::BackendFailure {
-            backend: "qip",
+            backend: "qiskit",
             message: "cnot failed".into(),
         };
-        assert!(error.to_string().contains("qip"));
+        assert!(error.to_string().contains("qiskit"));
         assert!(error.to_string().contains("cnot"));
     }
 }

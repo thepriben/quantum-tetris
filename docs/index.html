@@ -5,21 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris: LA</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; background: #0a1220; color: #cde; line-height: 1.5; }
-    h1 { color: #5ef; }
-    .cta { display: inline-block; margin: 1rem 0.5rem 1rem 0; padding: 0.65rem 1.2rem; background: #087; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; }
-    .cta.q { background: #356; }
+    body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; background: #0a1220; color: #cde; line-height: 1.55; }
+    h1 { color: #5ef; text-shadow: 0 0 12px rgba(80,200,255,0.4); }
+    .cta { display: inline-block; margin: 1rem 0.5rem 1rem 0; padding: 0.75rem 1.4rem; background: linear-gradient(135deg,#087,#0a5); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 0 #043; }
+    .cta:active { transform: translateY(2px); box-shadow: 0 2px 0 #043; }
     code { background: #152033; padding: 0.1em 0.35em; border-radius: 4px; }
+    .keys { color: #fc5; font-weight: 600; }
   </style>
 </head>
 <body>
   <h1>Quantum Tetris: LA</h1>
-  <p>Neon Tetris where <strong>every piece</strong> is picked by a quantum circuit. Classic or QIP — same rules, different distributions.</p>
+  <p>Neon arcade Tetris where <strong>every piece</strong> is picked by a quantum circuit. Browser = classic mode. Desktop = classic or <strong>Qiskit Aer</strong>.</p>
+  <p class="keys">← → MOVE · ↑ ROTATE · ↓ FASTER · SPACE OBSERVE!</p>
   <p>
     <a class="cta" href="play.html">Play in browser</a>
-    <a class="cta q" href="play.html?mode=quantum">QIP mode</a>
   </p>
   <p><strong>Local:</strong> <code>cargo run -p quantum-town-la</code></p>
+  <p><strong>Qiskit:</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-town-la</code></p>
   <p><a href="QUANTUM.md">Quantum circuits</a> · <a href="https://github.com/thepriben/quantum-town-la">GitHub</a></p>
 </body>
 </html>
