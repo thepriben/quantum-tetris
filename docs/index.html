@@ -1,15 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; background: #0a1220; color: #cde; line-height: 1.55; }
+    .topbar { display: flex; justify-content: flex-end; margin-bottom: 0.5rem; }
+    #lang-toggle {
+      padding: 4px 10px; font: 600 12px system-ui, sans-serif;
+      color: #bdf; background: #152033; border: 1px solid #3a5880; border-radius: 6px; cursor: pointer;
+    }
+    #lang-toggle:hover { background: #1a2840; }
     h1 { color: #5ef; text-shadow: 0 0 12px rgba(80,200,255,0.4); }
+    h2 { color: #7cf; font-size: 1.05rem; margin-top: 1.5rem; }
     .cta { display: inline-block; margin: 1rem 0.5rem 1rem 0; padding: 0.75rem 1.4rem; background: linear-gradient(135deg,#087,#0a5); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 0 #043; }
     .cta:active { transform: translateY(2px); box-shadow: 0 2px 0 #043; }
-    code { background: #152033; padding: 0.1em 0.35em; border-radius: 4px; }
+    code { background: #152033; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.92em; }
     .keys { display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0; }
     .hint { display: inline-flex; align-items: center; gap: 4px; }
     .hint kbd {
@@ -17,22 +24,32 @@
       color: #fc5; background: #152033; border: 1px solid #3a5880; border-radius: 4px;
     }
     .hint span { color: #cde; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+    .circuits { margin: 0.5rem 0 0; padding-left: 1.1rem; }
+    .circuits li { margin-bottom: 0.65rem; }
   </style>
+  <script src="i18n.js" defer></script>
 </head>
 <body>
-  <h1>Quantum Tetris</h1>
-  <p>Neon arcade Tetris where <strong>every piece</strong> is picked by a quantum circuit. The browser game runs in <strong>quantum mode</strong> by default (Born-rule simulator, Qiskit-matched). Switch to classic with the in-game button.</p>
+  <div class="topbar"><button id="lang-toggle" type="button">(en)</button></div>
+  <h1 data-i18n="home.title">Quantum Tetris</h1>
+  <p data-i18n="home.lead" data-i18n-html></p>
   <div class="keys">
-    <div class="hint"><kbd>LR</kbd><span>MOVE</span></div>
-    <div class="hint"><kbd>^</kbd><span>ROTATE</span></div>
-    <div class="hint"><kbd>v</kbd><span>FASTER</span></div>
-    <div class="hint"><kbd>Sp</kbd><span>DROP</span></div>
+    <div class="hint"><kbd>LR</kbd><span data-i18n="hint.move">BOUGER</span></div>
+    <div class="hint"><kbd>^</kbd><span data-i18n="hint.rotate">TOURNER</span></div>
+    <div class="hint"><kbd>v</kbd><span data-i18n="hint.faster">VITE</span></div>
+    <div class="hint"><kbd>Sp</kbd><span data-i18n="hint.drop">POSER</span></div>
   </div>
   <p>
-    <a class="cta" href="play.html">Play in browser</a>
+    <a class="cta" href="play.html" data-i18n="home.play">Jouer dans le navigateur</a>
   </p>
-  <p><strong>Local classic:</strong> <code>cargo run -p quantum-tetris</code></p>
-  <p><strong>Local Qiskit Aer:</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
-  <p><a href="QUANTUM.md">Quantum circuits</a> · <a href="https://github.com/thepriben/quantum-tetris">GitHub</a></p>
+  <h2 data-i18n="home.circuitsTitle">Circuits Qiskit par action</h2>
+  <ul class="circuits">
+    <li data-i18n="home.circuit.spawn" data-i18n-html></li>
+    <li data-i18n="home.circuit.observe" data-i18n-html></li>
+    <li data-i18n="home.circuit.line" data-i18n-html></li>
+  </ul>
+  <p><strong data-i18n="home.localClassic">Classique local :</strong> <code>cargo run -p quantum-tetris</code></p>
+  <p><strong data-i18n="home.localQiskit">Qiskit Aer local :</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
+  <p><a href="QUANTUM.md" data-i18n="home.circuitsLink">Circuits quantiques</a> · <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a></p>
 </body>
 </html>

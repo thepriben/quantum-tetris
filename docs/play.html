@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum Tetris — Play</title>
+  <title>Quantum Tetris — Jouer</title>
   <style>
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0a1220; }
     canvas { display: block; width: 100%; height: 100%; touch-action: none; }
@@ -15,63 +15,61 @@
     }
     #bar a { color: #6fd; text-decoration: none; }
     #bar a:hover { text-decoration: underline; }
-    #keys {
-      display: none;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
-    #keys.visible { display: flex; }
-    .hint {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .hint kbd {
-      display: inline-block;
-      padding: 2px 5px;
-      font: 600 10px/1.2 ui-monospace, monospace;
-      color: #fc5;
-      background: rgba(16, 28, 44, 0.95);
-      border: 1px solid rgba(80, 130, 190, 0.7);
-      border-radius: 4px;
-    }
-    .hint span {
-      color: #cde;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+    #lang-toggle {
+      margin-left: auto;
+      padding: 3px 8px; font: 600 11px system-ui, sans-serif;
+      color: #bdf; background: rgba(16, 28, 44, 0.95); border: 1px solid rgba(80, 130, 190, 0.7);
+      border-radius: 4px; cursor: pointer;
     }
     #status { color: #8cf; font-size: 12px; }
   </style>
+  <script src="i18n.js" defer></script>
 </head>
-<body>
+<body data-page="play">
   <div id="bar">
-    <a href="index.html">← Home</a>
-    <div id="keys">
-      <div class="hint"><kbd>LR</kbd><span>MOVE</span></div>
-      <div class="hint"><kbd>^</kbd><span>ROTATE</span></div>
-      <div class="hint"><kbd>v</kbd><span>FASTER</span></div>
-      <div class="hint"><kbd>Sp</kbd><span>DROP</span></div>
-    </div>
-    <span id="status">Loading…</span>
+    <a href="index.html" data-i18n="play.home">← Accueil</a>
+    <span id="status" data-i18n="play.loading">Chargement…</span>
+    <button id="lang-toggle" type="button">(en)</button>
   </div>
   <script type="module">
     import init, { run_wasm } from './wasm/quantum_tetris.js';
 
     const status = document.getElementById('status');
+    const strings = () => window.qtI18n?.getLocale?.() === 'en'
+      ? {
+          starting: 'Starting quantum mode…',
+          ready: 'Quantum mode · switch CLASSIC / QUANTUM in-game',
+          error: 'WASM error — run ./scripts/build_wasm.sh first',
+        }
+      : {
+          starting: 'Démarrage du mode quantique…',
+          ready: 'Mode quantique · bascule CLASSIQUE / QUANTIQUE in-game',
+          error: 'Erreur WASM — lance ./scripts/build_wasm.sh',
+        };
 
     async function boot() {
-      status.textContent = 'Starting quantum mode…';
+      status.textContent = strings().starting;
       await init();
       run_wasm();
-      document.getElementById('keys').classList.remove('visible');
-      status.textContent = 'Quantum mode · switch CLASSIC / QUANTUM in-game';
+      status.textContent = strings().ready;
     }
 
     boot().catch((e) => {
-      status.textContent = 'WASM error — run ./scripts/build_wasm.sh first';
+      status.textContent = strings().error;
       console.error(e);
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'qt-lang' && status.textContent !== strings().starting) {
+        status.textContent = strings().ready;
+      }
+    });
+    document.getElementById('lang-toggle')?.addEventListener('click', () => {
+      setTimeout(() => {
+        if (status.textContent !== strings().starting) {
+          status.textContent = strings().ready;
+        }
+      }, 0);
     });
   </script>
 </body>

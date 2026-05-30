@@ -1,5 +1,6 @@
 //! Score, quantum readout, HUD strings.
 
+use crate::i18n::GameplayMoment;
 use crate::pieces::PieceFamily;
 use bevy::prelude::*;
 use quantum_tetris_quantum::BackendKind;
@@ -11,6 +12,7 @@ pub struct GameRun {
     pub last_bits: String,
     pub last_confidence: f32,
     pub last_event: String,
+    pub last_moment: GameplayMoment,
     pub hint: String,
     pub drop_interval: f32,
     pub active_family: PieceFamily,
@@ -28,6 +30,7 @@ impl GameRun {
             last_bits: String::new(),
             last_confidence: 0.0,
             last_event: String::new(),
+            last_moment: GameplayMoment::None,
             hint: String::new(),
             drop_interval: 0.85,
             active_family: PieceFamily::Fork,

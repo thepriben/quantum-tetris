@@ -3,6 +3,7 @@
 use crate::board::{Board, COLS, ROWS};
 use crate::config::QuantumSession;
 use crate::game_state::GameRun;
+use crate::i18n::{self, Locale};
 use crate::pieces::PieceKind;
 use crate::tetris;
 use bevy::ecs::system::ParamSet;
@@ -40,8 +41,28 @@ pub(crate) struct HudBits;
 pub(crate) struct ModeClassicBtn;
 #[derive(Component)]
 pub(crate) struct ModeQuantumBtn;
+#[derive(Component)]
+pub(crate) struct LangToggleBtn;
+#[derive(Component)]
+pub(crate) struct HudCircuitTitle;
+#[derive(Component)]
+pub(crate) struct HudCircuit;
+#[derive(Component)]
+pub(crate) struct HudEvent;
+#[derive(Component)]
+pub(crate) struct ModeClassicLabel;
+#[derive(Component)]
+pub(crate) struct ModeQuantumLabel;
+#[derive(Component)]
+pub(crate) struct HintMoveLabel;
+#[derive(Component)]
+pub(crate) struct HintRotateLabel;
+#[derive(Component)]
+pub(crate) struct HintFasterLabel;
+#[derive(Component)]
+pub(crate) struct HintDropLabel;
 
-pub(crate) fn setup_ui(mut commands: Commands, run: Res<GameRun>) {
+pub(crate) fn setup_ui(mut commands: Commands, run: Res<GameRun>, locale: Res<Locale>) {
     commands.spawn(Camera2d);
 
     commands
@@ -57,7 +78,7 @@ pub(crate) fn setup_ui(mut commands: Commands, run: Res<GameRun>) {
             },
         ))
         .with_children(|root| {
-            spawn_side_panel(root, &run);
+            spawn_side_panel(root, &run, *locale);
             spawn_grid(root);
         });
 }
@@ -111,10 +132,11 @@ fn grid_cell_bundle(col: usize, row: usize) -> impl Bundle {
     )
 }
 
-fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun) {
+fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Locale) {
     parent.spawn(panel_node()).with_children(|p| {
-        spawn_mode_row(p, run.is_quantum);
-        spawn_controls_hint(p);
+        spawn_lang_row(p, locale);
+        spawn_mode_row(p, run.is_quantum, locale);
+        spawn_controls_hint(p, locale);
         p.spawn((
             HudScore,
             Text::new("0"),
@@ -122,24 +144,69 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun) {
         ));
         p.spawn((
             HudLines,
-            Text::new("lines 0 · lv 1"),
+            Text::new(i18n::lines_level(locale, 0, 1)),
             text_style(14.0, Color::srgb(0.7, 0.85, 0.95)),
         ));
         spawn_next_preview(p);
         p.spawn((
             HudNext,
-            Text::new("next T"),
+            Text::new(i18n::next_piece(locale, "T")),
             text_style(13.0, Color::srgb(0.65, 0.78, 0.92)),
+        ));
+        p.spawn((
+            HudEvent,
+            Text::new("—"),
+            text_style(12.0, Color::srgb(0.72, 0.82, 0.92)),
         ));
         p.spawn((
             HudBits,
             Text::new("—"),
             text_style(13.0, Color::srgb(0.55, 0.9, 0.75)),
         ));
+        p.spawn((
+            HudCircuitTitle,
+            Text::new(i18n::circuit_heading(locale)),
+            text_style(11.0, Color::srgb(0.55, 0.75, 0.95)),
+        ));
+        p.spawn((
+            HudCircuit,
+            Text::new("—"),
+            text_style_multiline(10.0, Color::srgb(0.62, 0.78, 0.88)),
+        ));
     });
 }
 
-fn spawn_mode_row(parent: &mut ChildSpawnerCommands, quantum: bool) {
+fn spawn_lang_row(parent: &mut ChildSpawnerCommands, locale: Locale) {
+    parent
+        .spawn(Node {
+            flex_direction: FlexDirection::Row,
+            justify_content: JustifyContent::FlexEnd,
+            width: Val::Percent(100.0),
+            ..default()
+        })
+        .with_children(|row| {
+            row.spawn((
+                LangToggleBtn,
+                Button,
+                Node {
+                    padding: UiRect::axes(Val::Px(8.0), Val::Px(4.0)),
+                    border: UiRect::all(Val::Px(1.0)),
+                    border_radius: BorderRadius::all(Val::Px(4.0)),
+                    ..default()
+                },
+                BackgroundColor(Color::srgba(0.08, 0.14, 0.24, 0.95)),
+                BorderColor::all(Color::srgb(0.35, 0.5, 0.68)),
+            ))
+            .with_children(|btn| {
+                btn.spawn((
+                    Text::new(locale.toggle_label()),
+                    text_style(11.0, Color::srgb(0.75, 0.88, 1.0)),
+                ));
+            });
+        });
+}
+
+fn spawn_mode_row(parent: &mut ChildSpawnerCommands, quantum: bool, locale: Locale) {
     parent
         .spawn(Node {
             flex_direction: FlexDirection::Row,
@@ -147,14 +214,27 @@ fn spawn_mode_row(parent: &mut ChildSpawnerCommands, quantum: bool) {
             ..default()
         })
         .with_children(|row| {
-            spawn_mode_button(row, ModeClassicBtn, "CLASSIC", !quantum);
-            spawn_mode_button(row, ModeQuantumBtn, "QUANTUM", quantum);
+            spawn_mode_button(
+                row,
+                ModeClassicBtn,
+                ModeClassicLabel,
+                i18n::mode_classic(locale),
+                !quantum,
+            );
+            spawn_mode_button(
+                row,
+                ModeQuantumBtn,
+                ModeQuantumLabel,
+                i18n::mode_quantum(locale),
+                quantum,
+            );
         });
 }
 
-fn spawn_mode_button<M: Component>(
+fn spawn_mode_button(
     parent: &mut ChildSpawnerCommands,
-    marker: M,
+    marker: impl Component,
+    label_marker: impl Component,
     label: &str,
     selected: bool,
 ) {
@@ -164,9 +244,9 @@ fn spawn_mode_button<M: Component>(
             marker,
             Button,
             Node {
-                width: Val::Px(100.0),
+                width: Val::Px(108.0),
                 height: Val::Px(36.0),
-                min_width: Val::Px(100.0),
+                min_width: Val::Px(108.0),
                 min_height: Val::Px(36.0),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
@@ -184,13 +264,14 @@ fn spawn_mode_button<M: Component>(
                     align_items: AlignItems::Center,
                     ..default()
                 },
+                label_marker,
                 Text::new(label),
-                text_style(13.0, text_c),
+                text_style(12.0, text_c),
             ));
         });
 }
 
-fn spawn_controls_hint(parent: &mut ChildSpawnerCommands) {
+fn spawn_controls_hint(parent: &mut ChildSpawnerCommands, locale: Locale) {
     parent
         .spawn(Node {
             flex_direction: FlexDirection::Row,
@@ -200,14 +281,19 @@ fn spawn_controls_hint(parent: &mut ChildSpawnerCommands) {
             ..default()
         })
         .with_children(|row| {
-            spawn_hint_chip(row, "LR", "MOVE");
-            spawn_hint_chip(row, "^", "ROTATE");
-            spawn_hint_chip(row, "v", "FASTER");
-            spawn_hint_chip(row, "Sp", "DROP");
+            spawn_hint_chip(row, "LR", i18n::hint_move(locale), HintMoveLabel);
+            spawn_hint_chip(row, "^", i18n::hint_rotate(locale), HintRotateLabel);
+            spawn_hint_chip(row, "v", i18n::hint_faster(locale), HintFasterLabel);
+            spawn_hint_chip(row, "Sp", i18n::hint_drop(locale), HintDropLabel);
         });
 }
 
-fn spawn_hint_chip(parent: &mut ChildSpawnerCommands, key: &str, action: &str) {
+fn spawn_hint_chip(
+    parent: &mut ChildSpawnerCommands,
+    key: &str,
+    action: &str,
+    label_marker: impl Component,
+) {
     parent
         .spawn(Node {
             flex_direction: FlexDirection::Row,
@@ -229,7 +315,11 @@ fn spawn_hint_chip(parent: &mut ChildSpawnerCommands, key: &str, action: &str) {
             .with_children(|k| {
                 k.spawn((Text::new(key), text_style(10.0, Color::srgb(1.0, 0.82, 0.4))));
             });
-            chip.spawn((Text::new(action), text_style(10.0, Color::srgb(0.78, 0.88, 0.98))));
+            chip.spawn((
+                label_marker,
+                Text::new(action),
+                text_style(10.0, Color::srgb(0.78, 0.88, 0.98)),
+            ));
         });
 }
 
@@ -295,8 +385,25 @@ fn spawn_next_preview(parent: &mut ChildSpawnerCommands) {
 }
 
 #[allow(clippy::type_complexity)]
+pub(crate) fn handle_lang_button(
+    mut locale: ResMut<Locale>,
+    mut btn: Query<
+        (&Interaction, &mut Text),
+        (Changed<Interaction>, With<LangToggleBtn>, With<Button>),
+    >,
+) {
+    for (interaction, mut text) in &mut btn {
+        if *interaction == Interaction::Pressed {
+            *locale = locale.toggle();
+            **text = locale.toggle_label().into();
+        }
+    }
+}
+
+#[allow(clippy::type_complexity)]
 pub(crate) fn handle_mode_buttons(
     mut session: ResMut<QuantumSession>,
+    locale: Res<Locale>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
     mut buttons: ParamSet<(
@@ -308,9 +415,9 @@ pub(crate) fn handle_mode_buttons(
     let pick_quantum = buttons.p1().iter().any(|i| *i == Interaction::Pressed);
 
     if pick_classic {
-        apply_mode(&mut session, &mut board, &mut run, BackendKind::Classic);
+        apply_mode(&mut session, &mut board, &mut run, BackendKind::Classic, *locale);
     } else if pick_quantum {
-        apply_mode(&mut session, &mut board, &mut run, BackendKind::Quantum);
+        apply_mode(&mut session, &mut board, &mut run, BackendKind::Quantum, *locale);
     }
 }
 
@@ -319,17 +426,19 @@ fn apply_mode(
     board: &mut Board,
     run: &mut GameRun,
     kind: BackendKind,
+    locale: Locale,
 ) {
     if !session.switch_to(kind) {
         return;
     }
-    tetris::restart_game(session, board, run);
+    tetris::restart_game(session, board, run, locale);
 }
 
 #[allow(clippy::type_complexity)]
 pub(crate) fn refresh_ui(
     board: Res<Board>,
     run: Res<GameRun>,
+    locale: Res<Locale>,
     mut bg_queries: ParamSet<(
         Query<(&GridCell, &mut BackgroundColor)>,
         Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
@@ -342,11 +451,22 @@ pub(crate) fn refresh_ui(
             (With<ModeQuantumBtn>, Without<ModeClassicBtn>),
         >,
     )>,
-    mut texts: ParamSet<(
+    mut hud_texts: ParamSet<(
         Query<&mut Text, With<HudScore>>,
         Query<&mut Text, With<HudLines>>,
         Query<&mut Text, With<HudNext>>,
         Query<&mut Text, With<HudBits>>,
+        Query<&mut Text, With<HudEvent>>,
+        Query<&mut Text, With<HudCircuitTitle>>,
+        Query<&mut Text, With<HudCircuit>>,
+    )>,
+    mut label_texts: ParamSet<(
+        Query<&mut Text, With<ModeClassicLabel>>,
+        Query<&mut Text, With<ModeQuantumLabel>>,
+        Query<&mut Text, With<HintMoveLabel>>,
+        Query<&mut Text, With<HintRotateLabel>>,
+        Query<&mut Text, With<HintFasterLabel>>,
+        Query<&mut Text, With<HintDropLabel>>,
     )>,
 ) {
     for (cell, mut bg) in bg_queries.p0().iter_mut() {
@@ -369,16 +489,16 @@ pub(crate) fn refresh_ui(
         *border = BorderColor::all(b);
     }
 
-    for mut t in texts.p0().iter_mut() {
+    for mut t in hud_texts.p0().iter_mut() {
         **t = run.score.to_string();
     }
-    for mut t in texts.p1().iter_mut() {
-        **t = format!("lines {} · lv {}", run.lines, run.level);
+    for mut t in hud_texts.p1().iter_mut() {
+        **t = i18n::lines_level(*locale, run.lines, run.level);
     }
-    for mut t in texts.p2().iter_mut() {
-        **t = format!("next {}", next_label(board.next));
+    for mut t in hud_texts.p2().iter_mut() {
+        **t = i18n::next_piece(*locale, next_label(board.next));
     }
-    for mut t in texts.p3().iter_mut() {
+    for mut t in hud_texts.p3().iter_mut() {
         **t = if run.last_bits.is_empty() {
             "—".into()
         } else if run.is_quantum {
@@ -386,6 +506,37 @@ pub(crate) fn refresh_ui(
         } else {
             format!("[{}]", run.last_bits)
         };
+    }
+    for mut t in hud_texts.p4().iter_mut() {
+        **t = if run.last_event.is_empty() {
+            "—".into()
+        } else {
+            run.last_event.clone()
+        };
+    }
+    for mut t in hud_texts.p5().iter_mut() {
+        **t = i18n::circuit_heading(*locale).into();
+    }
+    for mut t in hud_texts.p6().iter_mut() {
+        **t = i18n::circuit_explain(*locale, run.last_moment).into();
+    }
+    for mut t in label_texts.p0().iter_mut() {
+        **t = i18n::mode_classic(*locale).into();
+    }
+    for mut t in label_texts.p1().iter_mut() {
+        **t = i18n::mode_quantum(*locale).into();
+    }
+    for mut t in label_texts.p2().iter_mut() {
+        **t = i18n::hint_move(*locale).into();
+    }
+    for mut t in label_texts.p3().iter_mut() {
+        **t = i18n::hint_rotate(*locale).into();
+    }
+    for mut t in label_texts.p4().iter_mut() {
+        **t = i18n::hint_faster(*locale).into();
+    }
+    for mut t in label_texts.p5().iter_mut() {
+        **t = i18n::hint_drop(*locale).into();
     }
 }
 
@@ -404,13 +555,28 @@ fn panel_node() -> impl Bundle {
             flex_direction: FlexDirection::Column,
             row_gap: Val::Px(8.0),
             padding: UiRect::all(Val::Px(14.0)),
-            min_width: Val::Px(220.0),
+            min_width: Val::Px(248.0),
+            max_width: Val::Px(248.0),
             border: UiRect::all(Val::Px(2.0)),
             border_radius: BorderRadius::all(Val::Px(12.0)),
             ..default()
         },
         BackgroundColor(PANEL),
         BorderColor::all(Color::srgb(0.3, 0.45, 0.65)),
+    )
+}
+
+fn text_style_multiline(size: f32, color: Color) -> impl Bundle {
+    (
+        TextFont {
+            font_size: size,
+            ..default()
+        },
+        TextColor(color),
+        TextLayout {
+            linebreak: LineBreak::WordBoundary,
+            ..default()
+        },
     )
 }
 

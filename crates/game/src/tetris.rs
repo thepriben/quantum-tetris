@@ -3,6 +3,7 @@
 use crate::board::{ActivePiece, Board, RunPhase, SPAWN_Y};
 use crate::config::QuantumSession;
 use crate::game_state::GameRun;
+use crate::i18n::{self, GameplayMoment, Locale};
 use crate::input;
 use crate::measurement_fx::{
     drop_interval_from_bits, line_circuit, line_clear_bonus, observe_circuit, observe_from_bits,
@@ -14,19 +15,21 @@ use bevy::prelude::*;
 
 pub fn init_first_piece(
     session: Res<QuantumSession>,
+    locale: Res<Locale>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
 ) {
     if board.active.is_some() {
         return;
     }
-    spawn_next(&session, &mut board, &mut run);
+    spawn_next(&session, &mut board, &mut run, *locale);
 }
 
 pub fn tick_gravity(
     time: Res<Time>,
     mut acc: Local<f32>,
     session: Res<QuantumSession>,
+    locale: Res<Locale>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
 ) {
@@ -48,19 +51,20 @@ pub fn tick_gravity(
     if board.fits(&moved) {
         board.active = Some(moved);
     } else {
-        lock_and_continue(&session, &mut board, &mut run);
+        lock_and_continue(&session, &mut board, &mut run, *locale);
     }
 }
 
 pub fn handle_input(
     keys: Res<ButtonInput<KeyCode>>,
     session: Res<QuantumSession>,
+    locale: Res<Locale>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
 ) {
     if board.phase != RunPhase::Playing {
         if keys.just_pressed(KeyCode::Space) {
-            reset_game(&session, &mut board, &mut run);
+            reset_game(&session, &mut board, &mut run, *locale);
         }
         return;
     }
@@ -98,15 +102,20 @@ pub fn handle_input(
         } else {
             active.y += 1;
             board.active = Some(active);
-            lock_and_continue(&session, &mut board, &mut run);
+            lock_and_continue(&session, &mut board, &mut run, *locale);
         }
     }
     if input::space_just_pressed(&keys) {
-        observe_hard_drop(&session, &mut board, &mut run);
+        observe_hard_drop(&session, &mut board, &mut run, *locale);
     }
 }
 
-fn observe_hard_drop(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
+fn observe_hard_drop(
+    session: &QuantumSession,
+    board: &mut Board,
+    run: &mut GameRun,
+    locale: Locale,
+) {
     let Some(mut active) = board.active.take() else {
         return;
     };
@@ -129,19 +138,29 @@ fn observe_hard_drop(session: &QuantumSession, board: &mut Board, run: &mut Game
         run.score += fx.line_bonus * 150;
     }
 
-    run.last_event = format!("observe [{}] {}", measurement.bits, fx.label);
-    after_lock(session, board, run);
+    run.last_moment = GameplayMoment::Observe;
+    run.last_event = i18n::observe_event(
+        locale,
+        &measurement.bits,
+        i18n::observe_fx_label(locale, &measurement.bits),
+    );
+    after_lock(session, board, run, locale);
 }
 
-fn lock_and_continue(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
+fn lock_and_continue(
+    session: &QuantumSession,
+    board: &mut Board,
+    run: &mut GameRun,
+    locale: Locale,
+) {
     let Some(active) = board.active.take() else {
         return;
     };
     board.lock_piece(&active);
-    after_lock(session, board, run);
+    after_lock(session, board, run, locale);
 }
 
-fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
+fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
     let cleared = board.clear_lines();
     if cleared > 0 {
         let m = session.run_circuit(&line_circuit());
@@ -150,12 +169,13 @@ fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
         run.lines += cleared;
         run.score += bonus;
         run.level_from_lines();
-        run.last_event = format!("{cleared} line(s) [{}] +{bonus}", m.bits);
+        run.last_moment = GameplayMoment::LineClear;
+        run.last_event = i18n::line_clear_event(locale, cleared, &m.bits, bonus);
     }
-    spawn_next(session, board, run);
+    spawn_next(session, board, run, locale);
 }
 
-fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
+fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
     let tele_now = session.run_circuit(&piece_circuit());
     let tele_next = session.run_circuit(&piece_circuit());
     let rot_m = session.run_circuit(&rotation_circuit());
@@ -185,25 +205,38 @@ fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
     if !board.fits(&candidate) {
         board.phase = RunPhase::GameOver;
         board.active = None;
-        run.last_event = format!("Game over — score {}", run.score);
-        run.hint = "Space — retry".into();
+        run.last_moment = GameplayMoment::GameOver;
+        run.last_event = i18n::game_over_event(locale, run.score);
+        run.hint = i18n::retry_hint(locale).into();
         return;
     }
 
     board.active = Some(candidate);
-    run.last_event = format!("[{}] {}", now_readout.bell, kind_label(kind));
+    run.last_moment = GameplayMoment::Spawn;
+    run.last_event = i18n::spawn_event(locale, &now_readout.bell, kind_label(kind));
 }
 
-fn reset_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
+fn reset_game(
+    session: &QuantumSession,
+    board: &mut Board,
+    run: &mut GameRun,
+    locale: Locale,
+) {
     *board = Board::default();
     *run = GameRun::new(session.kind);
     run.last_event.clear();
-    spawn_next(session, board, run);
+    run.last_moment = GameplayMoment::None;
+    spawn_next(session, board, run, locale);
 }
 
 /// New board after mode change or game-over restart.
-pub fn restart_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun) {
-    reset_game(session, board, run);
+pub fn restart_game(
+    session: &QuantumSession,
+    board: &mut Board,
+    run: &mut GameRun,
+    locale: Locale,
+) {
+    reset_game(session, board, run, locale);
 }
 
 fn kind_label(k: PieceKind) -> &'static str {
