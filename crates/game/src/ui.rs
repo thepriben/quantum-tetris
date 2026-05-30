@@ -7,7 +7,7 @@ use crate::pieces::PieceKind;
 use crate::tetris;
 use bevy::ecs::system::ParamSet;
 use bevy::prelude::*;
-use quantum_town_quantum::BackendKind;
+use quantum_tetris_quantum::BackendKind;
 
 pub(crate) const BG: Color = Color::srgb(0.04, 0.07, 0.14);
 const GRID: Color = Color::srgba(0.15, 0.22, 0.38, 0.55);
@@ -151,9 +151,7 @@ fn spawn_mode_row(parent: &mut ChildSpawnerCommands, config: &GameConfig, quantu
         })
         .with_children(|row| {
             spawn_mode_button(row, ModeClassicBtn, "CLASSIC", !quantum);
-            if config.platform != GamePlatform::Wasm {
-                spawn_mode_button(row, ModeQuantumBtn, "QUANTUM", quantum);
-            }
+            spawn_mode_button(row, ModeQuantumBtn, "QUANTUM", quantum);
         });
 }
 
@@ -250,27 +248,20 @@ fn spawn_next_preview(parent: &mut ChildSpawnerCommands) {
 
 #[allow(clippy::type_complexity)]
 pub(crate) fn handle_mode_buttons(
-    config: Res<GameConfig>,
+    _config: Res<GameConfig>,
     mut session: ResMut<QuantumSession>,
     mut board: ResMut<Board>,
     mut run: ResMut<GameRun>,
     classic: Query<&Interaction, (Changed<Interaction>, With<ModeClassicBtn>, With<Button>)>,
     quantum: Query<&Interaction, (Changed<Interaction>, With<ModeQuantumBtn>, With<Button>)>,
 ) {
-    if config.platform == GamePlatform::Wasm {
-        return;
-    }
-
     let pick_classic = classic.iter().any(|i| *i == Interaction::Pressed);
     let pick_quantum = quantum.iter().any(|i| *i == Interaction::Pressed);
 
     if pick_classic {
         apply_mode(&mut session, &mut board, &mut run, BackendKind::Classic);
     } else if pick_quantum {
-        #[cfg(feature = "qiskit")]
-        apply_mode(&mut session, &mut board, &mut run, BackendKind::Qiskit);
-        #[cfg(not(feature = "qiskit"))]
-        apply_mode(&mut session, &mut board, &mut run, BackendKind::Classic);
+        apply_mode(&mut session, &mut board, &mut run, BackendKind::Quantum);
     }
 }
 

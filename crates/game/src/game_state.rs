@@ -2,7 +2,7 @@
 
 use crate::pieces::PieceFamily;
 use bevy::prelude::*;
-use quantum_town_quantum::BackendKind;
+use quantum_tetris_quantum::BackendKind;
 
 #[derive(Resource, Debug)]
 pub struct GameRun {

@@ -18,7 +18,7 @@ command -v wasm-bindgen >/dev/null || {
 rustup target add wasm32-unknown-unknown
 
 echo "→ cargo build (wasm32, release)…"
-CARGO_TARGET_DIR=target cargo build --lib -p quantum-town-la --release \
+CARGO_TARGET_DIR=target cargo build --lib -p quantum-tetris --release \
   --no-default-features --features wasm \
   --target wasm32-unknown-unknown
 
@@ -29,7 +29,7 @@ mkdir -p "$OUT"
 echo "→ wasm-bindgen…"
 wasm-bindgen --out-dir "$OUT" --target web \
   --no-typescript \
-  target/wasm32-unknown-unknown/release/quantum_town_la.wasm
+  target/wasm32-unknown-unknown/release/quantum_tetris.wasm
 
 echo "OK — open docs/play.html via a local server (see docs/WASM.md)"
 du -sh "$OUT" 2>/dev/null || true

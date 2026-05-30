@@ -1,4 +1,4 @@
-//! **Quantum Tetris: LA** — circuit-driven Tetris, classic or Qiskit.
+//! **Quantum Tetris** — circuit-driven Tetris, classic or Qiskit.
 
 pub mod app;
 pub mod board;

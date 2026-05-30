@@ -1,6 +1,6 @@
-//! Native desktop binary for Quantum Tetris: LA.
+//! Native desktop binary for Quantum Tetris.
 
-use quantum_town_la::{run_game, GameConfig};
+use quantum_tetris::{run_game, GameConfig};
 
 fn main() {
     #[cfg(feature = "desktop")]

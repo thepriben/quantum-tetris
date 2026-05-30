@@ -3,7 +3,7 @@
 use std::io::Write;
 use std::process::{Command, Stdio};
 
-use quantum_town_quantum::QuantumCircuit;
+use quantum_tetris_quantum::QuantumCircuit;
 
 fn python_ready() -> bool {
     if std::env::var("QUANTUM_SKIP_PYTHON_TESTS").is_ok() {

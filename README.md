@@ -1,9 +1,9 @@
-# Quantum Tetris: LA
+# Quantum Tetris
 
-[![CI](https://github.com/thepriben/quantum-town-la/actions/workflows/ci.yml/badge.svg)](https://github.com/thepriben/quantum-town-la/actions/workflows/ci.yml)
+[![CI](https://github.com/thepriben/quantum-tetris/actions/workflows/ci.yml/badge.svg)](https://github.com/thepriben/quantum-tetris/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Quantum Tetris** — neon arcade stacker where **every piece, spin, and drop speed** comes from a small quantum circuit. Play in **classic** mode (uniform random) or **Qiskit Aer** (Born-rule distributions).
+**Quantum Tetris** — neon arcade stacker where **every piece, spin, and drop speed** comes from a small quantum circuit. Play in **classic** mode (uniform random) or **quantum** mode (Born-rule distributions, Qiskit Aer on desktop).
 
 ---
 
@@ -11,29 +11,29 @@
 
 ```bash
 cp .env.example .env
-cargo run -p quantum-town-la
+cargo run -p quantum-tetris
 ```
 
 | Mode | Command |
 | --- | --- |
-| **Classic** (default) | `QUANTUM_MODE=classic cargo run -p quantum-town-la` |
-| **Qiskit** | `QUANTUM_MODE=qiskit cargo run -p quantum-town-la` |
+| **Classic** (default) | `QUANTUM_MODE=classic cargo run -p quantum-tetris` |
+| **Quantum / Qiskit** | `QUANTUM_MODE=qiskit cargo run -p quantum-tetris` |
 
 Qiskit needs Python 3 and `pip install -r scripts/requirements.txt`. If Aer is unavailable, the game falls back to classic.
 
 ### What works where
 
-| Where | Classic | Qiskit (Python Aer) |
+| Where | Classic | Quantum |
 | --- | --- | --- |
-| **Your Mac** (`cargo run`) | yes | yes — `QUANTUM_MODE=qiskit` |
-| **GitHub Actions CI** | yes (tests) | yes — job `quantum-qiskit` on every push |
-| **Browser / GitHub Pages** | yes (WASM) | **no** — no Python in the browser |
+| **Your Mac** (`cargo run`) | yes | yes — Qiskit Aer via Python |
+| **GitHub Actions CI** | yes (tests) | yes — job `quantum-qiskit` + Born/Qiskit parity |
+| **Browser / GitHub Pages** | yes (WASM) | yes — Born-rule statevector (Qiskit-matched) |
 
-The site deploys a **WASM** build: circuits run in Rust with uniform random bits. **Qiskit cannot run inside a web page**; it needs a Python subprocess (desktop only).
+The browser build runs a **Rust statevector simulator** with the same gate set as Qiskit Aer. Probabilities are cross-checked against Qiskit in CI. Desktop quantum mode uses the real **Qiskit Aer** subprocess.
 
-On GitHub, Qiskit is validated by CI (`cargo test` + `scripts/quantum_shim.py`). To **play** with Born-rule distributions, use the desktop game with Qiskit locally.
+**GitHub Pages** requires a **public** repository on the free plan.
 
-**GitHub Pages** also requires a **public** repository on the free plan (private repos block Pages).
+**Play online:** [thepriben.github.io/quantum-tetris/play.html](https://thepriben.github.io/quantum-tetris/play.html)
 
 ---
 
@@ -45,6 +45,8 @@ On GitHub, Qiskit is validated by CI (`cargo test` + `scripts/quantum_shim.py`).
 | **↑** | **Rotate** |
 | **↓** | **Speed up** (soft drop) |
 | **Space** | **Observe!** — hard drop + quantum bonus |
+
+In-game **CLASSIC** / **QUANTUM** buttons switch modes (browser and desktop).
 
 ---
 
@@ -68,7 +70,7 @@ Details → [docs/QUANTUM.md](docs/QUANTUM.md) · Browser → [docs/WASM.md](doc
 
 ```
 crates/game/     Bevy Tetris + HUD
-crates/quantum/  Circuit IR + classic / Qiskit backends
+crates/quantum/  Circuit IR + classic / Born / Qiskit backends
 docs/            WASM bundle + GitHub Pages
 scripts/         build_wasm.sh, quantum_shim.py
 ```

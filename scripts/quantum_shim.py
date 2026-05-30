@@ -69,6 +69,20 @@ def _sample_bits(probabilities: list[tuple[str, float]]) -> str:
     return probabilities[-1][0]
 
 
+def _exact_probabilities(circuit: dict[str, Any]) -> dict[str, Any]:
+    from qiskit.quantum_info import Statevector
+
+    qc = _build_qiskit_circuit(circuit)
+    qc_no_meas = qc.remove_final_measurements(inplace=False)
+    statevector = Statevector.from_instruction(qc_no_meas)
+    width = int(circuit["qubits"])
+    probabilities = [
+        (format(index, f"0{width}b"), float(abs(statevector[index]) ** 2))
+        for index in range(1 << width)
+    ]
+    return {"bits": probabilities[0][0], "probabilities": probabilities}
+
+
 def _run_qiskit(circuit: dict[str, Any]) -> dict[str, Any]:
     from qiskit_aer import AerSimulator
 
@@ -102,8 +116,12 @@ def main() -> None:
     if backend != "qiskit":
         _fail(f"unsupported backend: {backend} (only qiskit is enabled)")
 
+    mode = payload.get("mode", "sample")
     try:
-        result = _run_qiskit(circuit)
+        if mode == "exact":
+            result = _exact_probabilities(circuit)
+        else:
+            result = _run_qiskit(circuit)
     except ImportError as error:
         _fail(
             f"Missing Python package ({error}). "

@@ -1,11 +1,11 @@
-use quantum_town_quantum::{BackendKind, ClassicBackend, QuantumBackend, QuantumCircuit};
+use quantum_tetris_quantum::{BackendKind, ClassicBackend, QuantumBackend, QuantumCircuit};
 
 #[test]
 fn backend_parse_aliases() {
     assert_eq!(BackendKind::parse("classic"), BackendKind::Classic);
     assert_eq!(BackendKind::parse("random"), BackendKind::Classic);
-    #[cfg(feature = "backend-qiskit")]
-    assert_eq!(BackendKind::parse("qiskit"), BackendKind::Qiskit);
+    assert_eq!(BackendKind::parse("qiskit"), BackendKind::Quantum);
+    assert_eq!(BackendKind::parse("born"), BackendKind::Quantum);
 }
 
 #[test]

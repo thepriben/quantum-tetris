@@ -1,40 +1,32 @@
-//! Backend adapters: **classic** uniform random and **Qiskit Aer** (Python).
+//! Backend adapters: **classic** uniform random, **Born** statevector, and **Qiskit Aer** (Python).
 
+mod born;
 mod classic;
 #[cfg(feature = "backend-qiskit")]
 mod qiskit;
 
+pub use born::{born_probabilities, BornBackend};
 pub use classic::ClassicBackend;
 #[cfg(feature = "backend-qiskit")]
 pub use qiskit::QiskitBackend;
 
 use crate::{QuantumBackend, QuantumError};
 
-/// Supported backends for Quantum Tetris: LA.
+/// Supported backends for Quantum Tetris.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BackendKind {
-    /// Uniform random bitstrings — arcade baseline, WASM-friendly.
+    /// Uniform random bitstrings — arcade baseline.
     Classic,
-    /// Qiskit Aer via `scripts/quantum_shim.py` (desktop / CI).
-    #[cfg(feature = "backend-qiskit")]
-    Qiskit,
+    /// Born-rule distributions: Qiskit Aer on desktop, statevector simulator in WASM.
+    Quantum,
 }
 
 impl BackendKind {
-    /// Parse `classic` or `qiskit` (`quantum` is kept as a Qiskit alias).
+    /// Parse `classic`, `quantum`, `qiskit`, or `born`.
     pub fn parse(name: &str) -> Self {
         match name.trim().to_ascii_lowercase().as_str() {
             "classic" | "random" | "rand" => Self::Classic,
-            "qiskit" | "quantum" | "aer" => {
-                #[cfg(feature = "backend-qiskit")]
-                {
-                    Self::Qiskit
-                }
-                #[cfg(not(feature = "backend-qiskit"))]
-                {
-                    Self::Classic
-                }
-            }
+            "quantum" | "qiskit" | "aer" | "born" => Self::Quantum,
             _ => Self::Classic,
         }
     }
@@ -51,8 +43,16 @@ impl BackendKind {
     pub fn label(self) -> &'static str {
         match self {
             Self::Classic => "classic (uniform)",
-            #[cfg(feature = "backend-qiskit")]
-            Self::Qiskit => "quantum (Qiskit Aer)",
+            Self::Quantum => {
+                #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
+                {
+                    "quantum (Qiskit Aer)"
+                }
+                #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
+                {
+                    "quantum (Born rule · Qiskit-matched)"
+                }
+            }
         }
     }
 }
@@ -61,8 +61,16 @@ impl BackendKind {
 pub fn build_backend(kind: BackendKind) -> Result<Box<dyn QuantumBackend>, QuantumError> {
     match kind {
         BackendKind::Classic => Ok(Box::new(ClassicBackend)),
-        #[cfg(feature = "backend-qiskit")]
-        BackendKind::Qiskit => Ok(Box::new(QiskitBackend)),
+        BackendKind::Quantum => {
+            #[cfg(all(feature = "backend-qiskit", not(target_arch = "wasm32")))]
+            {
+                Ok(Box::new(QiskitBackend))
+            }
+            #[cfg(not(all(feature = "backend-qiskit", not(target_arch = "wasm32"))))]
+            {
+                Ok(Box::new(BornBackend))
+            }
+        }
     }
 }
 
@@ -73,20 +81,19 @@ mod tests {
     #[test]
     fn parse_backend_names() {
         assert_eq!(BackendKind::parse("classic"), BackendKind::Classic);
-        #[cfg(feature = "backend-qiskit")]
-        {
-            assert_eq!(BackendKind::parse("qiskit"), BackendKind::Qiskit);
-            assert_eq!(BackendKind::parse("quantum"), BackendKind::Qiskit);
-        }
-        #[cfg(not(feature = "backend-qiskit"))]
-        {
-            assert_eq!(BackendKind::parse("qiskit"), BackendKind::Classic);
-        }
+        assert_eq!(BackendKind::parse("qiskit"), BackendKind::Quantum);
+        assert_eq!(BackendKind::parse("quantum"), BackendKind::Quantum);
+        assert_eq!(BackendKind::parse("born"), BackendKind::Quantum);
         assert_eq!(BackendKind::parse("unknown"), BackendKind::Classic);
     }
 
     #[test]
     fn build_classic_backend() {
         assert!(build_backend(BackendKind::Classic).is_ok());
+    }
+
+    #[test]
+    fn build_quantum_backend() {
+        assert!(build_backend(BackendKind::Quantum).is_ok());
     }
 }

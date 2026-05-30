@@ -59,7 +59,7 @@ pub fn build_app(config: GameConfig) -> App {
         DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: "Quantum Tetris: LA".into(),
+                    title: "Quantum Tetris".into(),
                     resolution: (900, 720).into(),
                     ..default()
                 }),
@@ -81,7 +81,7 @@ pub fn run_game(config: GameConfig) {
     #[cfg(feature = "desktop")]
     eprintln!(
         "\n\
-         Quantum Tetris: LA — {}\n\
+         Quantum Tetris — {}\n\
          ─────────────────────────────────────\n\
          • Backends: classic (uniform) or Qiskit Aer (Born rule)\n\
          • Teleporter: Bell bits → family, message qubit → shape\n\

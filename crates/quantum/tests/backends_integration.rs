@@ -1,4 +1,4 @@
-use quantum_town_quantum::{build_backend, BackendKind, QuantumBackend, QuantumCircuit};
+use quantum_tetris_quantum::{build_backend, BackendKind, QuantumBackend, QuantumCircuit};
 
 #[test]
 fn box_dyn_backend_delegates_run() {

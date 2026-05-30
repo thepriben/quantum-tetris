@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quantum Tetris: LA</title>
+  <title>Quantum Tetris</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; background: #0a1220; color: #cde; line-height: 1.55; }
     h1 { color: #5ef; text-shadow: 0 0 12px rgba(80,200,255,0.4); }
@@ -14,14 +14,14 @@
   </style>
 </head>
 <body>
-  <h1>Quantum Tetris: LA</h1>
-  <p>Neon arcade Tetris where <strong>every piece</strong> is picked by a quantum circuit. Browser = classic mode. Desktop = classic or <strong>Qiskit Aer</strong>.</p>
+  <h1>Quantum Tetris</h1>
+  <p>Neon arcade Tetris where <strong>every piece</strong> is picked by a quantum circuit. The browser game runs in <strong>quantum mode</strong> by default (Born-rule simulator, Qiskit-matched). Switch to classic with the in-game button.</p>
   <p class="keys">← → MOVE · ↑ ROTATE · ↓ FASTER · SPACE OBSERVE!</p>
   <p>
     <a class="cta" href="play.html">Play in browser</a>
   </p>
-  <p><strong>Local:</strong> <code>cargo run -p quantum-town-la</code></p>
-  <p><strong>Qiskit:</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-town-la</code></p>
-  <p><a href="QUANTUM.md">Quantum circuits</a> · <a href="https://github.com/thepriben/quantum-town-la">GitHub</a></p>
+  <p><strong>Local classic:</strong> <code>cargo run -p quantum-tetris</code></p>
+  <p><strong>Local Qiskit Aer:</strong> <code>QUANTUM_MODE=qiskit cargo run -p quantum-tetris</code></p>
+  <p><a href="QUANTUM.md">Quantum circuits</a> · <a href="https://github.com/thepriben/quantum-tetris">GitHub</a></p>
 </body>
 </html>
