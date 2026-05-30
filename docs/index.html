@@ -11,7 +11,7 @@
   <header class="site-header">
     <div>
       <h1 data-i18n="home.title">Quantum Tetris</h1>
-      <p class="tagline" data-i18n="home.subtitle">Tetris — randomness from circuits, not a dice roll</p>
+      <p class="tagline" data-i18n="home.subtitle">Tetris — randomness from quantum circuits</p>
     </div>
     <div class="lang-flags" role="group" aria-label="Language">
       <button type="button" class="lang-btn" data-lang="en" data-i18n="lang.en" data-i18n-attr="title" title="English" aria-label="English">
@@ -44,7 +44,7 @@
           <div id="loader">
             <div class="spinner" aria-hidden="true"></div>
             <span id="loader-text" data-i18n="play.starting">Loading…</span>
-            <span class="loader-hint" data-i18n="play.hint">First load downloads ~70 MB — please wait.</span>
+            <span class="loader-hint" data-i18n="play.hint">Initial download (~70 MB). Wait for the progress bar to finish.</span>
           </div>
           <p id="error" role="alert"></p>
         </div>
@@ -52,15 +52,15 @@
     </section>
 
     <section class="col-guide">
-      <p class="lead" data-i18n="home.lead" data-i18n-html>Looks like Tetris. Every roll (piece, speed, bonus) is a quantum measurement — Qiskit on desktop, matched simulator in the browser.</p>
-      <p class="principle" data-i18n="home.principle" data-i18n-html><strong>You:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
+      <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Every random outcome (piece, speed, bonus) comes from a quantum circuit measurement — Qiskit Aer on desktop, matched statevector simulator in the browser.</p>
+      <p class="principle" data-i18n="home.principle" data-i18n-html><strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
 
       <h2 data-i18n="home.quantumTitle">Mechanics</h2>
       <ul class="moment-list">
         <li class="moment moment--quantum">
           <h3 data-i18n="home.moment.piece.title">Active piece & “next”</h3>
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
-          <p class="moment-game" data-i18n="home.moment.piece.game">Which shape plays, and what the next preview shows.</p>
+          <p class="moment-game" data-i18n="home.moment.piece.game">Sets the active shape and the next preview.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
           <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> ×2 — Bell pair → family (I, O, T…), message qubit → variant.</p>
           <figure class="circuit-fig">
@@ -70,7 +70,7 @@
         <li class="moment moment--quantum">
           <h3 data-i18n="home.moment.brain.title">Rotation & column</h3>
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
-          <p class="moment-game" data-i18n="home.moment.brain.game">Spawn orientation and which column the piece enters.</p>
+          <p class="moment-game" data-i18n="home.moment.brain.game">Sets spawn orientation and entry column.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
           <p class="moment-quantum" data-i18n="home.moment.brain.quantum" data-i18n-html><code>imp-brain-v1</code> — two measured bits mapped to rotation and column.</p>
           <figure class="circuit-fig">
@@ -80,7 +80,7 @@
         <li class="moment moment--quantum">
           <h3 data-i18n="home.moment.hunter.title">Drop cadence</h3>
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
-          <p class="moment-game" data-i18n="home.moment.hunter.game">Time between grid steps — speeds up with level.</p>
+          <p class="moment-game" data-i18n="home.moment.hunter.game">Interval between grid steps; decreases as level rises.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
           <p class="moment-quantum" data-i18n="home.moment.hunter.quantum" data-i18n-html><code>enemy-profile-hunter-v1</code> — drop interval drawn on each new piece.</p>
           <figure class="circuit-fig">
@@ -90,7 +90,7 @@
         <li class="moment moment--quantum">
           <h3 data-i18n="home.moment.observe.title">Space — hard drop</h3>
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
-          <p class="moment-game" data-i18n="home.moment.observe.game">Locks instantly; score bonus, sometimes an extra line.</p>
+          <p class="moment-game" data-i18n="home.moment.observe.game">Instant lock; score bonus, sometimes one extra line.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
           <p class="moment-quantum" data-i18n="home.moment.observe.quantum" data-i18n-html><code>observation-pulse-v1</code> — deliberate measure, 2 bits → bonus type.</p>
           <figure class="circuit-fig">

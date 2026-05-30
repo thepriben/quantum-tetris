@@ -8,9 +8,9 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Play online</strong></a>
 </p>
 
-Tetris where **every stochastic outcome** comes from a quantum circuit — not a PRNG. Only your keyboard moves (← → ↑ ↓) are classical. Piece shape, next preview, rotation, spawn column, drop speed, Space bonus, and line-clear multiplier are all **Born-rule measurements** (Qiskit Aer on desktop, Qiskit-matched statevector simulator in the browser).
+Tetris where **every stochastic outcome** comes from a quantum circuit — not a PRNG. Only the player's keyboard moves (← → ↑ ↓) are classical. Piece shape, next preview, rotation, spawn column, drop speed, Space bonus, and line-clear multiplier are all **Born-rule measurements** (Qiskit Aer on desktop, Qiskit-matched statevector simulator in the browser).
 
-> **You:** ← → ↑ ↓ and Space · **The game:** everything else.
+> **The player:** ← → ↑ ↓ and Space · **The game:** everything else.
 
 ---
 
@@ -22,7 +22,7 @@ Each random moment runs a named Qiskit preset. Diagrams below are generated from
 
 | | |
 |---|---|
-| **In-game** | Which shape plays, and what the **next** preview shows. |
+| **In-game** | Sets the active shape and the **next** preview. |
 | **Circuit** | `quantum-teleportation-gate-v1` ×2 — Bell pair → family (I, O, T…), message qubit → variant. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="480"></p>
@@ -31,7 +31,7 @@ Each random moment runs a named Qiskit preset. Diagrams below are generated from
 
 | | |
 |---|---|
-| **In-game** | Spawn orientation and which column the piece enters. |
+| **In-game** | Sets spawn orientation and entry column. |
 | **Circuit** | `imp-brain-v1` — two measured bits → rotation + column. |
 
 <p align="left"><img src="docs/circuits/imp-brain-v1.png" alt="imp-brain-v1" width="480"></p>
@@ -40,7 +40,7 @@ Each random moment runs a named Qiskit preset. Diagrams below are generated from
 
 | | |
 |---|---|
-| **In-game** | Time between grid steps — speeds up with level. |
+| **In-game** | Interval between grid steps; decreases as level rises. |
 | **Circuit** | `enemy-profile-hunter-v1` — drop interval drawn on each new piece. |
 
 <p align="left"><img src="docs/circuits/enemy-profile-hunter-v1.png" alt="enemy-profile-hunter-v1" width="480"></p>
@@ -49,7 +49,7 @@ Each random moment runs a named Qiskit preset. Diagrams below are generated from
 
 | | |
 |---|---|
-| **In-game** | Locks instantly; score bonus, sometimes an extra line. |
+| **In-game** | Instant lock; score bonus, sometimes one extra line. |
 | **Circuit** | `observation-pulse-v1` — deliberate measure, 2 bits → bonus type. |
 
 <p align="left"><img src="docs/circuits/observation-pulse-v1.png" alt="observation-pulse-v1" width="480"></p>
