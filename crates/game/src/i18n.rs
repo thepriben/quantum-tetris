@@ -39,15 +39,15 @@ pub enum GameplayMoment {
 pub fn circuit_explain(locale: Locale, moment: GameplayMoment) -> &'static str {
     match (locale, moment) {
         (Locale::Fr, GameplayMoment::Spawn) => {
-            "Spawn — 3 circuits Qiskit :\n\
-             • quantum-teleportation-gate-v1 : choisit la pièce (famille Bell + qubit message)\n\
-             • imp-brain-v1 : rotation et colonne d'apparition\n\
+            "Spawn — 4 mesures Qiskit :\n\
+             • quantum-teleportation-gate-v1 ×2 : pièce en cours + pièce suivante\n\
+             • imp-brain-v1 : rotation et colonne\n\
              • enemy-profile-hunter-v1 : vitesse de chute"
         }
         (Locale::En, GameplayMoment::Spawn) => {
-            "Spawn — 3 Qiskit circuits:\n\
-             • quantum-teleportation-gate-v1: picks the piece (Bell family + message qubit)\n\
-             • imp-brain-v1: rotation and spawn column\n\
+            "Spawn — 4 Qiskit measurements:\n\
+             • quantum-teleportation-gate-v1 ×2: active piece + next preview\n\
+             • imp-brain-v1: rotation and column\n\
              • enemy-profile-hunter-v1: drop speed"
         }
         (Locale::Fr, GameplayMoment::Observe) => {

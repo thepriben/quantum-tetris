@@ -5,25 +5,39 @@
 
   const T = {
     fr: {
-      'meta.title': 'Quantum Tetris',
+      'meta.title': 'Quantum Tetris — Guide quantum & gameplay',
       'meta.playTitle': 'Quantum Tetris — Jouer',
       'lang.toggle': '(en)',
+      'home.badge': 'Guide quantum & gameplay',
       'home.title': 'Quantum Tetris',
+      'home.subtitle': 'Explications · circuits Qiskit · mécaniques de jeu',
       'home.lead':
-        'Tetris néon où <strong>chaque pièce</strong> est tirée par un circuit quantique. Le jeu navigateur démarre en <strong>mode quantique</strong> (simulateur Born, calibré Qiskit). Passe en classique avec le bouton in-game.',
+        'Pas de dés classique : <strong>chaque tirage du jeu</strong> est une mesure quantique exécutée par Qiskit (ou un simulateur Born calibré dans le navigateur). Seuls tes déplacements au clavier restent classiques — tout le reste vient d\'un circuit.',
+      'home.quantumTitle': 'Ce qui est quantique dans le gameplay',
+      'home.quantumList':
+        '<ul class="quantum-list">' +
+        '<li><strong>Pièce en cours & suivante</strong> — deux tirs du circuit de téléportation (<code>quantum-teleportation-gate-v1</code>) : paire de Bell → famille (I, O, T…), qubit message → variante</li>' +
+        '<li><strong>Rotation & colonne d\'apparition</strong> — <code>imp-brain-v1</code></li>' +
+        '<li><strong>Vitesse de chute</strong> — <code>enemy-profile-hunter-v1</code></li>' +
+        '<li><strong>Chute forcée (Espace)</strong> — mesure volontaire <code>observation-pulse-v1</code></li>' +
+        '<li><strong>Ligne effacée</strong> — stabilisateur <code>q-shard-stabilizer-v1</code> (multiplicateur de score)</li>' +
+        '</ul>',
       'hint.move': 'BOUGER',
       'hint.rotate': 'TOURNER',
       'hint.faster': 'VITE',
       'hint.drop': 'POSER',
-      'home.play': 'Jouer dans le navigateur',
+      'home.play': 'Jouer maintenant',
+      'home.playNote': 'La page de jeu est épurée — retrouve ici tout le détail quantique.',
+      'home.controlsTitle': 'Contrôles (classiques — joueur)',
       'home.localClassic': 'Classique local :',
       'home.localQiskit': 'Qiskit Aer local :',
       'home.circuitsLink': 'Circuits quantiques',
       'home.github': 'GitHub',
-      'home.circuitsTitle': 'Circuits Qiskit par action',
-      'home.circuit.spawn.title': 'Nouvelle pièce',
+      'home.readme': 'Architecture (README)',
+      'home.circuitsTitle': 'Circuits Qiskit — diagrammes & effets',
+      'home.circuit.spawn.title': 'Apparition — pièce actuelle & suivante',
       'home.circuit.spawn.text':
-        'Trois circuits s\'enchaînent à chaque apparition : la <strong>téléportation</strong> choisit la forme (paire de Bell + qubit message), <strong>imp-brain</strong> fixe rotation et colonne, <strong>hunter profile</strong> règle la vitesse de chute.',
+        'À chaque spawn, <strong>quatre mesures</strong> : deux téléportations (pièce en jeu + preview «&nbsp;suiv.&nbsp;»), puis rotation/colonne et vitesse. C\'est le cœur du gameplay quantique.',
       'home.circuit.observe.title': 'Espace — chute forcée',
       'home.circuit.observe.text':
         'Le circuit <code>observation-pulse-v1</code> simule une mesure volontaire : bonus de score, parfois une ligne bonus.',
@@ -35,32 +49,43 @@
       'circuit.hunter.alt': 'Diagramme Qiskit — enemy-profile-hunter-v1 (vitesse)',
       'circuit.observe.alt': 'Diagramme Qiskit — observation-pulse-v1 (mesure volontaire)',
       'circuit.line.alt': 'Diagramme Qiskit — q-shard-stabilizer-v1 (multiplicateur)',
-      'play.home': '← Accueil',
-      'play.loading': 'Chargement…',
-      'play.starting': 'Démarrage du mode quantique…',
-      'play.ready': 'Mode quantique · bascule CLASSIQUE / QUANTIQUE in-game',
-      'play.error': 'Erreur WASM — lance ./scripts/build_wasm.sh',
+      'play.home': '← Guide quantum',
+      'play.starting': 'Chargement du moteur quantique…',
     },
     en: {
-      'meta.title': 'Quantum Tetris',
+      'meta.title': 'Quantum Tetris — Quantum & gameplay guide',
       'meta.playTitle': 'Quantum Tetris — Play',
       'lang.toggle': '(fr)',
+      'home.badge': 'Quantum & gameplay guide',
       'home.title': 'Quantum Tetris',
+      'home.subtitle': 'Explanations · Qiskit circuits · game mechanics',
       'home.lead':
-        'Neon arcade Tetris where <strong>every piece</strong> is picked by a quantum circuit. The browser game runs in <strong>quantum mode</strong> by default (Born-rule simulator, Qiskit-matched). Switch to classic with the in-game button.',
+        'No classical dice: <strong>every random draw in the game</strong> is a quantum measurement run through Qiskit (or a Born-rule simulator matched to Qiskit in the browser). Only your keyboard moves are classical — everything else comes from a circuit.',
+      'home.quantumTitle': 'What is quantum in the gameplay',
+      'home.quantumList':
+        '<ul class="quantum-list">' +
+        '<li><strong>Current & next piece</strong> — two teleportation shots (<code>quantum-teleportation-gate-v1</code>): Bell pair → family (I, O, T…), message qubit → variant</li>' +
+        '<li><strong>Rotation & spawn column</strong> — <code>imp-brain-v1</code></li>' +
+        '<li><strong>Drop speed</strong> — <code>enemy-profile-hunter-v1</code></li>' +
+        '<li><strong>Hard drop (Space)</strong> — deliberate measure <code>observation-pulse-v1</code></li>' +
+        '<li><strong>Line clear</strong> — stabilizer <code>q-shard-stabilizer-v1</code> (score multiplier)</li>' +
+        '</ul>',
       'hint.move': 'MOVE',
       'hint.rotate': 'ROTATE',
       'hint.faster': 'FASTER',
       'hint.drop': 'DROP',
-      'home.play': 'Play in browser',
+      'home.play': 'Play now',
+      'home.playNote': 'The game page is minimal — all quantum details live here.',
+      'home.controlsTitle': 'Controls (classical — player)',
       'home.localClassic': 'Local classic:',
       'home.localQiskit': 'Local Qiskit Aer:',
       'home.circuitsLink': 'Quantum circuits',
       'home.github': 'GitHub',
-      'home.circuitsTitle': 'Qiskit circuits per action',
-      'home.circuit.spawn.title': 'New piece',
+      'home.readme': 'Architecture (README)',
+      'home.circuitsTitle': 'Qiskit circuits — diagrams & effects',
+      'home.circuit.spawn.title': 'Spawn — current & next piece',
       'home.circuit.spawn.text':
-        'Three circuits run on every spawn: <strong>teleportation</strong> picks the shape (Bell pair + message qubit), <strong>imp-brain</strong> sets rotation and column, <strong>hunter profile</strong> sets drop speed.',
+        'On every spawn, <strong>four measurements</strong>: two teleportations (active piece + “next” preview), then rotation/column and speed. This is the core quantum gameplay loop.',
       'home.circuit.observe.title': 'Space — hard drop',
       'home.circuit.observe.text':
         'The <code>observation-pulse-v1</code> circuit models a deliberate measure: score bonus, sometimes an extra line.',
@@ -72,11 +97,8 @@
       'circuit.hunter.alt': 'Qiskit diagram — enemy-profile-hunter-v1 (speed)',
       'circuit.observe.alt': 'Qiskit diagram — observation-pulse-v1 (deliberate measure)',
       'circuit.line.alt': 'Qiskit diagram — q-shard-stabilizer-v1 (multiplier)',
-      'play.home': '← Home',
-      'play.loading': 'Loading…',
-      'play.starting': 'Starting quantum mode…',
-      'play.ready': 'Quantum mode · switch CLASSIC / QUANTUM in-game',
-      'play.error': 'WASM error — run ./scripts/build_wasm.sh first',
+      'play.home': '← Quantum guide',
+      'play.starting': 'Loading quantum engine…',
     },
   };
 
@@ -108,8 +130,11 @@
       }
     });
     document.title = dict['meta.title'] || document.title;
-    if (document.body.dataset.page === 'play') {
+    const page = document.body.dataset.page;
+    if (page === 'play') {
       document.title = dict['meta.playTitle'] || document.title;
+    } else if (page === 'index') {
+      document.title = dict['meta.title'] || document.title;
     }
     const btn = document.getElementById('lang-toggle');
     if (btn) btn.textContent = dict['lang.toggle'];
