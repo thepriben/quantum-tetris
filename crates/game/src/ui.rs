@@ -171,13 +171,13 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
             Text::new(i18n::lines_level(locale, 0, 1)),
             text_style(14.0, Color::srgb(0.7, 0.85, 0.95)),
         ));
-        spawn_next_preview(p);
         p.spawn((
             HudNext,
             TextSlot::Next,
             Text::new(i18n::next_piece(locale, "T")),
-            text_style(13.0, Color::srgb(0.65, 0.78, 0.92)),
+            text_style(12.0, Color::srgb(0.65, 0.78, 0.92)),
         ));
+        spawn_next_preview(p);
         p.spawn((
             HudEvent,
             TextSlot::Event,
