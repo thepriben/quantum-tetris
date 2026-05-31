@@ -8,6 +8,8 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Play online</strong></a>
 </p>
 
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/c09b7921-8ae3-41c6-b516-d941ff36349a" />
+
 Tetris where stochastic game events (piece, spawn state, cadence, bonuses…) are driven by measured quantum circuits in the default mode. The player still controls movement with ← → ↑ ↓ and Space; the game draws everything else from circuit measurements.
 
 > **The player:** ← → ↑ ↓ and Space · **The game:** everything else.
