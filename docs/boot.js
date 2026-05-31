@@ -5,6 +5,14 @@ const WASM_ASSET_VERSION = String(Date.now());
 const WASM_JS = wasmAssetUrl('./wasm/quantum_tetris.js');
 const WASM_BIN = wasmAssetUrl('./wasm/quantum_tetris_bg.wasm');
 
+class WasmLoadError extends Error {
+  constructor(kind, message) {
+    super(message);
+    this.name = 'WasmLoadError';
+    this.kind = kind;
+  }
+}
+
 let bootStarted = false;
 let pendingLocale = null;
 let setWebLocaleFn = null;
@@ -26,6 +34,11 @@ function wasmAssetUrl(path) {
   const url = new URL(path, import.meta.url);
   url.searchParams.set('v', WASM_ASSET_VERSION);
   return url;
+}
+
+function displayUrl(url) {
+  const parsed = new URL(url, window.location.href);
+  return `${parsed.pathname}${parsed.search}`;
 }
 
 /** Called from i18n.js before WASM is ready. */
@@ -62,20 +75,38 @@ function mountCanvas(frameInner, loader, onFail) {
 }
 
 async function fetchWasmBytes(url, onProgress) {
-  const res = await fetch(url, { cache: 'no-store' });
+  let res;
+  try {
+    res = await fetch(url, { cache: 'no-store' });
+  } catch (error) {
+    throw new WasmLoadError('wasmNetwork', readableError(error));
+  }
   if (!res.ok) {
-    throw new Error(`WASM HTTP ${res.status}`);
+    throw new WasmLoadError(
+      'wasmHttp',
+      `${res.status} ${res.statusText || 'HTTP error'} at ${displayUrl(url)}`,
+    );
   }
   const total = Number(res.headers.get('content-length') || 0);
   if (!res.body?.getReader || !total) {
     onProgress?.(0, 0);
-    return res.arrayBuffer();
+    try {
+      return await res.arrayBuffer();
+    } catch (error) {
+      throw new WasmLoadError('wasmNetwork', readableError(error));
+    }
   }
   const reader = res.body.getReader();
   const chunks = [];
   let loaded = 0;
   while (true) {
-    const { done, value } = await reader.read();
+    let item;
+    try {
+      item = await reader.read();
+    } catch (error) {
+      throw new WasmLoadError('wasmNetwork', readableError(error));
+    }
+    const { done, value } = item;
     if (done) break;
     chunks.push(value);
     loaded += value.length;
@@ -99,15 +130,36 @@ function assertWasmMagic(buffer) {
     magic[2] !== 0x73 ||
     magic[3] !== 0x6d
   ) {
-    throw new Error('response is not a WebAssembly binary');
+    throw new WasmLoadError(
+      'wasmNotBinary',
+      `${buffer.byteLength} bytes; first bytes ${hexPrefix(buffer) || 'none'}`,
+    );
   }
 }
 
-function errorDetail(error) {
+function hexPrefix(buffer) {
+  return Array.from(new Uint8Array(buffer, 0, Math.min(8, buffer.byteLength)))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function readableError(error) {
   if (error instanceof Error && error.message) {
-    return ` (${error.message})`;
+    return error.message;
   }
-  return '';
+  return String(error || 'unknown error');
+}
+
+function wasmErrorMessage(error) {
+  const key = error instanceof WasmLoadError ? `error.${error.kind}` : 'error.wasmInit';
+  const fallback = t('error.wasmUnknown', 'WASM failed to load.');
+  const base = t(key, fallback);
+  const detail = readableError(error);
+  return `${base}\n${t('error.detail', 'Detail')}: ${detail}`;
+}
+
+function errorMessageWithDetail(key, fallback, detail) {
+  return `${t(key, fallback)}\n${t('error.detail', 'Detail')}: ${detail}`;
 }
 
 export async function bootGame({ frameInner, loader, errorEl }) {
@@ -129,13 +181,21 @@ export async function bootGame({ frameInner, loader, errorEl }) {
     mod = await import(WASM_JS.href);
   } catch (e) {
     console.error(e);
-    fail(t('error.wasmJs', 'WASM JavaScript bundle missing'));
+    fail(errorMessageWithDetail(
+      'error.wasmJs',
+      'WASM JavaScript bundle missing',
+      readableError(e),
+    ));
     return;
   }
 
   const { default: init, run_wasm, set_web_locale } = mod;
   if (typeof init !== 'function' || typeof run_wasm !== 'function') {
-    fail(t('error.wasmExports', 'WASM exports missing'));
+    fail(errorMessageWithDetail(
+      'error.wasmExports',
+      'WASM exports missing',
+      `loaded ${displayUrl(WASM_JS.href)}`,
+    ));
     return;
   }
 
@@ -159,10 +219,14 @@ export async function bootGame({ frameInner, loader, errorEl }) {
     });
     assertWasmMagic(wasmBytes);
     loaderText(t('play.initializing', 'Starting engine…'));
-    await init(wasmBytes);
+    try {
+      await init(wasmBytes);
+    } catch (error) {
+      throw new WasmLoadError('wasmInit', readableError(error));
+    }
   } catch (e) {
     console.error(e);
-    fail(`${t('error.wasmBinary', 'WASM binary unavailable or failed to initialize')}${errorDetail(e)}`);
+    fail(wasmErrorMessage(e));
     return;
   }
 

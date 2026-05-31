@@ -306,6 +306,7 @@ code {
   text-align: center;
   padding: 0.75rem;
   line-height: 1.5;
+  white-space: pre-line;
 }
 #error.visible { display: block; }
 

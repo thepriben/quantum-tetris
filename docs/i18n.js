@@ -50,8 +50,16 @@
       'error.wasmJs':
         'Bundle JavaScript WASM introuvable — lancez ./scripts/build_wasm.sh puis servez docs/.',
       'error.wasmExports': 'Le bundle WASM ne contient pas les exports attendus.',
-      'error.wasmBinary':
-        'Binaire WASM introuvable ou invalide — relancez ./scripts/build_wasm.sh ou le workflow Pages.',
+      'error.wasmNetwork':
+        'Téléchargement du jeu interrompu. Vérifiez la connexion puis rechargez la page.',
+      'error.wasmHttp':
+        'Le binaire WASM n’est pas publié à l’URL attendue. Le workflow Pages n’a probablement pas terminé ou l’artefact est incomplet.',
+      'error.wasmNotBinary':
+        'L’URL du WASM répond, mais ne renvoie pas un binaire WebAssembly. GitHub Pages sert peut-être une page HTML d’erreur ou un cache incomplet.',
+      'error.wasmInit':
+        'Le binaire WASM est téléchargé, mais le navigateur ne peut pas l’initialiser. Rechargez sans cache ; si ça persiste, le JS et le WASM publiés ne correspondent peut-être pas.',
+      'error.wasmUnknown': 'Chargement WASM impossible.',
+      'error.detail': 'Détail',
       'error.canvas': 'Le canvas n\'a pas démarré — recharger la page.',
       'error.run': 'Erreur au lancement du jeu — voir la console.',
     },
@@ -101,8 +109,16 @@
       'error.wasmJs':
         'WASM JavaScript bundle missing — run ./scripts/build_wasm.sh, then serve docs/.',
       'error.wasmExports': 'WASM bundle is present but does not expose the expected game entry points.',
-      'error.wasmBinary':
-        'WASM binary missing or invalid — rerun ./scripts/build_wasm.sh or the Pages workflow.',
+      'error.wasmNetwork':
+        'Game download was interrupted. Check the connection, then reload the page.',
+      'error.wasmHttp':
+        'The WASM binary is not published at the expected URL. The Pages workflow may still be running or the artifact is incomplete.',
+      'error.wasmNotBinary':
+        'The WASM URL responded, but it did not return a WebAssembly binary. GitHub Pages may be serving an HTML error page or an incomplete cache.',
+      'error.wasmInit':
+        'The WASM binary downloaded, but the browser could not initialize it. Hard-refresh the page; if it persists, the published JS and WASM may not match.',
+      'error.wasmUnknown': 'WASM failed to load.',
+      'error.detail': 'Detail',
       'error.canvas': 'Canvas did not start — reload the page.',
       'error.run': 'Game failed to start — see console.',
     },
