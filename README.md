@@ -25,7 +25,7 @@ Each stochastic moment invokes a circuit from the shared preset list (see [`docs
 | | |
 |---|---|
 | **In-game** | Sets the falling tetromino. |
-| **Circuit** | `quantum-teleportation-gate-v1` (×2) — paired teleportation-inspired Bell measurements; Bell bits pick the family (I, O, T…) and paired message bits choose the concrete shape. |
+| **Circuit** | `quantum-teleportation-gate-v1` — one teleportation-inspired Bell measurement; the 3-bit readout maps directly to the active tetromino. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="720"></p>
 
@@ -131,7 +131,7 @@ flowchart TB
 
 ### Spawn pipeline
 
-Four measurements run before each piece appears:
+Three measurements run before each piece appears:
 
 ```mermaid
 sequenceDiagram
@@ -139,10 +139,8 @@ sequenceDiagram
   participant Q as QuantumSession
   participant M as measurement_fx.rs
 
-  T->>Q: piece_circuit() — teleportation-inspired shot #1
-  Q-->>T: Bell + message bits
-  T->>Q: piece_circuit() — teleportation-inspired partner shot
-  Q-->>T: partner message bit → active piece
+  T->>Q: piece_circuit() — teleportation-inspired 3-bit draw
+  Q-->>T: bits → active piece
   T->>Q: rotation_circuit() — imp-brain-v1
   Q-->>M: rotation + spawn column
   T->>Q: speed_circuit() — hunter-profile-v1

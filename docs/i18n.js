@@ -23,7 +23,7 @@
       'home.moment.piece.title': 'Tirage de la pièce',
       'home.moment.piece.game': 'Détermine le tétromino en chute.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> (×2) — mesures de Bell couplées inspirées de la téléportation ; les bits de Bell fixent la famille (I, O, T…) et les bits message couplés choisissent la forme concrète.',
+        '<code>quantum-teleportation-gate-v1</code> — une mesure de Bell inspirée de la téléportation ; le résultat 3 bits choisit directement le tétromino actif.',
       'home.moment.brain.title': 'Rotation & colonne',
       'home.moment.brain.game': 'Fixe l\'orientation à l\'apparition et la colonne d\'entrée.',
       'home.moment.brain.quantum':
@@ -82,7 +82,7 @@
       'home.moment.piece.title': 'Active piece draw',
       'home.moment.piece.game': 'Sets the falling tetromino.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> (×2) — paired teleportation-inspired Bell measurements; Bell bits pick the family (I, O, T…) and paired message bits choose the concrete shape.',
+        '<code>quantum-teleportation-gate-v1</code> — one teleportation-inspired Bell measurement; the 3-bit readout maps directly to the active tetromino.',
       'home.moment.brain.title': 'Rotation & column',
       'home.moment.brain.game': 'Sets spawn orientation and entry column.',
       'home.moment.brain.quantum':
