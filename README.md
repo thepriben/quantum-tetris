@@ -20,12 +20,12 @@ Tetris where stochastic game events (piece, spawn state, cadence, bonuses…) ar
 
 Each stochastic moment invokes a circuit from the shared preset list (see [`docs/QUANTUM.md`](docs/QUANTUM.md)). The diagrams below are generated from the same gate definitions mirrored by [`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py).
 
-### Active piece & “next”
+### Active Piece Draw
 
 | | |
 |---|---|
-| **In-game** | Sets the active shape and the **next** preview. |
-| **Circuit** | `quantum-teleportation-gate-v1` (×2) — teleportation-inspired Bell measurement; measured bits pick family (I, O, T…) and variant. |
+| **In-game** | Sets the falling tetromino. |
+| **Circuit** | `quantum-teleportation-gate-v1` (×2) — paired teleportation-inspired Bell measurements; Bell bits pick the family (I, O, T…) and paired message bits choose the concrete shape. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="720"></p>
 
@@ -90,8 +90,6 @@ python3 -m http.server 8080 --directory docs
 # → http://localhost:8080/
 ```
 
-If the linker fails with `errno=28`, free disk space or run `./scripts/clean_build.sh`. The WASM bundle is large, so the first browser load can take a moment. `wasm-opt` is disabled by default because current Binaryen builds can break the `wasm-bindgen` externref table export used by Bevy.
-
 **Controls:** ← → move · ↑ rotate · ↓ soft drop · **Space** hard drop + quantum observe (`observation-pulse-v1`).
 
 ---
@@ -142,9 +140,9 @@ sequenceDiagram
   participant M as measurement_fx.rs
 
   T->>Q: piece_circuit() — teleportation-inspired shot #1
-  Q-->>T: bits → active piece
-  T->>Q: piece_circuit() — teleportation-inspired shot #2
-  Q-->>T: bits → next piece (preview)
+  Q-->>T: Bell + message bits
+  T->>Q: piece_circuit() — teleportation-inspired partner shot
+  Q-->>T: partner message bit → active piece
   T->>Q: rotation_circuit() — imp-brain-v1
   Q-->>M: rotation + spawn column
   T->>Q: speed_circuit() — hunter-profile-v1

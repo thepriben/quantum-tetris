@@ -32,7 +32,7 @@ QUANTUM_BACKEND=classic|quantum
 
 | Label | Qubits | When | Game effect |
 | --- | --- | --- | --- |
-| `quantum-teleportation-gate-v1` | 3 | Each spawn (×2) | **Shot 1**: current piece. **Shot 2**: next piece. Bell-measurement bits (q0,q1) → family; message/receiver bit (q2) → variant |
+| `quantum-teleportation-gate-v1` | 3 | Each spawn (×2) | Paired shots choose the current piece. Bell-measurement bits (q0,q1) → family; the two message/receiver bits (q2) disambiguate variants |
 | `imp-brain-v1` | 2 | Each spawn | Rotation 0–3 + spawn column |
 | `enemy-profile-hunter-v1` | 2 | Each spawn | Gravity interval (seconds) |
 | `observation-pulse-v1` | 2 | Space | Hard-drop bonus |

@@ -1,6 +1,6 @@
 //! 10×20 playfield.
 
-use crate::pieces::{cells, PieceFamily, PieceKind};
+use crate::pieces::{cells, PieceKind};
 use bevy::prelude::*;
 
 pub const COLS: usize = 10;
@@ -31,8 +31,6 @@ pub enum RunPhase {
 pub struct Board {
     pub cells: [[Option<PieceKind>; COLS]; ROWS],
     pub active: Option<ActivePiece>,
-    pub next: PieceKind,
-    pub next_family: PieceFamily,
     pub phase: RunPhase,
 }
 
@@ -41,8 +39,6 @@ impl Default for Board {
         Self {
             cells: [[None; COLS]; ROWS],
             active: None,
-            next: PieceKind::T,
-            next_family: PieceFamily::Fork,
             phase: RunPhase::Playing,
         }
     }

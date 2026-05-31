@@ -86,13 +86,13 @@ pub fn circuit_explain(locale: Locale, moment: GameplayMoment) -> &'static str {
     match (locale, moment) {
         (Locale::Fr, GameplayMoment::Spawn) => {
             "Apparition - 4 circuits:\n\
-             - quantum-teleportation-gate-v1 x2: piece active + suivante\n\
+             - quantum-teleportation-gate-v1 x2: tirage couple de la piece active\n\
              - imp-brain-v1: rotation et colonne\n\
              - enemy-profile-hunter-v1: intervalle de chute"
         }
         (Locale::En, GameplayMoment::Spawn) => {
             "Spawn - 4 circuits:\n\
-             - quantum-teleportation-gate-v1 x2: active piece + next preview\n\
+             - quantum-teleportation-gate-v1 x2: paired active-piece draw\n\
              - imp-brain-v1: rotation and column\n\
              - enemy-profile-hunter-v1: drop interval"
         }
@@ -166,13 +166,6 @@ pub fn lines_level(locale: Locale, lines: u32, level: u32) -> String {
     match locale {
         Locale::Fr => format!("lignes {lines} / niv {level}"),
         Locale::En => format!("lines {lines} / lv {level}"),
-    }
-}
-
-pub fn next_piece(locale: Locale, label: &str) -> String {
-    match locale {
-        Locale::Fr => format!("suiv. {label}"),
-        Locale::En => format!("next {label}"),
     }
 }
 

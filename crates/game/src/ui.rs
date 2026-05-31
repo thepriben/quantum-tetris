@@ -4,9 +4,7 @@ use crate::board::{Board, COLS, ROWS};
 use crate::config::QuantumSession;
 use crate::game_state::GameRun;
 use crate::i18n::{self, Locale};
-use crate::pieces::PieceKind;
 use crate::tetris;
-use bevy::ecs::system::ParamSet;
 use bevy::prelude::*;
 use quantum_tetris_quantum::BackendKind;
 
@@ -28,13 +26,6 @@ pub(crate) struct GridCell {
 pub(crate) struct HudScore;
 #[derive(Component)]
 pub(crate) struct HudLines;
-#[derive(Component)]
-pub(crate) struct HudNext;
-#[derive(Component)]
-pub(crate) struct NextPreviewCell {
-    pub col: usize,
-    pub row: usize,
-}
 #[derive(Component)]
 pub(crate) struct HudBits;
 #[derive(Component)]
@@ -69,7 +60,6 @@ pub(crate) struct HintDropLabel;
 pub(crate) enum TextSlot {
     Score,
     Lines,
-    Next,
     Event,
     Bits,
     CircuitTitle,
@@ -171,13 +161,6 @@ fn spawn_side_panel(parent: &mut ChildSpawnerCommands, run: &GameRun, locale: Lo
             Text::new(i18n::lines_level(locale, 0, 1)),
             text_style(14.0, Color::srgb(0.7, 0.85, 0.95)),
         ));
-        p.spawn((
-            HudNext,
-            TextSlot::Next,
-            Text::new(i18n::next_piece(locale, "T")),
-            text_style(12.0, Color::srgb(0.65, 0.78, 0.92)),
-        ));
-        spawn_next_preview(p);
         p.spawn((
             HudEvent,
             TextSlot::Event,
@@ -406,51 +389,6 @@ fn mode_button_colors(selected: bool) -> (Color, Color, Color) {
     }
 }
 
-const PREVIEW: usize = 4;
-const PREVIEW_CELL: f32 = 18.0;
-
-fn spawn_next_preview(parent: &mut ChildSpawnerCommands) {
-    parent
-        .spawn((
-            Node {
-                flex_direction: FlexDirection::Column,
-                row_gap: Val::Px(2.0),
-                padding: UiRect::all(Val::Px(6.0)),
-                border: UiRect::all(Val::Px(1.0)),
-                border_radius: BorderRadius::all(Val::Px(6.0)),
-                ..default()
-            },
-            BackgroundColor(Color::srgba(0.05, 0.08, 0.16, 0.95)),
-            BorderColor::all(Color::srgb(0.25, 0.4, 0.6)),
-        ))
-        .with_children(|wrap| {
-            for row in 0..PREVIEW {
-                wrap.spawn(Node {
-                    flex_direction: FlexDirection::Row,
-                    column_gap: Val::Px(2.0),
-                    height: Val::Px(PREVIEW_CELL),
-                    ..default()
-                })
-                .with_children(|line| {
-                    for col in 0..PREVIEW {
-                        line.spawn((
-                            NextPreviewCell { col, row },
-                            Node {
-                                width: Val::Px(PREVIEW_CELL),
-                                height: Val::Px(PREVIEW_CELL),
-                                min_width: Val::Px(PREVIEW_CELL),
-                                min_height: Val::Px(PREVIEW_CELL),
-                                border_radius: BorderRadius::all(Val::Px(3.0)),
-                                ..default()
-                            },
-                            BackgroundColor(GRID),
-                        ));
-                    }
-                });
-            }
-        });
-}
-
 #[cfg(not(target_arch = "wasm32"))]
 #[allow(clippy::type_complexity)]
 pub(crate) fn handle_lang_button(
@@ -496,22 +434,15 @@ pub(crate) fn refresh_ui(
     board: Res<Board>,
     run: Res<GameRun>,
     locale: Res<Locale>,
-    mut bg_queries: ParamSet<(
-        Query<(&GridCell, &mut BackgroundColor)>,
-        Query<(&NextPreviewCell, &mut BackgroundColor), Without<GridCell>>,
-    )>,
+    mut grid_cells: Query<(&GridCell, &mut BackgroundColor)>,
     mut mode_buttons: Query<
         (&ModeBtn, &mut BackgroundColor, &mut BorderColor),
-        (With<Button>, Without<GridCell>, Without<NextPreviewCell>),
+        (With<Button>, Without<GridCell>),
     >,
     mut texts: Query<(&TextSlot, &mut Text)>,
 ) {
-    for (cell, mut bg) in bg_queries.p0().iter_mut() {
+    for (cell, mut bg) in grid_cells.iter_mut() {
         *bg = BackgroundColor(board.display_color(cell.col, cell.row).unwrap_or(GRID));
-    }
-
-    for (cell, mut bg) in bg_queries.p1().iter_mut() {
-        *bg = BackgroundColor(preview_color(board.next, cell.col, cell.row).unwrap_or(GRID));
     }
 
     for (mode, mut bg, mut border) in mode_buttons.iter_mut() {
@@ -524,7 +455,6 @@ pub(crate) fn refresh_ui(
         **t = match slot {
             TextSlot::Score => run.score.to_string(),
             TextSlot::Lines => i18n::lines_level(*locale, run.lines, run.level),
-            TextSlot::Next => i18n::next_piece(*locale, next_label(board.next)),
             TextSlot::Bits => {
                 if run.last_bits.is_empty() {
                     "-".into()
@@ -552,15 +482,6 @@ pub(crate) fn refresh_ui(
             TextSlot::LangToggle => locale.toggle_label().into(),
         };
     }
-}
-
-fn preview_color(kind: PieceKind, col: usize, row: usize) -> Option<Color> {
-    for (pc, pr) in crate::pieces::preview_shape(kind) {
-        if pc == col && pr == row {
-            return Some(kind.color());
-        }
-    }
-    None
 }
 
 fn panel_node() -> impl Bundle {
@@ -606,16 +527,4 @@ fn text_style(size: f32, color: Color) -> impl Bundle {
             ..default()
         },
     )
-}
-
-fn next_label(k: PieceKind) -> &'static str {
-    match k {
-        PieceKind::I => "I",
-        PieceKind::O => "O",
-        PieceKind::T => "T",
-        PieceKind::S => "S",
-        PieceKind::Z => "Z",
-        PieceKind::J => "J",
-        PieceKind::L => "L",
-    }
 }

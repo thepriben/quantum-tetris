@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
-  <link rel="stylesheet" href="site.css?v=20260531-errors">
-  <script src="i18n.js?v=20260531-errors"></script>
+  <link rel="stylesheet" href="site.css?v=20260531-no-preview">
+  <script src="i18n.js?v=20260531-no-preview"></script>
 </head>
 <body>
   <header class="site-header">
@@ -59,11 +59,11 @@
       <h2 data-i18n="home.quantumTitle">Mechanics</h2>
       <ul class="moment-list">
         <li class="moment moment--quantum">
-          <h3 data-i18n="home.moment.piece.title">Active piece & “next”</h3>
+          <h3 data-i18n="home.moment.piece.title">Active piece draw</h3>
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
-          <p class="moment-game" data-i18n="home.moment.piece.game">Sets the active shape and the next preview.</p>
+          <p class="moment-game" data-i18n="home.moment.piece.game">Sets the falling tetromino.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> (×2) — teleportation-inspired Bell measurement; measured bits pick the family (I, O, T…) and variant.</p>
+          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> (×2) — paired teleportation-inspired Bell measurements; Bell bits pick the family (I, O, T…) and paired message bits choose the concrete shape.</p>
           <figure class="circuit-fig">
             <img src="circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" loading="lazy" decoding="async">
           </figure>
@@ -119,7 +119,7 @@
   </div>
 
   <script type="module">
-    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js?v=20260531-errors';
+    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js?v=20260531-no-preview';
 
     window.__qtQueueLocale = queueWebLocale;
     guardCircuitImages();
