@@ -8,6 +8,8 @@
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Jouer en ligne</strong></a>
 </p>
 
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/c09b7921-8ae3-41c6-b516-d941ff36349a" />
+
 Tetris où les événements stochastiques (pièce, état d’apparition, cadence, bonus…) sont pilotés par des circuits quantiques mesurés en mode par défaut. Le joueur garde les commandes ← → ↑ ↓ et Espace ; le jeu tire le reste depuis les mesures.
 
 > **Le joueur :** ← → ↑ ↓ et Espace · **Le jeu :** tout le reste.
