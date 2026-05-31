@@ -22,6 +22,8 @@ python3 -m http.server 8080 --directory docs
 
 Requires ~3 GiB free disk for the release WASM build. Use `./scripts/clean_build.sh` if needed. If the page says the WASM bundle is missing, `docs/wasm/` has not been generated locally or the GitHub Pages workflow has not deployed a successful build yet.
 
+`wasm-opt` is intentionally disabled by default. Current Binaryen builds can rewrite the `wasm-bindgen` table exports incorrectly for this Bevy bundle, causing browser initialization failures such as `WebAssembly.Table.grow(): failed to grow table by 4`. `./scripts/build_wasm.sh` validates the `__wbindgen_externrefs` export after every build.
+
 ---
 
 ## Layout

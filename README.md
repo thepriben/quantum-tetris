@@ -90,7 +90,7 @@ python3 -m http.server 8080 --directory docs
 # → http://localhost:8080/
 ```
 
-If the linker fails with `errno=28`, free disk space or run `./scripts/clean_build.sh`. The optimized WASM bundle is about 40 MB (larger without `wasm-opt`), so the first browser load can take a moment.
+If the linker fails with `errno=28`, free disk space or run `./scripts/clean_build.sh`. The WASM bundle is large, so the first browser load can take a moment. `wasm-opt` is disabled by default because current Binaryen builds can break the `wasm-bindgen` externref table export used by Bevy.
 
 **Controls:** ← → move · ↑ rotate · ↓ soft drop · **Space** hard drop + quantum observe (`observation-pulse-v1`).
 
