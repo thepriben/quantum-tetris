@@ -32,22 +32,26 @@ QUANTUM_BACKEND=classic|quantum
 
 | Label | Qubits | When | Game effect |
 | --- | --- | --- | --- |
-| `quantum-teleportation-gate-v1` | 3 | Each spawn (×2) | Paired shots choose the current piece. Bell-measurement bits (q0,q1) → family; the two message/receiver bits (q2) disambiguate variants |
+| `quantum-teleportation-gate-v1` | 3 | Each spawn | One 3-bit readout chooses the current tetromino |
 | `imp-brain-v1` | 2 | Each spawn | Rotation 0–3 + spawn column |
 | `enemy-profile-hunter-v1` | 2 | Each spawn | Gravity interval (seconds) |
 | `observation-pulse-v1` | 2 | Space | Hard-drop bonus |
 | `q-shard-stabilizer-v1` | 2 | Line clear | Score multiplier |
 
-### Teleporter families (Bell measurement)
+### Teleporter Piece Draw
 
-`quantum-teleportation-gate-v1` exposes the sender-side Bell measurement bits as gameplay state. It is teleportation-inspired rather than a hidden correction protocol: the game intentionally reads the correction/message bits instead of applying classical feed-forward and discarding them.
+`quantum-teleportation-gate-v1` exposes the measured 3-bit readout as gameplay state. It is teleportation-inspired rather than a hidden correction protocol: the game intentionally reads the correction/message bits instead of applying classical feed-forward and discarding them.
 
-| Bell | Family | Pieces |
-| --- | --- | --- |
-| `00` | Line | I |
-| `01` | Block | O |
-| `10` | Fork | T |
-| `11` | Corner | J, L, S, Z (message bits from current + next shot) |
+| Bits | Piece |
+| --- | --- |
+| `000` | I |
+| `001` | O |
+| `010` | T |
+| `011` | S |
+| `100` | Z |
+| `101` | J |
+| `110` | L |
+| `111` | T |
 
 ### Bit mappings (2-qubit circuits)
 

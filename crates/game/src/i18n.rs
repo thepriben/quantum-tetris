@@ -85,14 +85,14 @@ pub enum GameplayMoment {
 pub fn circuit_explain(locale: Locale, moment: GameplayMoment) -> &'static str {
     match (locale, moment) {
         (Locale::Fr, GameplayMoment::Spawn) => {
-            "Apparition - 4 circuits:\n\
-             - quantum-teleportation-gate-v1 x2: tirage couple de la piece active\n\
+            "Apparition - 3 circuits:\n\
+             - quantum-teleportation-gate-v1: tirage 3 bits de la piece active\n\
              - imp-brain-v1: rotation et colonne\n\
              - enemy-profile-hunter-v1: intervalle de chute"
         }
         (Locale::En, GameplayMoment::Spawn) => {
-            "Spawn - 4 circuits:\n\
-             - quantum-teleportation-gate-v1 x2: paired active-piece draw\n\
+            "Spawn - 3 circuits:\n\
+             - quantum-teleportation-gate-v1: 3-bit active-piece draw\n\
              - imp-brain-v1: rotation and column\n\
              - enemy-profile-hunter-v1: drop interval"
         }

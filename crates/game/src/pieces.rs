@@ -3,39 +3,6 @@
 use bevy::prelude::*;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-pub enum PieceFamily {
-    /// Bell `00` — straight tetromino.
-    Line,
-    /// Bell `01` — 2×2 square.
-    Block,
-    /// Bell `10` — T junction.
-    Fork,
-    /// Bell `11` — J, L, S, Z corners.
-    Corner,
-}
-
-impl PieceFamily {
-    /// Two Bell-measurement bits from the teleporter circuit (q0, q1).
-    pub fn from_bell(bell: &str) -> Self {
-        match bell {
-            "00" => Self::Line,
-            "01" => Self::Block,
-            "10" => Self::Fork,
-            _ => Self::Corner,
-        }
-    }
-
-    pub fn label(self) -> &'static str {
-        match self {
-            Self::Line => "Line",
-            Self::Block => "Block",
-            Self::Fork => "Fork",
-            Self::Corner => "Corner",
-        }
-    }
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum PieceKind {
     I = 0,
     O = 1,
@@ -47,15 +14,6 @@ pub enum PieceKind {
 }
 
 impl PieceKind {
-    pub fn family(self) -> PieceFamily {
-        match self {
-            Self::I => PieceFamily::Line,
-            Self::O => PieceFamily::Block,
-            Self::T => PieceFamily::Fork,
-            Self::J | Self::L | Self::S | Self::Z => PieceFamily::Corner,
-        }
-    }
-
     pub fn from_index(i: usize) -> Self {
         match i % 7 {
             0 => Self::I,

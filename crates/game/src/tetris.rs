@@ -7,8 +7,8 @@ use crate::i18n::{self, GameplayMoment, Locale};
 use crate::input;
 use crate::measurement_fx::{
     drop_interval_from_bits, line_circuit, line_clear_bonus, observe_circuit, observe_from_bits,
-    piece_circuit, piece_from_teleport_pair, record_measurement, rotation_circuit,
-    rotation_from_bits, spawn_x_from_bits, speed_circuit,
+    piece_circuit, piece_from_teleport, record_measurement, rotation_circuit, rotation_from_bits,
+    spawn_x_from_bits, speed_circuit,
 };
 use crate::pieces::PieceKind;
 use bevy::prelude::*;
@@ -177,15 +177,12 @@ fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun, lo
 
 fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
     let tele_now = session.run_circuit(&piece_circuit());
-    let tele_partner = session.run_circuit(&piece_circuit());
     let rot_m = session.run_circuit(&rotation_circuit());
     let speed_m = session.run_circuit(&speed_circuit());
 
     record_measurement(run, &tele_now);
 
-    let (kind, now_readout, _) = piece_from_teleport_pair(&tele_now, &tele_partner);
-
-    run.active_family = now_readout.family;
+    let (kind, now_readout) = piece_from_teleport(&tele_now);
 
     let rotation = rotation_from_bits(&rot_m.bits);
     let x = spawn_x_from_bits(&rot_m.bits);

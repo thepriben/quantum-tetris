@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
-  <link rel="stylesheet" href="site.css?v=20260531-no-preview">
-  <script src="i18n.js?v=20260531-no-preview"></script>
+  <link rel="stylesheet" href="site.css?v=20260531-single-piece-draw">
+  <script src="i18n.js?v=20260531-single-piece-draw"></script>
 </head>
 <body>
   <header class="site-header">
@@ -63,7 +63,7 @@
           <p class="moment-label" data-i18n="home.label.game">In-game</p>
           <p class="moment-game" data-i18n="home.moment.piece.game">Sets the falling tetromino.</p>
           <p class="moment-label" data-i18n="home.label.quantum">Circuit</p>
-          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> (×2) — paired teleportation-inspired Bell measurements; Bell bits pick the family (I, O, T…) and paired message bits choose the concrete shape.</p>
+          <p class="moment-quantum" data-i18n="home.moment.piece.quantum" data-i18n-html><code>quantum-teleportation-gate-v1</code> — one teleportation-inspired Bell measurement; the 3-bit readout maps directly to the active tetromino.</p>
           <figure class="circuit-fig">
             <img src="circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" loading="lazy" decoding="async">
           </figure>
@@ -119,7 +119,7 @@
   </div>
 
   <script type="module">
-    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js?v=20260531-no-preview';
+    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js?v=20260531-single-piece-draw';
 
     window.__qtQueueLocale = queueWebLocale;
     guardCircuitImages();

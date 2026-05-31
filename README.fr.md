@@ -25,7 +25,7 @@ Tetris où les événements stochastiques (pièce, état d’apparition, cadence
 | | |
 |---|---|
 | **En jeu** | Détermine le tétromino en chute. |
-| **Circuit** | `quantum-teleportation-gate-v1` (×2) — mesures de Bell couplées inspirées de la téléportation ; les bits de Bell fixent la famille (I, O, T…) et les bits message couplés choisissent la forme concrète. |
+| **Circuit** | `quantum-teleportation-gate-v1` — une mesure de Bell inspirée de la téléportation ; le résultat 3 bits choisit directement le tétromino actif. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="720"></p>
 
@@ -131,7 +131,7 @@ flowchart TB
 
 ### Pipeline au spawn
 
-Quatre mesures s’enchaînent avant chaque pièce :
+Trois mesures s’enchaînent avant chaque pièce :
 
 ```mermaid
 sequenceDiagram
@@ -139,10 +139,8 @@ sequenceDiagram
   participant Q as QuantumSession
   participant M as measurement_fx.rs
 
-  T->>Q: piece_circuit() — mesure inspirée de la téléportation #1
-  Q-->>T: bits de Bell + message
-  T->>Q: piece_circuit() — mesure partenaire inspirée de la téléportation
-  Q-->>T: bit message partenaire → pièce active
+  T->>Q: piece_circuit() — tirage 3 bits inspiré de la téléportation
+  Q-->>T: bits → pièce active
   T->>Q: rotation_circuit() — imp-brain-v1
   Q-->>M: rotation + colonne spawn
   T->>Q: speed_circuit() — hunter-profile-v1
