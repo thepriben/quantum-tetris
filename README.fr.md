@@ -90,7 +90,7 @@ python3 -m http.server 8080 --directory docs
 # → http://localhost:8080/
 ```
 
-Si le linker échoue avec `errno=28`, libérez de l’espace disque ou lancez `./scripts/clean_build.sh`. Le bundle WASM optimisé fait environ 40 Mo (davantage sans `wasm-opt`) ; le premier chargement peut prendre un moment.
+Si le linker échoue avec `errno=28`, libérez de l’espace disque ou lancez `./scripts/clean_build.sh`. Le bundle WASM est volumineux ; le premier chargement peut prendre un moment. `wasm-opt` est désactivé par défaut, car les builds Binaryen actuels peuvent casser l’export de table `externref` utilisé par `wasm-bindgen` et Bevy.
 
 **Contrôles :** ← → déplacer · ↑ rotation · ↓ chute douce · **Espace** chute forcée + observe (`observation-pulse-v1`).
 
