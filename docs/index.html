@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
-  <link rel="stylesheet" href="site.css">
-  <script src="i18n.js"></script>
+  <link rel="stylesheet" href="site.css?v=20260531-errors">
+  <script src="i18n.js?v=20260531-errors"></script>
 </head>
 <body>
   <header class="site-header">
@@ -119,7 +119,7 @@
   </div>
 
   <script type="module">
-    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js';
+    import { bootGame, bindLocaleSync, queueWebLocale, guardCircuitImages } from './boot.js?v=20260531-errors';
 
     window.__qtQueueLocale = queueWebLocale;
     guardCircuitImages();
