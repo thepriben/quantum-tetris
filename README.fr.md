@@ -20,12 +20,12 @@ Tetris où les événements stochastiques (pièce, état d’apparition, cadence
 
 À chaque moment stochastique, le moteur invoque un circuit de la liste partagée (voir [`docs/QUANTUM.md`](docs/QUANTUM.md)). Les diagrammes sont générés depuis les mêmes définitions de portes, recopiées dans [`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py).
 
-### Pièce en cours & « suiv. »
+### Tirage de la pièce
 
 | | |
 |---|---|
-| **En jeu** | Détermine la forme active et l’aperçu **suivant**. |
-| **Circuit** | `quantum-teleportation-gate-v1` (×2) — mesure de Bell inspirée de la téléportation ; les bits mesurés fixent la famille (I, O, T…) et la variante. |
+| **En jeu** | Détermine le tétromino en chute. |
+| **Circuit** | `quantum-teleportation-gate-v1` (×2) — mesures de Bell couplées inspirées de la téléportation ; les bits de Bell fixent la famille (I, O, T…) et les bits message couplés choisissent la forme concrète. |
 
 <p align="left"><img src="docs/circuits/quantum-teleportation-gate-v1.png" alt="quantum-teleportation-gate-v1" width="720"></p>
 
@@ -90,8 +90,6 @@ python3 -m http.server 8080 --directory docs
 # → http://localhost:8080/
 ```
 
-Si le linker échoue avec `errno=28`, libérez de l’espace disque ou lancez `./scripts/clean_build.sh`. Le bundle WASM est volumineux ; le premier chargement peut prendre un moment. `wasm-opt` est désactivé par défaut, car les builds Binaryen actuels peuvent casser l’export de table `externref` utilisé par `wasm-bindgen` et Bevy.
-
 **Contrôles :** ← → déplacer · ↑ rotation · ↓ chute douce · **Espace** chute forcée + observe (`observation-pulse-v1`).
 
 ---
@@ -142,9 +140,9 @@ sequenceDiagram
   participant M as measurement_fx.rs
 
   T->>Q: piece_circuit() — mesure inspirée de la téléportation #1
-  Q-->>T: bits → pièce en cours
-  T->>Q: piece_circuit() — mesure inspirée de la téléportation #2
-  Q-->>T: bits → pièce suivante (preview)
+  Q-->>T: bits de Bell + message
+  T->>Q: piece_circuit() — mesure partenaire inspirée de la téléportation
+  Q-->>T: bit message partenaire → pièce active
   T->>Q: rotation_circuit() — imp-brain-v1
   Q-->>M: rotation + colonne spawn
   T->>Q: speed_circuit() — hunter-profile-v1

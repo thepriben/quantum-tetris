@@ -41,19 +41,18 @@ pub fn read_teleport(bits: &str) -> TeleportReadout {
     }
 }
 
-/// Decode **current** and **next** piece from two consecutive teleporter shots.
+/// Decode the falling piece from two consecutive teleporter shots.
 ///
 /// - Bell bits (2) → tetromino **family** (4 outcomes).
 /// - Message bit + partner message bit → concrete shape (needed for the 4-piece Corner family).
-pub fn pieces_from_teleport_pair(
+pub fn piece_from_teleport_pair(
     current: &Measurement,
-    upcoming: &Measurement,
-) -> (PieceKind, PieceKind, TeleportReadout, TeleportReadout) {
+    partner: &Measurement,
+) -> (PieceKind, TeleportReadout, TeleportReadout) {
     let now = read_teleport(&current.bits);
-    let next = read_teleport(&upcoming.bits);
-    let kind = piece_in_family(now.family, now.message, next.message);
-    let next_kind = piece_in_family(next.family, next.message, now.message);
-    (kind, next_kind, now, next)
+    let partner = read_teleport(&partner.bits);
+    let kind = piece_in_family(now.family, now.message, partner.message);
+    (kind, now, partner)
 }
 
 fn piece_in_family(family: PieceFamily, primary_msg: bool, partner_msg: bool) -> PieceKind {
@@ -193,30 +192,29 @@ mod tests {
 
     #[test]
     fn fixed_families_ignore_message_bit() {
-        let (kind, _, _, _) = pieces_from_teleport_pair(&m("001"), &m("000"));
+        let (kind, _, _) = piece_from_teleport_pair(&m("001"), &m("000"));
         assert_eq!(kind, PieceKind::I);
-        let (kind, _, _, _) = pieces_from_teleport_pair(&m("011"), &m("000"));
+        let (kind, _, _) = piece_from_teleport_pair(&m("011"), &m("000"));
         assert_eq!(kind, PieceKind::O);
-        let (kind, _, _, _) = pieces_from_teleport_pair(&m("101"), &m("000"));
+        let (kind, _, _) = piece_from_teleport_pair(&m("101"), &m("000"));
         assert_eq!(kind, PieceKind::T);
     }
 
     #[test]
     fn corner_family_uses_both_message_bits() {
-        let (j, _, _, _) = pieces_from_teleport_pair(&m("110"), &m("000"));
+        let (j, _, _) = piece_from_teleport_pair(&m("110"), &m("000"));
         assert_eq!(j, PieceKind::J);
-        let (l, _, _, _) = pieces_from_teleport_pair(&m("110"), &m("001"));
+        let (l, _, _) = piece_from_teleport_pair(&m("110"), &m("001"));
         assert_eq!(l, PieceKind::L);
-        let (s, _, _, _) = pieces_from_teleport_pair(&m("111"), &m("000"));
+        let (s, _, _) = piece_from_teleport_pair(&m("111"), &m("000"));
         assert_eq!(s, PieceKind::S);
-        let (z, _, _, _) = pieces_from_teleport_pair(&m("111"), &m("001"));
+        let (z, _, _) = piece_from_teleport_pair(&m("111"), &m("001"));
         assert_eq!(z, PieceKind::Z);
     }
 
     #[test]
-    fn upcoming_piece_comes_from_second_teleport() {
-        let (_, next, _, readout) = pieces_from_teleport_pair(&m("000"), &m("101"));
-        assert_eq!(next, PieceKind::T);
+    fn paired_teleport_readout_exposes_partner_bits() {
+        let (_, _, readout) = piece_from_teleport_pair(&m("000"), &m("101"));
         assert_eq!(readout.bell, "10");
         assert_eq!(readout.family, PieceFamily::Fork);
     }

@@ -20,10 +20,10 @@
       'home.quantumTitle': 'Mécaniques',
       'home.label.game': 'En jeu',
       'home.label.quantum': 'Circuit',
-      'home.moment.piece.title': 'Pièce en cours & « suiv. »',
-      'home.moment.piece.game': 'Détermine la forme active et l\'aperçu suivant.',
+      'home.moment.piece.title': 'Tirage de la pièce',
+      'home.moment.piece.game': 'Détermine le tétromino en chute.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> (×2) — mesure de Bell inspirée de la téléportation ; les bits mesurés fixent la famille (I, O, T…) et la variante.',
+        '<code>quantum-teleportation-gate-v1</code> (×2) — mesures de Bell couplées inspirées de la téléportation ; les bits de Bell fixent la famille (I, O, T…) et les bits message couplés choisissent la forme concrète.',
       'home.moment.brain.title': 'Rotation & colonne',
       'home.moment.brain.game': 'Fixe l\'orientation à l\'apparition et la colonne d\'entrée.',
       'home.moment.brain.quantum':
@@ -79,10 +79,10 @@
       'home.quantumTitle': 'Mechanics',
       'home.label.game': 'In-game',
       'home.label.quantum': 'Circuit',
-      'home.moment.piece.title': 'Active piece & “next”',
-      'home.moment.piece.game': 'Sets the active shape and the next preview.',
+      'home.moment.piece.title': 'Active piece draw',
+      'home.moment.piece.game': 'Sets the falling tetromino.',
       'home.moment.piece.quantum':
-        '<code>quantum-teleportation-gate-v1</code> (×2) — teleportation-inspired Bell measurement; measured bits pick the family (I, O, T…) and variant.',
+        '<code>quantum-teleportation-gate-v1</code> (×2) — paired teleportation-inspired Bell measurements; Bell bits pick the family (I, O, T…) and paired message bits choose the concrete shape.',
       'home.moment.brain.title': 'Rotation & column',
       'home.moment.brain.game': 'Sets spawn orientation and entry column.',
       'home.moment.brain.quantum':
