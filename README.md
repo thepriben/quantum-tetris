@@ -14,7 +14,7 @@ Tetris where stochastic game events (piece, spawn state, cadence, bonuses…) ar
 
 > **The player:** ← → ↑ ↓ and Space · **The game:** everything else.
 
-**Runtime.** Bevy (Rust), shipped as a desktop binary or WASM in the browser. Quantum mode defaults to **RustQIP** statevector simulation, so the same circuit presets run locally and online.
+**Runtime.** Bevy (Rust), shipped as a desktop binary or WASM in the browser. Quantum mode defaults to [**RustQIP**](https://github.com/Renmusxd/RustQIP) statevector simulation, so the same circuit presets run locally and online.
 
 ---
 
@@ -193,6 +193,19 @@ quantum-tetris/
 | **Pages** | push `main` | Release WASM build, circuit PNGs, deploy `docs/` |
 
 Live: [thepriben.github.io/quantum-tetris/](https://thepriben.github.io/quantum-tetris/)
+
+---
+
+## Publication
+
+This project is the companion code for an article in the French developer magazine **_Programmez!_**:
+
+> Benoît Prieur — *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, **_Programmez!_** special issue (hors-série) n°23, 2026, pp. 7–11.
+> [Read the article →](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu)
+
+## Related projects
+
+- [**RustQIP**](https://github.com/Renmusxd/RustQIP) — the `qip` statevector simulator that powers the default quantum backend (`RustQipBackend`). Quantum Tetris is a downstream, game-oriented showcase of RustQIP running both natively and in the browser via WASM.
 
 ---
 

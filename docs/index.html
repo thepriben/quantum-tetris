@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantum Tetris</title>
   <link rel="stylesheet" href="site.css?v=20260531-single-piece-draw">
-  <script src="i18n.js?v=20260531-single-piece-draw"></script>
+  <script src="i18n.js?v=20260626-publication"></script>
 </head>
 <body>
   <header class="site-header">
@@ -55,6 +55,7 @@
       <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Piece, spawn state, cadence, bonuses: each stochastic event runs a predefined circuit; measured bits drive the in-game effect.</p>
       <p class="stack" data-i18n="home.stack" data-i18n-html><strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online.</p>
       <p class="principle" data-i18n="home.principle" data-i18n-html><strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
+      <p class="publication" data-i18n="home.publication" data-i18n-html><strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11: <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu</a>.</p>
 
       <h2 data-i18n="home.quantumTitle">Mechanics</h2>
       <ul class="moment-list">
@@ -113,6 +114,10 @@
       <footer class="footer-dev">
         <p>
           <a href="https://github.com/thepriben/quantum-tetris" data-i18n="home.github">GitHub</a>
+          ·
+          <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a>
+          ·
+          <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu" data-i18n="home.article">Programmez! article</a>
         </p>
       </footer>
     </section>

@@ -17,6 +17,8 @@
         '<strong>Architecture.</strong> Bevy (Rust) → WASM dans le navigateur. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simule le statevector par défaut en local et en ligne.',
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
+      'home.publication':
+        '<strong>Publication.</strong> Article paru dans <em>Programmez!</em> hors-série n°23 (2026), p. 7–11 : <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu</a>.',
       'home.quantumTitle': 'Mécaniques',
       'home.label.game': 'En jeu',
       'home.label.quantum': 'Circuit',
@@ -41,6 +43,7 @@
       'home.moment.line.quantum':
         '<code>q-shard-stabilizer-v1</code> — après effacement d\'une ligne ; les bits fixent le multiplicateur (×1–×4).',
       'home.circuitsLink': 'Référence circuits',
+      'home.article': 'Article Programmez!',
       'home.github': 'GitHub',
       'home.readme': 'Build local',
       'play.starting': 'Chargement…',
@@ -76,6 +79,8 @@
         '<strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online.',
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
+      'home.publication':
+        '<strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11: <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu</a>.',
       'home.quantumTitle': 'Mechanics',
       'home.label.game': 'In-game',
       'home.label.quantum': 'Circuit',
@@ -100,6 +105,7 @@
       'home.moment.line.quantum':
         '<code>q-shard-stabilizer-v1</code> — after a line clear; bits set the score multiplier (×1–×4).',
       'home.circuitsLink': 'Circuit reference',
+      'home.article': 'Programmez! article',
       'home.github': 'GitHub',
       'home.readme': 'Local build',
       'play.starting': 'Loading…',
