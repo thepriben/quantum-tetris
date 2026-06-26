@@ -200,8 +200,7 @@ En ligne : [thepriben.github.io/quantum-tetris/](https://thepriben.github.io/qua
 
 Ce projet est le code compagnon d'un article paru dans **_Programmez!_** :
 
-> Benoît Prieur — *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, **_Programmez!_** hors-série n°23, 2026, pp. 7–11.
-> [Lire l'article →](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu)
+> Benoît Prieur — *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, **_Programmez!_** hors-série n°23, 2026, pp. 7–11 ([lien](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu)).
 
 ## Projets liés
 
