@@ -20,7 +20,7 @@
       'home.publication':
         '<strong>Publication.</strong> Article paru dans <em>Programmez!</em> hors-série n°23 (2026), p. 7–11 — <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Lien</a> vers le magazine (accès payant).',
       'home.audit':
-        '<strong>Hasard auditable.</strong> Chaque tirage stochastique est journalisé (reçus chaînés C5/C6). À la game over, le journal s’affiche dans la console du navigateur ; export fichier et vérification offline en build desktop — voir <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> sur GitHub.',
+        '<strong>Hasard auditable.</strong> Chaque tirage stochastique est journalisé (reçus chaînés C5/C6). À la game over, le journal s’affiche dans la console du navigateur ; export fichier et vérification offline en build desktop — voir <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> sur GitHub. Le cadre conceptuel de ces couches est développé dans le préprint <a href="https://doi.org/10.5281/zenodo.20991595"><em>From Pseudorandom Play to Auditable Esports Competition</em></a>.',
       'home.quantumTitle': 'Mécaniques',
       'home.label.game': 'En jeu',
       'home.label.quantum': 'Circuit',
@@ -85,7 +85,7 @@
       'home.publication':
         '<strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11 — <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Link</a> to the magazine article (not open access).',
       'home.audit':
-        '<strong>Auditable randomness.</strong> Every stochastic draw is logged (hash-chained receipts, layers C5/C6). On game over the journal is printed to the browser console; file export and offline verification are available in the desktop build — see <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> on GitHub.',
+        '<strong>Auditable randomness.</strong> Every stochastic draw is logged (hash-chained receipts, layers C5/C6). On game over the journal is printed to the browser console; file export and offline verification are available in the desktop build — see <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> on GitHub. The conceptual framework behind these layers is developed in the preprint <a href="https://doi.org/10.5281/zenodo.20991595"><em>From Pseudorandom Play to Auditable Esports Competition</em></a>.',
       'home.quantumTitle': 'Mechanics',
       'home.label.game': 'In-game',
       'home.label.quantum': 'Circuit',
