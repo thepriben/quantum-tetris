@@ -6,6 +6,7 @@ use quantum_tetris_quantum::{
     QuantumCircuit, QuantumError,
 };
 use std::sync::Mutex;
+#[cfg(not(target_arch = "wasm32"))]
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// How the game is launched (native binary vs WASM bundle).
@@ -47,12 +48,26 @@ impl GameConfig {
     }
 }
 
+/// Unique per-session identifier used in the audit genesis hash (C5/C6).
+///
+/// On native we derive it from the wall clock; on `wasm32-unknown-unknown`
+/// `SystemTime::now()` panics ("time not implemented on this platform"), so we
+/// use a random identifier instead (the RNG backend is already required for
+/// quantum draws).
+#[cfg(not(target_arch = "wasm32"))]
 fn new_session_id() -> String {
     let ms = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis())
         .unwrap_or(0);
     format!("qt-{ms}")
+}
+
+#[cfg(target_arch = "wasm32")]
+fn new_session_id() -> String {
+    use rand::Rng;
+    let n: u64 = rand::rng().random();
+    format!("qt-{n:016x}")
 }
 
 /// Shared quantum backend + append-only audit journal (C5/C6).
