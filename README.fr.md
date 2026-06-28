@@ -24,8 +24,8 @@ Quantum Tetris est le code compagnon de deux publications. Chacune est rattaché
 
 | Publication | Release |
 | --- | --- |
-| **Programmez!** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Lire l'article](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
-| **Préprint** *(à paraître)* — Benoît Prieur, *« Du jeu pseudo-aléatoire à la compétition quantiquement auditable : une infrastructure de hasard pour l'esport et les jeux cyber-physiques »*. | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) *(bientôt)* |
+| **Article *Programmez!*** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Lire l'article](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
+| **Préprint** *(à paraître)* — Benoît Prieur, *« Du jeu pseudo-aléatoire à la compétition quantiquement auditable : une infrastructure de hasard pour l'esport et les jeux cyber-physiques »*. Code : journal d'audit C5/C6 — voir [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) *(bientôt)* |
 
 ---
 

@@ -1,5 +1,6 @@
 //! Quantum Tetris — gravity, input, circuit-driven spawns.
 
+use crate::audit_io;
 use crate::board::{ActivePiece, Board, RunPhase, SPAWN_Y};
 use crate::config::QuantumSession;
 use crate::game_state::GameRun;
@@ -126,9 +127,17 @@ fn observe_hard_drop(
     } {}
     active.y += 1;
 
-    let measurement = session.run_circuit(&observe_circuit());
-    record_measurement(run, &measurement);
+    let circuit = observe_circuit();
+    let (measurement, backend_used) = session.run_draw(&circuit);
     let fx = observe_from_bits(&measurement.bits);
+    session.audit_draw(
+        &circuit,
+        &measurement,
+        "observe",
+        Some(fx.label),
+        backend_used,
+    );
+    record_measurement(run, &measurement);
     run.score += fx.score_bonus;
     board.lock_piece(&active);
 
@@ -163,9 +172,17 @@ fn lock_and_continue(
 fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
     let cleared = board.clear_lines();
     if cleared > 0 {
-        let m = session.run_circuit(&line_circuit());
-        record_measurement(run, &m);
+        let circuit = line_circuit();
+        let (m, backend_used) = session.run_draw(&circuit);
         let bonus = line_clear_bonus(&m.bits, cleared);
+        session.audit_draw(
+            &circuit,
+            &m,
+            "line_clear",
+            Some(&format!("mult={} lines={cleared} bonus={bonus}", m.bits)),
+            backend_used,
+        );
+        record_measurement(run, &m);
         run.lines += cleared;
         run.score += bonus;
         run.level_from_lines();
@@ -176,17 +193,43 @@ fn after_lock(session: &QuantumSession, board: &mut Board, run: &mut GameRun, lo
 }
 
 fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
-    let tele_now = session.run_circuit(&piece_circuit());
-    let rot_m = session.run_circuit(&rotation_circuit());
-    let speed_m = session.run_circuit(&speed_circuit());
-
+    let piece = piece_circuit();
+    let (tele_now, bu_piece) = session.run_draw(&piece);
+    let (kind, now_readout) = piece_from_teleport(&tele_now);
+    session.audit_draw(
+        &piece,
+        &tele_now,
+        "spawn_piece",
+        Some(&format!("piece={}", kind_label(kind))),
+        bu_piece,
+    );
     record_measurement(run, &tele_now);
 
-    let (kind, now_readout) = piece_from_teleport(&tele_now);
+    let rotation = rotation_circuit();
+    let (rot_m, bu_rot) = session.run_draw(&rotation);
+    let rot = rotation_from_bits(&rot_m.bits);
+    session.audit_draw(
+        &rotation,
+        &rot_m,
+        "spawn_rotation",
+        Some(&format!("rot={rot} x={}", spawn_x_from_bits(&rot_m.bits))),
+        bu_rot,
+    );
 
-    let rotation = rotation_from_bits(&rot_m.bits);
+    let speed = speed_circuit();
+    let (speed_m, bu_speed) = session.run_draw(&speed);
+    let interval = drop_interval_from_bits(&speed_m.bits, run.level);
+    session.audit_draw(
+        &speed,
+        &speed_m,
+        "spawn_speed",
+        Some(&format!("drop={interval:.3}")),
+        bu_speed,
+    );
+
+    let rotation = rot;
     let x = spawn_x_from_bits(&rot_m.bits);
-    run.drop_interval = drop_interval_from_bits(&speed_m.bits, run.level);
+    run.drop_interval = interval;
 
     let candidate = ActivePiece {
         kind,
@@ -201,6 +244,7 @@ fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun, lo
         run.last_moment = GameplayMoment::GameOver;
         run.last_event = i18n::game_over_event(locale, run.score);
         run.hint = i18n::retry_hint(locale).into();
+        export_audit_on_game_over(session);
         return;
     }
 
@@ -209,7 +253,32 @@ fn spawn_next(session: &QuantumSession, board: &mut Board, run: &mut GameRun, lo
     run.last_event = i18n::spawn_event(locale, &now_readout.bell, kind_label(kind));
 }
 
+fn export_audit_on_game_over(session: &QuantumSession) {
+    let journal = session.finalize_audit();
+    if journal.verify().is_err() {
+        eprintln!("[audit] journal verification failed on game over");
+        return;
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    match audit_io::export_journal(&journal) {
+        Ok(path) => eprintln!("[audit] journal exported to {}", path.display()),
+        Err(error) => eprintln!("[audit] export failed: {error}"),
+    }
+    #[cfg(target_arch = "wasm32")]
+    if let Ok(json) = journal.to_json_pretty() {
+        eprintln!(
+            "[audit] session {} ({} entries)",
+            journal.session_id,
+            journal.entry_count()
+        );
+        eprintln!("{json}");
+    }
+}
+
 fn reset_game(session: &QuantumSession, board: &mut Board, run: &mut GameRun, locale: Locale) {
+    if board.phase != RunPhase::GameOver {
+        let _ = session.finalize_audit();
+    }
     *board = Board::default();
     *run = GameRun::new(session.kind);
     run.last_event.clear();
@@ -236,5 +305,24 @@ fn kind_label(k: PieceKind) -> &'static str {
         PieceKind::Z => "Z",
         PieceKind::J => "J",
         PieceKind::L => "L",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::board::Board;
+    use crate::config::QuantumSession;
+    use crate::game_state::GameRun;
+    use crate::i18n::Locale;
+    use quantum_tetris_quantum::BackendKind;
+
+    #[test]
+    fn spawn_records_three_audit_entries() {
+        let session = QuantumSession::with_fallback(BackendKind::Classic);
+        let mut board = Board::default();
+        let mut run = GameRun::new(BackendKind::Classic);
+        spawn_next(&session, &mut board, &mut run, Locale::En);
+        assert_eq!(session.audit_entry_count(), 3);
     }
 }

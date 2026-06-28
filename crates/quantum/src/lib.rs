@@ -20,16 +20,20 @@
 //! println!("Imp brain bits: {}", measurement.bits);
 //! ```
 
+pub mod audit;
 pub mod backends;
 pub mod circuit;
 pub mod error;
+pub mod mapping;
 pub mod measurement;
 
+pub use audit::{commitment_from_seed, sha256_hex, AuditEntry, AuditError, AuditJournal};
 pub use backends::{
     build_backend, rustqip_probabilities, BackendKind, ClassicBackend, RustQipBackend,
 };
 pub use circuit::{Gate, QuantumCircuit};
 pub use error::QuantumError;
+pub use mapping::{teleport_piece_label, teleport_uniform_piece_probabilities};
 pub use measurement::{EnemyBehavior, Measurement};
 
 /// Pluggable quantum execution surface used by the game crate.
