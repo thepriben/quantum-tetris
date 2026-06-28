@@ -1,6 +1,6 @@
 # Audit layer (C5 + C6)
 
-Quantum Tetris records every stochastic gameplay draw in an **append-only audit journal** with **hash-chained receipts**. This is the companion implementation for the preprint on auditable randomness infrastructure.
+Quantum Tetris records every stochastic gameplay draw in an **append-only audit journal** with **hash-chained receipts** (layers C5 and C6 of the randomness stack).
 
 ## What gets recorded
 
@@ -62,4 +62,3 @@ Under uniform 3-bit draws, piece **T** appears twice as often as any other piece
 ## Related reading
 
 - [`docs/QUANTUM.md`](QUANTUM.md) — circuit definitions and bit mappings
-- Preprint (forthcoming) — full six-layer randomness infrastructure
