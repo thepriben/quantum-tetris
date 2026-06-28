@@ -18,7 +18,9 @@
       'home.principle':
         '<strong>Le joueur :</strong> ← → ↑ ↓ et Espace. <strong>Le jeu :</strong> tout le reste.',
       'home.publication':
-        '<strong>Publication.</strong> Article paru dans <em>Programmez!</em> hors-série n°23 (2026), p. 7–11 : <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu</a>.',
+        '<strong>Publication.</strong> Article paru dans <em>Programmez!</em> hors-série n°23 (2026), p. 7–11 — <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Lien</a> vers le magazine (accès payant).',
+      'home.audit':
+        '<strong>Hasard auditable.</strong> Chaque tirage stochastique est journalisé (reçus chaînés C5/C6). À la game over, le journal s’affiche dans la console du navigateur ; export fichier et vérification offline en build desktop — voir <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> sur GitHub.',
       'home.quantumTitle': 'Mécaniques',
       'home.label.game': 'En jeu',
       'home.label.quantum': 'Circuit',
@@ -43,7 +45,8 @@
       'home.moment.line.quantum':
         '<code>q-shard-stabilizer-v1</code> — après effacement d\'une ligne ; les bits fixent le multiplicateur (×1–×4).',
       'home.circuitsLink': 'Référence circuits',
-      'home.article': 'Article <em>Programmez!</em>',
+      'home.article': 'Lien <em>Programmez!</em>',
+      'home.auditDoc': 'Audit (C5/C6)',
       'home.github': 'GitHub',
       'home.readme': 'Build local',
       'play.starting': 'Chargement…',
@@ -80,7 +83,9 @@
       'home.principle':
         '<strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.',
       'home.publication':
-        '<strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11: <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu</a>.',
+        '<strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11 — <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Link</a> to the magazine article (not open access).',
+      'home.audit':
+        '<strong>Auditable randomness.</strong> Every stochastic draw is logged (hash-chained receipts, layers C5/C6). On game over the journal is printed to the browser console; file export and offline verification are available in the desktop build — see <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> on GitHub.',
       'home.quantumTitle': 'Mechanics',
       'home.label.game': 'In-game',
       'home.label.quantum': 'Circuit',
@@ -105,7 +110,8 @@
       'home.moment.line.quantum':
         '<code>q-shard-stabilizer-v1</code> — after a line clear; bits set the score multiplier (×1–×4).',
       'home.circuitsLink': 'Circuit reference',
-      'home.article': 'Article <em>Programmez!</em>',
+      'home.article': '<em>Programmez!</em> link',
+      'home.auditDoc': 'Audit (C5/C6)',
       'home.github': 'GitHub',
       'home.readme': 'Local build',
       'play.starting': 'Loading…',

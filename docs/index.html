@@ -55,7 +55,8 @@
       <p class="lead" data-i18n="home.lead" data-i18n-html>Standard Tetris rules. Piece, spawn state, cadence, bonuses: each stochastic event runs a predefined circuit; measured bits drive the in-game effect.</p>
       <p class="stack" data-i18n="home.stack" data-i18n-html><strong>Architecture.</strong> Bevy (Rust) → WASM in the browser. <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a> (<code>RustQipBackend</code>) simulates the statevector by default locally and online.</p>
       <p class="principle" data-i18n="home.principle" data-i18n-html><strong>The player:</strong> ← → ↑ ↓ and Space. <strong>The game:</strong> everything else.</p>
-      <p class="publication" data-i18n="home.publication" data-i18n-html><strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11: <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu</a>.</p>
+      <p class="publication" data-i18n="home.publication" data-i18n-html><strong>Publication.</strong> Featured in <em>Programmez!</em> special issue (hors-série) n°23 (2026), pp. 7–11 — <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu">Link</a> to the magazine article (not open access).</p>
+      <p class="audit" data-i18n="home.audit" data-i18n-html><strong>Auditable randomness.</strong> Every stochastic draw is logged (hash-chained receipts, layers C5/C6). On game over the journal is printed to the browser console; file export and offline verification are available in the desktop build — see <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md">docs/AUDIT.md</a> on GitHub.</p>
 
       <h2 data-i18n="home.quantumTitle">Mechanics</h2>
       <ul class="moment-list">
@@ -117,7 +118,9 @@
           ·
           <a href="https://github.com/Renmusxd/RustQIP">RustQIP</a>
           ·
-          <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu" data-i18n="home.article" data-i18n-html>Article <em>Programmez!</em></a>
+          <a href="https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu" data-i18n="home.article" data-i18n-html><em>Programmez!</em> link</a>
+          ·
+          <a href="https://github.com/thepriben/quantum-tetris/blob/main/docs/AUDIT.md" data-i18n="home.auditDoc">Audit (C5/C6)</a>
         </p>
       </footer>
     </section>
