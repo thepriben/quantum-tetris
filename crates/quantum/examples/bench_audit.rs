@@ -83,7 +83,10 @@ fn main() {
     // Realistic session extrapolation: 3 draws per spawn (piece, rotation,
     // gravity) plus occasional observe/line-clear draws.
     let draws_per_min = 3.0 * 60.0; // ~1 spawn/s, conservative
-    println!("\n== Extrapolation (a ~10 min match, ~{} draws) ==", (draws_per_min * 10.0) as u32);
+    println!(
+        "\n== Extrapolation (a ~10 min match, ~{} draws) ==",
+        (draws_per_min * 10.0) as u32
+    );
     let draws = draws_per_min * 10.0;
     println!(
         "  audit CPU overhead    : {:.2} ms total",

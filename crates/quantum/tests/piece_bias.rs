@@ -1,8 +1,8 @@
 //! Empirical confirmation of teleport → piece frequencies (mapping layer C4).
 
 use quantum_tetris_quantum::{
-    build_backend, rustqip_probabilities, teleport_piece_label, teleport_uniform_piece_probabilities,
-    BackendKind, QuantumBackend, QuantumCircuit,
+    build_backend, rustqip_probabilities, teleport_piece_label,
+    teleport_uniform_piece_probabilities, BackendKind, QuantumBackend, QuantumCircuit,
 };
 
 const SAMPLES: usize = 80_000;
@@ -43,7 +43,9 @@ fn measure_against_expected(kind: BackendKind, expected: &[(&'static str, f64)])
 
     for _ in 0..SAMPLES {
         let m = backend.run(&circuit).expect("run");
-        *counts.entry(teleport_piece_label(&m.bits)).or_insert(0usize) += 1;
+        *counts
+            .entry(teleport_piece_label(&m.bits))
+            .or_insert(0usize) += 1;
     }
 
     for (label, prob) in expected {

@@ -235,8 +235,8 @@ impl AuditJournal {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::QuantumCircuit;
     use crate::BackendKind;
+    use crate::QuantumCircuit;
 
     fn sample_measurement(bits: &str) -> Measurement {
         Measurement {
