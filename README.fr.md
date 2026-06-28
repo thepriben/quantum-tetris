@@ -26,6 +26,27 @@ Chaque release taguée fige un état reproductible du code.
 | --- | --- |
 | **Article *Programmez!*** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Lien](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
 | **Hasard auditable (C5/C6)** — reçus chaînés, journal de session commit-reveal, export à la game over. Voir [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
+
+**Reproduire une release**
+
+```bash
+git checkout programmez-hs23    # code de l'article *Programmez!*
+git checkout preprint-randomness  # journal d'audit + pile C5/C6
+```
+
+---
+
+## Hasard auditable
+
+Chaque tirage stochastique en mode quantum par défaut est consigné dans un **journal d'audit chaîné par hash** (couches C5 et C6). En desktop, à la game over, la session est révélée et exportée vers `audit/{session_id}.json`.
+
+| Étape | Commande / action |
+| --- | --- |
+| Jouer (desktop) | `cargo run -p quantum-tetris-game` — journal finalisé à la game over |
+| Vérifier l'export | `./scripts/verify_audit.sh audit/qt-….json` |
+| Lire la pile | [`docs/AUDIT.md`](docs/AUDIT.md) — contexte six couches, schéma JSON, chaîne de hash, tests |
+| Biais de mapping (C4) | Pièce **T** à P=¼ sous tirages 3 bits uniformes (`010` et `111`) — [`docs/QUANTUM.md`](docs/QUANTUM.md) |
+
 ---
 
 ## Gameplay & circuits
@@ -182,7 +203,8 @@ quantum-tetris/
 ├── docs/
 │   ├── index.html         # Jeu + guide (anglais par défaut)
 │   ├── circuits/*.png     # Diagrammes de circuits
-│   ├── QUANTUM.md         # Référence circuits & bits
+│   ├── QUANTUM.md         # Référence circuits & mappings
+│   ├── AUDIT.md           # Journal d'audit C5/C6 & vérification
 │   └── WASM.md            # Notes build navigateur
 ├── scripts/
 │   ├── build_wasm.sh
