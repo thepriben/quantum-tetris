@@ -26,6 +26,27 @@ Each tagged release pins a reproducible code snapshot.
 | --- | --- |
 | **Article *Programmez!*** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Link](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
 | **Auditable randomness (C5/C6)** — hash-chained draw receipts, commit-reveal session journal, export on game over. See [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
+
+**Reproducing a release**
+
+```bash
+git checkout programmez-hs23    # code behind the *Programmez!* article
+git checkout preprint-randomness  # audit journal + C5/C6 verification stack
+```
+
+---
+
+## Auditable randomness
+
+Every stochastic draw in the default game mode is logged in a **hash-chained audit journal** (layers C5 and C6). On desktop game over, the session is revealed and exported to `audit/{session_id}.json`.
+
+| Step | Command / action |
+| --- | --- |
+| Play (desktop) | `cargo run -p quantum-tetris-game` — journal finalizes on game over |
+| Verify export | `./scripts/verify_audit.sh audit/qt-….json` |
+| Read the stack | [`docs/AUDIT.md`](docs/AUDIT.md) — six-layer context, JSON schema, hash chain, tests |
+| Mapping bias (C4) | Piece **T** at P=¼ under uniform 3-bit draws (`010` and `111`) — [`docs/QUANTUM.md`](docs/QUANTUM.md) |
+
 ---
 
 ## Gameplay & circuits
@@ -183,6 +204,7 @@ quantum-tetris/
 │   ├── index.html         # Game + mechanics guide (English default)
 │   ├── circuits/*.png     # circuit diagrams
 │   ├── QUANTUM.md         # Circuit & bit-mapping reference
+│   ├── AUDIT.md           # C5/C6 audit journal & verification
 │   └── WASM.md            # Browser build notes
 ├── scripts/
 │   ├── build_wasm.sh

@@ -53,6 +53,8 @@ QUANTUM_BACKEND=classic|quantum
 | `110` | L |
 | `111` | T |
 
+> **Fairness note (C4).** Both `010` and `111` map to T, so under uniform 3-bit draws P(T)=¼ while every other piece is at ⅛. The audit journal records `mapping_policy: teleport-v1` so this bias is explicit and checkable. See [AUDIT.md](AUDIT.md).
+
 ### Bit mappings (2-qubit circuits)
 
 **imp-brain** — rotation + column:
@@ -92,3 +94,5 @@ println!("{}", m.bits); // e.g. "101"
 ## WASM note
 
 The browser build uses **RustQIP quantum mode** by default. See [WASM.md](WASM.md).
+
+Audit journals are printed to the browser console on game over (no file export). For file export and offline verification, use the desktop build — see [AUDIT.md](AUDIT.md).
