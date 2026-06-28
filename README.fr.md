@@ -18,6 +18,17 @@ Tetris où les événements stochastiques (pièce, état d’apparition, cadence
 
 ---
 
+## Publications & releases
+
+Quantum Tetris est le code compagnon de deux publications. Chacune est rattachée à une release taguée, afin que l'état exact du code derrière l'article reste reproductible.
+
+| Publication | Release |
+| --- | --- |
+| **Programmez!** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Lire l'article](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
+| **Préprint** *(à paraître)* — Benoît Prieur, *« Du jeu pseudo-aléatoire à la compétition quantiquement auditable : une infrastructure de hasard pour l'esport et les jeux cyber-physiques »*. | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) *(bientôt)* |
+
+---
+
 ## Gameplay & circuits
 
 À chaque moment stochastique, le moteur invoque un circuit de la liste partagée (voir [`docs/QUANTUM.md`](docs/QUANTUM.md)). Les diagrammes sont générés depuis les mêmes définitions de portes, recopiées dans [`scripts/render_circuit_diagrams.py`](scripts/render_circuit_diagrams.py).
@@ -195,12 +206,6 @@ quantum-tetris/
 En ligne : [thepriben.github.io/quantum-tetris/](https://thepriben.github.io/quantum-tetris/)
 
 ---
-
-## Publication
-
-Ce projet est le code compagnon d'un article paru dans **_Programmez!_** :
-
-> Benoît Prieur — *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, **_Programmez!_** hors-série n°23, 2026, pp. 7–11 ([lien](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu)).
 
 ## Projets liés
 
