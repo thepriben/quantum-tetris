@@ -31,7 +31,7 @@ Chaque release taguée fige un état reproductible du code.
 | Publication | Release |
 | --- | --- |
 | **Article *Programmez!*** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Lien](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
-| **Preprint** — Benoît Prieur, *Du jeu pseudo-aléatoire à la compétition esport auditable : une infrastructure de hasard en couches pour les jeux compétitifs* (FR/EN), 2026. [Zenodo · 10.5281/zenodo.20991595](https://doi.org/10.5281/zenodo.20991595). Adossé aux couches de hasard auditable **C5/C6** implémentées ici (reçus chaînés, journal commit-reveal) — voir [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
+| **Preprint** — Benoît Prieur, *Du jeu pseudo-aléatoire à la compétition esport auditable : une infrastructure de hasard en couches pour les jeux compétitifs* (EN), 2026. [Zenodo · 10.5281/zenodo.20991595](https://doi.org/10.5281/zenodo.20991595). Adossé aux couches de hasard auditable **C5/C6** implémentées ici (reçus chaînés, journal commit-reveal) — voir [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
 
 **Reproduire une release**
 
