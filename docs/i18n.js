@@ -43,7 +43,7 @@
       'home.moment.line.quantum':
         '<code>q-shard-stabilizer-v1</code> — après effacement d\'une ligne ; les bits fixent le multiplicateur (×1–×4).',
       'home.circuitsLink': 'Référence circuits',
-      'home.article': 'Article Programmez!',
+      'home.article': 'Article <em>Programmez!</em>',
       'home.github': 'GitHub',
       'home.readme': 'Build local',
       'play.starting': 'Chargement…',
@@ -105,7 +105,7 @@
       'home.moment.line.quantum':
         '<code>q-shard-stabilizer-v1</code> — after a line clear; bits set the score multiplier (×1–×4).',
       'home.circuitsLink': 'Circuit reference',
-      'home.article': 'Programmez! article',
+      'home.article': 'Article <em>Programmez!</em>',
       'home.github': 'GitHub',
       'home.readme': 'Local build',
       'play.starting': 'Loading…',

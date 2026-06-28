@@ -11,6 +11,7 @@ serde_json = { workspace = true }
 thiserror = { workspace = true }
 rand = "0.9"
 qip = "1.5.0"
+sha2 = "0.10"
 
 [dev-dependencies]
 serde_json = { workspace = true }
