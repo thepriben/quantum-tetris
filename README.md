@@ -6,6 +6,12 @@
 
 <p align="center">
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Play online</strong></a>
+  ·
+  <a href="https://doi.org/10.5281/zenodo.20991595"><strong>📄 Preprint</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.20991595"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.20991595.svg" alt="DOI"></a>
 </p>
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/c09b7921-8ae3-41c6-b516-d941ff36349a" />
@@ -25,7 +31,7 @@ Each tagged release pins a reproducible code snapshot.
 | Publication | Release |
 | --- | --- |
 | **Article *Programmez!*** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Link](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
-| **Auditable randomness (C5/C6)** — hash-chained draw receipts, commit-reveal session journal, export on game over. See [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
+| **Preprint** — Benoît Prieur, *From Pseudorandom Play to Auditable Esports Competition: A Layered Randomness Infrastructure for Competitive Games* (EN/FR), 2026. [Zenodo · 10.5281/zenodo.20991595](https://doi.org/10.5281/zenodo.20991595). Backed by the auditable-randomness layers **C5/C6** implemented here (hash-chained receipts, commit-reveal journal) — see [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
 
 **Reproducing a release**
 
@@ -38,7 +44,7 @@ git checkout preprint-randomness  # audit journal + C5/C6 verification stack
 
 ## Auditable randomness
 
-Every stochastic draw in the default game mode is logged in a **hash-chained audit journal** (layers C5 and C6). On desktop game over, the session is revealed and exported to `audit/{session_id}.json`.
+Every stochastic draw in the default game mode is logged in a **hash-chained audit journal** (layers C5 and C6). On desktop game over, the session is revealed and exported to `audit/{session_id}.json`. These layers are described and measured in the companion preprint ([Zenodo · 10.5281/zenodo.20991595](https://doi.org/10.5281/zenodo.20991595)).
 
 | Step | Command / action |
 | --- | --- |

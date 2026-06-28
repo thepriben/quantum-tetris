@@ -6,6 +6,12 @@
 
 <p align="center">
   <a href="https://thepriben.github.io/quantum-tetris/"><strong>▶ Jouer en ligne</strong></a>
+  ·
+  <a href="https://doi.org/10.5281/zenodo.20991595"><strong>📄 Preprint</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.20991595"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.20991595.svg" alt="DOI"></a>
 </p>
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/c09b7921-8ae3-41c6-b516-d941ff36349a" />
@@ -25,7 +31,7 @@ Chaque release taguée fige un état reproductible du code.
 | Publication | Release |
 | --- | --- |
 | **Article *Programmez!*** — Benoît Prieur, *« Quantum Tetris : Rust, Bevy, WebAssembly et circuits quantiques dans la boucle de jeu »*, hors-série n°23, 2026, pp. 7–11. [Lien](https://www.programmez.com/magazine/article/quantum-tetris-rust-bevy-webassembly-et-circuits-quantiques-dans-la-boucle-de-jeu) | [`programmez-hs23`](https://github.com/thepriben/quantum-tetris/releases/tag/programmez-hs23) |
-| **Hasard auditable (C5/C6)** — reçus chaînés, journal de session commit-reveal, export à la game over. Voir [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
+| **Preprint** — Benoît Prieur, *Du jeu pseudo-aléatoire à la compétition esport auditable : une infrastructure de hasard en couches pour les jeux compétitifs* (FR/EN), 2026. [Zenodo · 10.5281/zenodo.20991595](https://doi.org/10.5281/zenodo.20991595). Adossé aux couches de hasard auditable **C5/C6** implémentées ici (reçus chaînés, journal commit-reveal) — voir [`docs/AUDIT.md`](docs/AUDIT.md). | [`preprint-randomness`](https://github.com/thepriben/quantum-tetris/releases/tag/preprint-randomness) |
 
 **Reproduire une release**
 
@@ -38,7 +44,7 @@ git checkout preprint-randomness  # journal d'audit + pile C5/C6
 
 ## Hasard auditable
 
-Chaque tirage stochastique en mode quantum par défaut est consigné dans un **journal d'audit chaîné par hash** (couches C5 et C6). En desktop, à la game over, la session est révélée et exportée vers `audit/{session_id}.json`.
+Chaque tirage stochastique en mode quantum par défaut est consigné dans un **journal d'audit chaîné par hash** (couches C5 et C6). En desktop, à la game over, la session est révélée et exportée vers `audit/{session_id}.json`. Ces couches sont décrites et mesurées dans le preprint compagnon ([Zenodo · 10.5281/zenodo.20991595](https://doi.org/10.5281/zenodo.20991595)).
 
 | Étape | Commande / action |
 | --- | --- |
