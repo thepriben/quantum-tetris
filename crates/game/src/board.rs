@@ -92,18 +92,19 @@ impl Board {
         }
     }
 
+    /// Row 0 is the bottom: clearing a row must shift everything above it down.
     pub fn clear_lines(&mut self) -> u32 {
         let mut cleared = 0u32;
-        let mut row = (ROWS as i32) - 1;
-        while row >= 0 {
-            if self.cells[row as usize].iter().all(|c| c.is_some()) {
+        let mut row = 0;
+        while row < ROWS {
+            if self.cells[row].iter().all(|c| c.is_some()) {
                 cleared += 1;
-                for r in (1..=row as usize).rev() {
-                    self.cells[r] = self.cells[r - 1];
+                for r in row..ROWS - 1 {
+                    self.cells[r] = self.cells[r + 1];
                 }
-                self.cells[0] = [None; COLS];
+                self.cells[ROWS - 1] = [None; COLS];
             } else {
-                row -= 1;
+                row += 1;
             }
         }
         cleared
@@ -128,6 +129,38 @@ impl Board {
 mod tests {
     use super::*;
     use crate::pieces::PieceKind;
+
+    #[test]
+    fn clear_lines_drops_stack_to_bottom() {
+        let mut board = Board::default();
+        // Full bottom row, one lone block two rows above it.
+        board.cells[0] = [Some(PieceKind::I); COLS];
+        board.cells[2][4] = Some(PieceKind::T);
+
+        assert_eq!(board.clear_lines(), 1);
+        assert_eq!(
+            board.cells[1][4],
+            Some(PieceKind::T),
+            "stack must fall by one row"
+        );
+        assert!(board.cells[2][4].is_none());
+        assert!(
+            board.cells[0].iter().all(|c| c.is_none()),
+            "cleared bottom row refills from the (empty) row above"
+        );
+    }
+
+    #[test]
+    fn clear_lines_handles_stacked_full_rows() {
+        let mut board = Board::default();
+        board.cells[0] = [Some(PieceKind::O); COLS];
+        board.cells[1] = [Some(PieceKind::S); COLS];
+        board.cells[3][0] = Some(PieceKind::L);
+
+        assert_eq!(board.clear_lines(), 2);
+        assert_eq!(board.cells[1][0], Some(PieceKind::L));
+        assert!(board.cells[3][0].is_none());
+    }
 
     #[test]
     fn every_piece_spawns_in_buffer() {

@@ -6,9 +6,14 @@ use crate::game_state::GameRun;
 use crate::i18n::{self, Locale};
 use crate::tetris;
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use quantum_tetris_quantum::BackendKind;
 
 pub(crate) const BG: Color = Color::srgb(0.04, 0.07, 0.14);
+/// Reference layout size — the UI is designed for a 900×720 window and scaled
+/// with [`UiScale`] when the actual window (or web canvas) differs.
+const DESIGN_WIDTH: f32 = 900.0;
+const DESIGN_HEIGHT: f32 = 720.0;
 const GRID: Color = Color::srgba(0.15, 0.22, 0.38, 0.55);
 const GRID_BORDER: Color = Color::srgba(0.08, 0.12, 0.22, 0.9);
 const PANEL: Color = Color::srgba(0.08, 0.12, 0.22, 0.92);
@@ -92,6 +97,25 @@ pub(crate) fn setup_ui(mut commands: Commands, run: Res<GameRun>, locale: Res<Lo
             spawn_side_panel(root, &run, *locale);
             spawn_grid(root);
         });
+}
+
+/// Scale the whole fixed-size UI so it always fits the window: the web canvas
+/// resizes with the page and Safari otherwise crops the 900×720 layout.
+pub(crate) fn fit_ui_scale(
+    window: Query<&Window, With<PrimaryWindow>>,
+    mut ui_scale: ResMut<UiScale>,
+) {
+    let Ok(window) = window.single() else {
+        return;
+    };
+    let (w, h) = (window.width(), window.height());
+    if w <= 0.0 || h <= 0.0 {
+        return;
+    }
+    let scale = (w / DESIGN_WIDTH).min(h / DESIGN_HEIGHT).min(1.25);
+    if (ui_scale.0 - scale).abs() > 0.001 {
+        ui_scale.0 = scale;
+    }
 }
 
 fn spawn_grid(parent: &mut ChildSpawnerCommands) {

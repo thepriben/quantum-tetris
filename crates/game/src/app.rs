@@ -37,6 +37,7 @@ impl Plugin for TetrisPlugin {
                 (
                     #[cfg(not(target_arch = "wasm32"))]
                     ui::handle_lang_button,
+                    ui::fit_ui_scale,
                     ui::handle_mode_buttons,
                     tetris::tick_gravity,
                     tetris::handle_input,
@@ -67,6 +68,10 @@ pub fn build_app(config: GameConfig) -> App {
                 primary_window: Some(Window {
                     title: "Quantum Tetris".into(),
                     resolution: (900, 720).into(),
+                    // Web: follow the CSS-sized canvas element so the surface
+                    // matches what the page shows (Safari cropped otherwise).
+                    // Ignored on desktop.
+                    fit_canvas_to_parent: true,
                     ..default()
                 }),
                 ..default()

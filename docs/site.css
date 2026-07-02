@@ -256,17 +256,23 @@ code {
   overflow: hidden;
   background: var(--bg-panel);
 }
+/* The container owns the aspect ratio; the canvas just fills it. Putting
+   aspect-ratio + height:auto on the canvas itself renders truncated on
+   Safari and fights Bevy's fit_canvas_to_parent resizing. */
 #frame-inner {
   line-height: 0;
   background: #0c0c0c;
+  position: relative;
+  aspect-ratio: 900 / 720;
 }
 #frame canvas {
   display: block;
+  position: absolute;
+  inset: 0;
   width: 100% !important;
-  height: auto !important;
-  max-width: 100%;
-  aspect-ratio: 900 / 720;
+  height: 100% !important;
   touch-action: none;
+  outline: none;
 }
 
 #loader {
